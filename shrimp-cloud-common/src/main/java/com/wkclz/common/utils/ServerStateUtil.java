@@ -54,8 +54,9 @@ public class ServerStateUtil {
         operatingSystem.setTotalSwapSpaceSize(operatingSystemMXBean.getTotalSwapSpaceSize());
         operatingSystem.setFreeSwapSpaceSize(operatingSystemMXBean.getFreeSwapSpaceSize());
         // 新的两个方法不能使用，待研究
-        operatingSystem.setTotalMemorySize(operatingSystemMXBean.getTotalPhysicalMemorySize());
-        operatingSystem.setFreeMemorySize(operatingSystemMXBean.getFreePhysicalMemorySize());
+
+        operatingSystem.setTotalMemorySize(operatingSystemMXBean.getTotalMemorySize());
+        operatingSystem.setFreeMemorySize(operatingSystemMXBean.getFreeMemorySize());
 
         return operatingSystem;
     }

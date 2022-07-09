@@ -22,7 +22,7 @@ public class Apis {
         return Result.data(mapping);
     }
 
-    @GetMapping(Routes.APIS_CODE_v1)
+    @GetMapping(Routes.APIS_CODE_V1)
     public Result apisCodeV1(HttpServletRequest request, String router){
         Object module = request.getAttribute("module");
         if (module != null){
@@ -51,7 +51,7 @@ public class Apis {
         return Result.data(sb.toString());
     }
 
-    @GetMapping(Routes.APIS_CODE_v2)
+    @GetMapping(Routes.APIS_CODE_V2)
     public Result apisCodeV2(HttpServletRequest request, String router){
         Object module = request.getAttribute("module");
         if (module != null){
@@ -79,7 +79,7 @@ public class Apis {
         return Result.data(sb.toString());
     }
 
-    @GetMapping(Routes.APIS_CODE_v3)
+    @GetMapping(Routes.APIS_CODE_V3)
     public Result apisCodeV3(HttpServletRequest request, String router){
         Object module = request.getAttribute("module");
         if (module != null){

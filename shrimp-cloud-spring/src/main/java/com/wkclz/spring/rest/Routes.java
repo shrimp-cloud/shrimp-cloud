@@ -17,11 +17,11 @@ public interface Routes {
     @Desc("1. 下载API 信息")
     String APIS_LIST = "/apis/list";
     @Desc("2. 接口代码1")
-    String APIS_CODE_v1 = "/apis/code/v1";
+    String APIS_CODE_V1 = "/apis/code/v1";
     @Desc("3. 接口代码2")
-    String APIS_CODE_v2 = "/apis/code/v2";
+    String APIS_CODE_V2 = "/apis/code/v2";
     @Desc("3. 接口代码3")
-    String APIS_CODE_v3 = "/apis/code/v3";
+    String APIS_CODE_V3 = "/apis/code/v3";
 
 
     /**

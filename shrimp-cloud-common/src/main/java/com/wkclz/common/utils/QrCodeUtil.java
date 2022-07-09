@@ -30,7 +30,7 @@ public class QrCodeUtil {
      * @throws WriterException
      * @throws IOException
      */
-    public static String createBase64QRCode(String url) {
+    public static String createBase64QrCode(String url) {
         try {
             MultiFormatWriter writer = new MultiFormatWriter();
             BitMatrix bitMatrix = writer.encode(url, BarcodeFormat.QR_CODE, 400, 400);
@@ -38,9 +38,7 @@ public class QrCodeUtil {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             ImageIO.write(bufferedImage, "jpg", Base64.getEncoder().wrap(os));
             return "data:image/jpg;base64," + os.toString();
-        } catch (WriterException e) {
-            logger.error(e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (WriterException | IOException e) {
             logger.error(e.getMessage(), e);
         }
         return null;
@@ -75,7 +73,7 @@ public class QrCodeUtil {
      * @return
      * @throws IOException
      */
-    public static String createBase64QRCodeWxapp(String urls) {
+    public static String createBase64QrCodeWxapp(String urls) {
 
         InputStream is = null;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

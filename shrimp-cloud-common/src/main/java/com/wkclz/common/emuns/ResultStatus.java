@@ -3,6 +3,9 @@ package com.wkclz.common.emuns;
 
 import com.wkclz.common.annotation.Desc;
 
+/**
+ * 返回状态
+ */
 @Desc("结果状态")
 public enum ResultStatus {
 

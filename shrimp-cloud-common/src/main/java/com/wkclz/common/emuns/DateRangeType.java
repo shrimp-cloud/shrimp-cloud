@@ -3,6 +3,9 @@ package com.wkclz.common.emuns;
 
 import com.wkclz.common.annotation.Desc;
 
+/**
+ * 时间范围
+ */
 @Desc("时间范围类型")
 public enum DateRangeType {
 

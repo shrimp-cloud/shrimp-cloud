@@ -2,6 +2,9 @@ package com.wkclz.spring.enums;
 
 import com.wkclz.common.annotation.Desc;
 
+/**
+ * 系统环境类型
+ */
 @Desc("系统环境")
 public enum EnvType {
 

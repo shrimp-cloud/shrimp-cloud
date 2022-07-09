@@ -127,12 +127,12 @@ public class SecretUtil {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("没有md5这个算法！");
         }
-        String md5code = new BigInteger(1, secretBytes).toString(16);
+        StringBuilder md5code = new StringBuilder(new BigInteger(1, secretBytes).toString(16));
         int x = 32 - md5code.length();
         for (int i = 0; i < x; i++) {
-            md5code = "0" + md5code;
+            md5code.insert(0, "0");
         }
-        return md5code;
+        return md5code.toString();
     }
 
 
