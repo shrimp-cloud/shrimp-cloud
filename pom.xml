@@ -12,6 +12,8 @@
     <modules>
         <module>shrimp-cloud-bom</module>
         <module>shrimp-cloud-parent</module>
+        <module>shrimp-cloud-common</module>
+        <module>shrimp-cloud-spring</module>
     </modules>
 
 </project>

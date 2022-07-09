@@ -17,10 +17,11 @@
 
     <packaging>pom</packaging>
     <name>shrimp-cloud-parent</name>
-    <description>shrimp-parent</description>
+    <description>shrimp-parent 啥都不做，交给 bom 管理</description>
 
     <properties>
         <spring-cloud.version>2021.0.3</spring-cloud.version>
+        <shrimp.cloud.bom.version>4.0.0-SNAPSHOT</shrimp.cloud.bom.version>
         <!--
         <spring-boot-admin.version>2.6.7</spring-boot-admin.version>
         -->
@@ -31,7 +32,7 @@
             <dependency>
                 <groupId>com.wkclz.bom</groupId>
                 <artifactId>shrimp-cloud-bom</artifactId>
-                <version>4.0.0-SNAPSHOT</version>
+                <version>${shrimp.cloud.bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
