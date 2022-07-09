@@ -17,6 +17,7 @@
         <!-- shrimp 相关依赖 -->
         <shrimp.common.version>4.0.0-SNAPSHOT</shrimp.common.version>
 
+        <commons-lang3.version>3.12.0</commons-lang3.version>
         <fastjson2.version>2.0.4</fastjson2.version>
         <hutool.version>5.8.2</hutool.version>
         <guava.version>31.1-jre</guava.version>
@@ -31,6 +32,11 @@
             </dependency>
 
 
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.alibaba.fastjson2</groupId>
                 <artifactId>fastjson2</artifactId>
