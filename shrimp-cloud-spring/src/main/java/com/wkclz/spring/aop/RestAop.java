@@ -118,7 +118,8 @@ public class RestAop {
         // 返回参数处理
         responeTime = new Date();
         costTime = responeTime.getTime() - requestTime.getTime();
-        if (obj instanceof Result result && Sys.CURRENT_ENV != EnvType.PROD) {
+        if (obj instanceof Result && Sys.CURRENT_ENV != EnvType.PROD) {
+            Result result = (Result)obj;
             result.setRequestTime(requestTime);
             result.setResponeTime(responeTime);
             result.setCostTime(costTime);
