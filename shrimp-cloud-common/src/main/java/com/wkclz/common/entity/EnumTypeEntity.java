@@ -1,11 +1,8 @@
 package com.wkclz.common.entity;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 /**
  * 枚举类型实体
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class EnumTypeEntity {
 
     private Class clazz;

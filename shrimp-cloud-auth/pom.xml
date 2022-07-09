@@ -17,6 +17,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-okhttp</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.wkclz.redis</groupId>
             <artifactId>shrimp-cloud-redis</artifactId>
         </dependency>

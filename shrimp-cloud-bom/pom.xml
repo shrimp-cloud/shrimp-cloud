@@ -14,6 +14,8 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
+        <feign-okhttp.version>11.0</feign-okhttp.version>
+
         <!-- shrimp 相关依赖 -->
         <shrimp.common.version>4.0.0-SNAPSHOT</shrimp.common.version>
         <shrimp.redis.version>4.0.0-SNAPSHOT</shrimp.redis.version>
@@ -28,10 +30,19 @@
         <guava.version>31.1-jre</guava.version>
         <jsoup.version>1.15.1</jsoup.version>
         <zxing.version>3.5.0</zxing.version>
+        <jasypt-spring-boot.version>3.0.3</jasypt-spring-boot.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <!-- spring -->
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-okhttp</artifactId>
+                <version>${feign-okhttp.version}</version>
+            </dependency>
+
+            <!-- wkclz -->
             <dependency>
                 <groupId>com.wkclz.common</groupId>
                 <artifactId>shrimp-cloud-common</artifactId>
@@ -98,8 +109,11 @@
                 <artifactId>jsoup</artifactId>
                 <version>${jsoup.version}</version>
             </dependency>
-
-
+            <dependency>
+                <groupId>com.github.ulisesbocchio</groupId>
+                <artifactId>jasypt-spring-boot</artifactId>
+                <version>${jasypt-spring-boot.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

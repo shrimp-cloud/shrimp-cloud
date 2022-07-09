@@ -1,4 +1,4 @@
-package com.wkclz.auth.helper;
+package com.wkclz.spring.helper;
 
 import com.alibaba.fastjson2.JSON;
 import com.wkclz.common.exception.BizException;

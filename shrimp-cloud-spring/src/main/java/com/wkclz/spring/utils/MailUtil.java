@@ -1,9 +1,9 @@
-package com.wkclz.common.utils;
+package com.wkclz.spring.utils;
 
 
 import com.sun.mail.util.MailSSLSocketFactory;
-import com.wkclz.core.base.Sys;
-import com.wkclz.core.pojo.enums.EnvType;
+import com.wkclz.spring.config.Sys;
+import com.wkclz.spring.enums.EnvType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;

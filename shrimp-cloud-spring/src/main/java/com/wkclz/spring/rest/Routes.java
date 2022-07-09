@@ -1,13 +1,13 @@
 package com.wkclz.spring.rest;
 
-import com.wkclz.core.base.annotation.Desc;
-import com.wkclz.core.base.annotation.Routers;
+import com.wkclz.common.annotation.Desc;
+import com.wkclz.common.annotation.Router;
 
 /**
  * Description:
  * Created: wangkaicun @ 2017-10-19 上午12:46
  */
-@Routers("core 包路由")
+@Router("core 包路由")
 public interface Routes {
 
     /**

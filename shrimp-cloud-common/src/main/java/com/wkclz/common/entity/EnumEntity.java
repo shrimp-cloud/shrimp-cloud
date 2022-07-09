@@ -1,11 +1,8 @@
 package com.wkclz.common.entity;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 /**
  * 枚举内容
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class EnumEntity {
 
     private String enumType;

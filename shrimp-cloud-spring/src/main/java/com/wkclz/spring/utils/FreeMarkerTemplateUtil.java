@@ -1,4 +1,4 @@
-package com.wkclz.common.utils;
+package com.wkclz.spring.utils;
 
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.NullCacheStorage;
