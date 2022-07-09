@@ -16,6 +16,10 @@
 
         <!-- shrimp 相关依赖 -->
         <shrimp.common.version>4.0.0-SNAPSHOT</shrimp.common.version>
+
+        <fastjson2.version>2.0.4</fastjson2.version>
+        <hutool.version>5.8.2</hutool.version>
+        <guava.version>31.1-jre</guava.version>
     </properties>
 
     <dependencyManagement>
@@ -25,6 +29,25 @@
                 <artifactId>shrimp-cloud-common</artifactId>
                 <version>${shrimp.common.version}</version>
             </dependency>
+
+
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${fastjson2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 
