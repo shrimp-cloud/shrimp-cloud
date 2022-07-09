@@ -192,34 +192,4 @@ public class Result<T> {
         return msg;
     }
 
-
-    /**
-     * 错误信息返回
-     *
-     * @param rep
-     * @return
-     * @throws Exception
-     */
-    /*
-    public static boolean responseError(HttpServletResponse rep, Result result) {
-        try {
-            result.setRequestTime(null);
-            result.setResponeTime(null);
-            result.setCostTime(null);
-            String string = JSON.toJSONString(result);
-            rep.setHeader("Content-Type", "application/json;charset=UTF-8");
-            rep.getWriter().print(string);
-            rep.getWriter().close();
-        } catch (JsonProcessingException e) {
-            logger.error(e.getMessage(), e);
-            return false;
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-            return false;
-        }
-        return false;
-    }
-    */
-
-
 }

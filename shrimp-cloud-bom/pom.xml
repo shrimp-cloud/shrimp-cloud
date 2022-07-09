@@ -16,6 +16,9 @@
 
         <!-- shrimp 相关依赖 -->
         <shrimp.common.version>4.0.0-SNAPSHOT</shrimp.common.version>
+        <shrimp.redis.version>4.0.0-SNAPSHOT</shrimp.redis.version>
+        <shrimp.spring.version>4.0.0-SNAPSHOT</shrimp.spring.version>
+        <shrimp.auth.version>4.0.0-SNAPSHOT</shrimp.auth.version>
 
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <fastjson2.version>2.0.4</fastjson2.version>
@@ -30,7 +33,21 @@
                 <artifactId>shrimp-cloud-common</artifactId>
                 <version>${shrimp.common.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.wkclz.redis</groupId>
+                <artifactId>shrimp-cloud-redis</artifactId>
+                <version>${shrimp.redis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wkclz.spring</groupId>
+                <artifactId>shrimp-cloud-spring</artifactId>
+                <version>${shrimp.spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wkclz.auth</groupId>
+                <artifactId>shrimp-cloud-auth</artifactId>
+                <version>${shrimp.auth.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.apache.commons</groupId>

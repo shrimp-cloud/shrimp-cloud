@@ -15,6 +15,7 @@
         <module>shrimp-cloud-common</module>
         <module>shrimp-cloud-redis</module>
         <module>shrimp-cloud-spring</module>
+        <module>shrimp-cloud-auth</module>
     </modules>
 
 </project>
