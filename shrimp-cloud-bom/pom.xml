@@ -9,19 +9,27 @@
     <version>4.0.0-SNAPSHOT</version>
 
     <packaging>pom</packaging>
+    <name>shrimp-cloud-bom</name>
+    <description>shrimp-cloud-bom 描述依赖版本</description>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
+        <!-- Spring 依赖(非spring-cloud-dependencies定义的依赖)  -->
         <feign-okhttp.version>11.0</feign-okhttp.version>
+        <druid-spring-boot-starter.version>1.2.8</druid-spring-boot-starter.version>
+        <mybatis-spring-boot-starter.version>2.2.0</mybatis-spring-boot-starter.version>
+        <pagehelper-spring-boot-starter.version>1.4.0</pagehelper-spring-boot-starter.version>
 
         <!-- shrimp 相关依赖 -->
         <shrimp.common.version>4.0.0-SNAPSHOT</shrimp.common.version>
         <shrimp.redis.version>4.0.0-SNAPSHOT</shrimp.redis.version>
         <shrimp.spring.version>4.0.0-SNAPSHOT</shrimp.spring.version>
         <shrimp.auth.version>4.0.0-SNAPSHOT</shrimp.auth.version>
+        <shrimp.mybatis.version>4.0.0-SNAPSHOT</shrimp.mybatis.version>
 
+        <!-- 三方静态依赖 -->
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <spring-beans.version>5.3.21</spring-beans.version>
@@ -45,6 +53,24 @@
                 <version>${feign-okhttp.version}</version>
             </dependency>
 
+            <!-- 数据库工具 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid-spring-boot-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis-spring-boot-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper-spring-boot-starter.version}</version>
+            </dependency>
+
+
             <!-- wkclz -->
             <dependency>
                 <groupId>com.wkclz.common</groupId>
@@ -65,6 +91,11 @@
                 <groupId>com.wkclz.auth</groupId>
                 <artifactId>shrimp-cloud-auth</artifactId>
                 <version>${shrimp.auth.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wkclz.mybatis</groupId>
+                <artifactId>shrimp-cloud-mybatis</artifactId>
+                <version>${shrimp.mybatis.version}</version>
             </dependency>
 
             <dependency>

@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.wkclz.mybatis.SpringAutoConfig
+org.springframework.context.ApplicationListener=\
+  com.wkclz.mybatis.config.DruidValidPing2Select
