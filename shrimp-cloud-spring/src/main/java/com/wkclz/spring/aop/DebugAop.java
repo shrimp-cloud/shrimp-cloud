@@ -32,7 +32,7 @@ public class DebugAop {
      */
 
     private static final Logger logger = LoggerFactory.getLogger(DebugAop.class);
-    private final String POINT_CUT = "@annotation(com.wkclz.core.base.annotation.Debug)";
+    private final String POINT_CUT = "@annotation(com.wkclz.common.annotation.Debug)";
 
 
     @Pointcut(POINT_CUT)
