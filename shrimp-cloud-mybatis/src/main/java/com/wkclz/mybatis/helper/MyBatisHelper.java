@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class MyBatisHelper {
 
     private final static Logger logger = LoggerFactory.getLogger(MyBatisHelper.class);
-    private static Set<String> STATEMENTS = new HashSet<>();
+    private static final Set<String> STATEMENTS = new HashSet<>();
 
     /**
      * 自定义 sql 查询-List
@@ -37,8 +37,7 @@ public class MyBatisHelper {
     public static <T extends BaseEntity> List<T> selectList(String sql, T param){
         SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
         String statement = reloadSql(sql);
-        List<T> result = sqlSession.selectList(statement, param);
-        return result;
+        return sqlSession.selectList(statement, param);
     }
 
     /**
@@ -52,9 +51,8 @@ public class MyBatisHelper {
         SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
         String statement = reloadSql(sql);
         PageHandle<T> pageHandle = new PageHandle<>(param);
-        assert sqlSession != null;
         List<T> list = sqlSession.selectList(statement, param);
-        PageData<T> page = pageHandle.page(list);
+        PageData page = pageHandle.page(list);
         return page;
     }
 
@@ -88,7 +86,6 @@ public class MyBatisHelper {
         Integer pageSize = (pageSizeObj == null)?10:Integer.parseInt(pageSizeObj.toString());
 
         PageHelper.startPage(pageNo, pageSize);
-        assert sqlSession != null;
         List<Map> list = sqlSession.selectList(statement, param);
 
         Page listPage = (Page) list;
@@ -115,7 +112,6 @@ public class MyBatisHelper {
         STATEMENTS.add(statement);
 
         SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
-        assert sqlSession != null;
         Configuration configuration = sqlSession.getConfiguration();
 
 
@@ -201,11 +197,10 @@ public class MyBatisHelper {
         logger.debug("从{}中加载{}属性", obj, fieldName);
         try{
             Field field = obj.getClass().getDeclaredField(fieldName);
-            boolean accessible = field.isAccessible();
-            field.setAccessible(true);
-            Object value = field.get(obj);
-            field.setAccessible(accessible);
-            return value;
+            if (!field.canAccess(obj)) {
+                field.setAccessible(true);
+            }
+            return field.get(obj);
         }catch(Exception e){
             logger.debug("ERROR: 加载对象中[{}]", fieldName, e);
             throw new RuntimeException("ERROR: 加载对象失败[" + fieldName + "]", e);

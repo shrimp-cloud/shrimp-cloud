@@ -47,7 +47,7 @@ public class EnumUtil {
     public static List<EnumTypeEntity> getEnumTypeEntitys(String backPackagePath) {
         Set<Class<?>> classes = ClassUtil.getClasses(backPackagePath);
         DICT_TYPE_ENTITYS = new ArrayList<>();
-        for (Class clazz : classes) {
+        for (Class<?> clazz : classes) {
             EnumTypeEntity dictTypeEntity = new EnumTypeEntity();
             dictTypeEntity.setClazz(clazz);
             dictTypeEntity.setEnumType(StringUtil.camelToUnderline(clazz.getSimpleName()).toUpperCase());
@@ -106,9 +106,7 @@ public class EnumUtil {
                     break;
                 }
             }
-        } catch (IllegalAccessException e) {
-            logger.error(e.getMessage(), e);
-        } catch (InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             logger.error(e.getMessage(), e);
         }
         return dictEntities;

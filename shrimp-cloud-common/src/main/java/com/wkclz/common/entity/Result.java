@@ -180,16 +180,17 @@ public class Result<T> {
      * @return
      */
     private static String concatStr(String[] msgs) {
-        StringBuffer stringBuffer = new StringBuffer();
-        for (String rem : msgs) {
-            stringBuffer.append(rem);
-            stringBuffer.append(";");
+        if (msgs == null || msgs.length == 0) {
+            return null;
         }
-        String msg = stringBuffer.toString();
-        if (msg.length() > 0) {
-            msg = msg.substring(0, msg.length() - 1);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < msgs.length; i++) {
+            sb.append(msgs[i]);
+            if (i != (msgs.length-1)) {
+                sb.append(";");
+            }
         }
-        return msg;
+        return sb.toString();
     }
 
 }

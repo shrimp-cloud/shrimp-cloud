@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -82,7 +83,7 @@ public class ClassUtil {
                 if ("file".equals(protocol)) {
                     // System.err.println("file类型的扫描");
                     // 获取包的物理路径
-                    String filePath = URLDecoder.decode(url.getFile(), "UTF-8");
+                    String filePath = URLDecoder.decode(url.getFile(), StandardCharsets.UTF_8);
                     // 以文件的方式扫描整个包下的文件 并添加到集合中
                     findAndAddClassesInPackageByFile(packageName, filePath, recursive, classes);
                 } else if ("jar".equals(protocol)) {
@@ -229,9 +230,6 @@ public class ClassUtil {
 
         // 包下面的类
         Set<Class<?>> clazzs = getClasses("cn.package.test");
-        if (clazzs == null) {
-            return;
-        }
 
         System.out.printf(clazzs.size() + "");
         // 某类或者接口的子类
