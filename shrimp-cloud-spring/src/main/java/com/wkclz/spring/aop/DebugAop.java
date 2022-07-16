@@ -7,8 +7,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
@@ -31,8 +29,7 @@ public class DebugAop {
      * : @AfterReturning第一个后置返回通知的返回值：18
      */
 
-    private static final Logger logger = LoggerFactory.getLogger(DebugAop.class);
-    private final String POINT_CUT = "@annotation(com.wkclz.common.annotation.Debug)";
+    private static final String POINT_CUT = "@annotation(com.wkclz.common.annotation.Debug)";
 
 
     @Pointcut(POINT_CUT)

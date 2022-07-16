@@ -28,6 +28,7 @@
         <shrimp.spring.version>4.0.0-SNAPSHOT</shrimp.spring.version>
         <shrimp.auth.version>4.0.0-SNAPSHOT</shrimp.auth.version>
         <shrimp.mybatis.version>4.0.0-SNAPSHOT</shrimp.mybatis.version>
+        <shrimp-cloud-gen-plugin.version>4.0.0-SNAPSHOT</shrimp-cloud-gen-plugin.version>
 
         <!-- 三方静态依赖 -->
         <commons-lang3.version>3.12.0</commons-lang3.version>
@@ -163,11 +164,20 @@
                 <artifactId>dysmsapi20170525</artifactId>
                 <version>${dysmsapi20170525.version}</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.wkclz.gen</groupId>
+                    <artifactId>shrimp-cloud-gen-plugin</artifactId>
+                    <version>${shrimp-cloud-gen-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <!-- Source attach plugin -->
             <plugin>
