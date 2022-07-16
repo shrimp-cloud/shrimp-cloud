@@ -17,10 +17,10 @@
         <maven.compiler.target>17</maven.compiler.target>
 
         <!-- Spring 依赖(非spring-cloud-dependencies定义的依赖)  -->
-        <feign-okhttp.version>11.0</feign-okhttp.version>
-        <druid-spring-boot-starter.version>1.2.8</druid-spring-boot-starter.version>
-        <mybatis-spring-boot-starter.version>2.2.0</mybatis-spring-boot-starter.version>
-        <pagehelper-spring-boot-starter.version>1.4.0</pagehelper-spring-boot-starter.version>
+        <feign-okhttp.version>11.9</feign-okhttp.version>
+        <druid-spring-boot-starter.version>1.2.11</druid-spring-boot-starter.version>
+        <mybatis-spring-boot-starter.version>2.2.2</mybatis-spring-boot-starter.version>
+        <pagehelper-spring-boot-starter.version>1.4.3</pagehelper-spring-boot-starter.version>
 
         <!-- shrimp 相关依赖 -->
         <shrimp.common.version>4.0.0-SNAPSHOT</shrimp.common.version>
@@ -33,15 +33,15 @@
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <spring-beans.version>5.3.21</spring-beans.version>
-        <fastjson2.version>2.0.4</fastjson2.version>
-        <hutool.version>5.8.2</hutool.version>
+        <fastjson2.version>2.0.9</fastjson2.version>
+        <hutool.version>5.8.4</hutool.version>
         <guava.version>31.1-jre</guava.version>
-        <jsoup.version>1.15.1</jsoup.version>
+        <jsoup.version>1.15.2</jsoup.version>
         <zxing.version>3.5.0</zxing.version>
         <jasypt-spring-boot.version>3.0.3</jasypt-spring-boot.version>
         <wkclz-excel.version>1.0.11.RELEASE</wkclz-excel.version>
-        <aliyun-sdk-oss.version>3.10.2</aliyun-sdk-oss.version>
-        <dysmsapi.version>2.0.15</dysmsapi.version>
+        <aliyun-sdk-oss.version>3.15.1</aliyun-sdk-oss.version>
+        <dysmsapi20170525.version>2.0.16</dysmsapi20170525.version>
     </properties>
 
     <dependencyManagement>
@@ -161,7 +161,7 @@
             <dependency>
                 <groupId>com.aliyun</groupId>
                 <artifactId>dysmsapi20170525</artifactId>
-                <version>${dysmsapi.version}</version>
+                <version>${dysmsapi20170525.version}</version>
             </dependency>
 
         </dependencies>
