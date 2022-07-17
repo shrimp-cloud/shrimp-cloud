@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.wkclz.auth.AuthAutoConfig
+  com.wkclz.auth.ShrimpAuthAutoConfig
