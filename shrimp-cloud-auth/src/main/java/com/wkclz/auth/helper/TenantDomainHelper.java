@@ -1,6 +1,7 @@
 package com.wkclz.auth.helper;
 
 import com.alibaba.fastjson2.JSON;
+import com.wkclz.auth.config.LzConfig;
 import com.wkclz.common.exception.BizException;
 import com.wkclz.common.utils.RegularUtil;
 import com.wkclz.redis.entity.RedisMsgBody;
@@ -76,6 +77,12 @@ public class TenantDomainHelper {
      * @return
      */
     public static Long getTenantId() {
+
+        LzConfig lzConfig = SpringContextHolder.getBean(LzConfig.class);
+        if (!lzConfig.getSecurityDomainTenant()) {
+            return -1L;
+        }
+
         String tenantIdStr = MDC.get(LogTraceConstant.TENANT_ID);
         if (tenantIdStr != null){
             return Long.valueOf(tenantIdStr);

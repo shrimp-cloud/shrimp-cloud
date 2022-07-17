@@ -1,5 +1,6 @@
 package com.wkclz.auth.interceptor.handler;
 
+import com.wkclz.auth.config.LzConfig;
 import com.wkclz.auth.helper.AccessHelper;
 import com.wkclz.auth.helper.ApiDomainHelper;
 import com.wkclz.auth.helper.AuthHelper;
@@ -18,14 +19,19 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthHandler {
 
     @Autowired
+    private LzConfig lzConfig;
+    @Autowired
     private AuthHelper authHelper;
 
     public Result preHandle(HttpServletRequest req, HttpServletResponse rep) {
 
         // API 安全检测
-        Result apiDomainCheckResult = ApiDomainHelper.checkApiDomains(req, rep);
-        if (apiDomainCheckResult != null) {
-            return apiDomainCheckResult;
+
+        if (lzConfig.getSecurityDomainApi()) {
+            Result apiDomainCheckResult = ApiDomainHelper.checkApiDomains(req, rep);
+            if (apiDomainCheckResult != null) {
+                return apiDomainCheckResult;
+            }
         }
 
         /**

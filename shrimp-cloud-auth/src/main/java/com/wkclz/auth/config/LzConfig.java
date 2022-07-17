@@ -1,6 +1,7 @@
 package com.wkclz.auth.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 /**
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component;
  * wangkc @ 2019-07-21 23:46:08
  */
 @Component
-@ConfigurationProperties(prefix = "lz")
+@Configuration
 public class LzConfig {
 
 
@@ -18,7 +19,13 @@ public class LzConfig {
      * updaate 和 insert 也可以自动赋值 createUser, lastUpadteUser
      * 后期扩展数据权限拦截
      */
-    private Boolean authFilter = true;
+    @Value("${lz.auth-filter:true}")
+    private Boolean authFilter;
+
+    @Value("${lz.security.domain.api:true}")
+    private Boolean securityDomainApi;
+    @Value("${lz.security.domain.tenant:true}")
+    private Boolean securityDomainTenant;
 
 
     public Boolean getAuthFilter() {
@@ -27,5 +34,22 @@ public class LzConfig {
 
     public void setAuthFilter(Boolean authFilter) {
         this.authFilter = authFilter;
+    }
+
+
+    public Boolean getSecurityDomainApi() {
+        return securityDomainApi;
+    }
+
+    public void setSecurityDomainApi(Boolean securityDomainApi) {
+        this.securityDomainApi = securityDomainApi;
+    }
+
+    public Boolean getSecurityDomainTenant() {
+        return securityDomainTenant;
+    }
+
+    public void setSecurityDomainTenant(Boolean securityDomainTenant) {
+        this.securityDomainTenant = securityDomainTenant;
     }
 }

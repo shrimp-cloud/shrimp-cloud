@@ -18,6 +18,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.PathMatcher;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -77,6 +78,9 @@ public class AccessHelper {
 
 
     public static List<String> getLocal() {
+        if (ACCESS_URI == null) {
+            return Arrays.asList("/*/public/**");
+        }
         return ACCESS_URI;
     }
 
