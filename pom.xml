@@ -18,8 +18,8 @@
         <module>shrimp-cloud-auth</module>
         <module>shrimp-cloud-mybatis</module>
         <module>shrimp-cloud-gen-plugin</module>
+        <module>shrimp-cloud-mqtt-starter</module>
     </modules>
-
 
     <build>
         <plugins>
