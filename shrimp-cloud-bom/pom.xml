@@ -28,14 +28,15 @@
         <shrimp.spring.version>4.0.0-SNAPSHOT</shrimp.spring.version>
         <shrimp.auth.version>4.0.0-SNAPSHOT</shrimp.auth.version>
         <shrimp.mybatis.version>4.0.0-SNAPSHOT</shrimp.mybatis.version>
+        <shrimp.mqtt.version>4.0.0-SNAPSHOT</shrimp.mqtt.version>
         <shrimp-cloud-gen-plugin.version>4.0.0-SNAPSHOT</shrimp-cloud-gen-plugin.version>
 
         <!-- 三方静态依赖 -->
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <spring-beans.version>5.3.21</spring-beans.version>
-        <fastjson2.version>2.0.9</fastjson2.version>
-        <hutool.version>5.8.4</hutool.version>
+        <fastjson2.version>2.0.11</fastjson2.version>
+        <hutool.version>5.8.5</hutool.version>
         <guava.version>31.1-jre</guava.version>
         <jsoup.version>1.15.2</jsoup.version>
         <zxing.version>3.5.0</zxing.version>
