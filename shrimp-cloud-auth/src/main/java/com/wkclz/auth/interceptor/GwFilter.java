@@ -106,7 +106,7 @@ public class GwFilter implements Filter {
 
         String uri = httpRequest.getRequestURI();
         String[] uriSplit = uri.split("/");
-        if (uriSplit.length < 2) {
+        if (uriSplit.length < 3) {
             ResponeHelper.responseError(httpResponse, Result.error(ResultStatus.ERROR_ROUTER));
             return;
         }
