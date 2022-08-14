@@ -14,8 +14,8 @@
     <artifactId>shrimp-cloud-mqtt-starter</artifactId>
     <version>4.0.0-SNAPSHOT</version>
 
-    <name>shrimp-cloud-mqtt</name>
-    <description>shrimp-cloud-mqtt</description>
+    <name>shrimp-cloud-mqtt-starter</name>
+    <description>shrimp-cloud-mqtt-starter</description>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

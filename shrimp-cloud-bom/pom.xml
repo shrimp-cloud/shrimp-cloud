@@ -23,13 +23,14 @@
         <pagehelper-spring-boot-starter.version>1.4.3</pagehelper-spring-boot-starter.version>
 
         <!-- shrimp 相关依赖 -->
-        <shrimp.common.version>4.0.0-SNAPSHOT</shrimp.common.version>
-        <shrimp.redis.version>4.0.0-SNAPSHOT</shrimp.redis.version>
-        <shrimp.spring.version>4.0.0-SNAPSHOT</shrimp.spring.version>
-        <shrimp.auth.version>4.0.0-SNAPSHOT</shrimp.auth.version>
-        <shrimp.mybatis.version>4.0.0-SNAPSHOT</shrimp.mybatis.version>
-        <shrimp.mqtt.version>4.0.0-SNAPSHOT</shrimp.mqtt.version>
+        <shrimp-common.version>4.0.0-SNAPSHOT</shrimp-common.version>
+        <shrimp-redis.version>4.0.0-SNAPSHOT</shrimp-redis.version>
+        <shrimp-spring.version>4.0.0-SNAPSHOT</shrimp-spring.version>
+        <shrimp-auth.version>4.0.0-SNAPSHOT</shrimp-auth.version>
+        <shrimp-mybatis.version>4.0.0-SNAPSHOT</shrimp-mybatis.version>
+        <shrimp-mqtt.version>4.0.0-SNAPSHOT</shrimp-mqtt.version>
         <shrimp-cloud-gen-plugin.version>4.0.0-SNAPSHOT</shrimp-cloud-gen-plugin.version>
+        <shrimp-cloud-swagger-starter.version>4.0.0-SNAPSHOT</shrimp-cloud-swagger-starter.version>
 
         <!-- 三方静态依赖 -->
         <commons-lang3.version>3.12.0</commons-lang3.version>
@@ -44,6 +45,7 @@
         <wkclz-excel.version>1.0.11.RELEASE</wkclz-excel.version>
         <aliyun-sdk-oss.version>3.15.1</aliyun-sdk-oss.version>
         <dysmsapi20170525.version>2.0.16</dysmsapi20170525.version>
+        <swagger.version>3.0.0</swagger.version>
     </properties>
 
     <dependencyManagement>
@@ -77,28 +79,34 @@
             <dependency>
                 <groupId>com.wkclz.common</groupId>
                 <artifactId>shrimp-cloud-common</artifactId>
-                <version>${shrimp.common.version}</version>
+                <version>${shrimp-common.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.wkclz.redis</groupId>
                 <artifactId>shrimp-cloud-redis</artifactId>
-                <version>${shrimp.redis.version}</version>
+                <version>${shrimp-redis.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.wkclz.spring</groupId>
                 <artifactId>shrimp-cloud-spring</artifactId>
-                <version>${shrimp.spring.version}</version>
+                <version>${shrimp-spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.wkclz.auth</groupId>
                 <artifactId>shrimp-cloud-auth</artifactId>
-                <version>${shrimp.auth.version}</version>
+                <version>${shrimp-auth.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.wkclz.mybatis</groupId>
                 <artifactId>shrimp-cloud-mybatis</artifactId>
-                <version>${shrimp.mybatis.version}</version>
+                <version>${shrimp-mybatis.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.wkclz.swagger</groupId>
+                <artifactId>shrimp-cloud-swagger-starter</artifactId>
+                <version>${shrimp-cloud-swagger-starter.version}</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -164,6 +172,16 @@
                 <groupId>com.aliyun</groupId>
                 <artifactId>dysmsapi20170525</artifactId>
                 <version>${dysmsapi20170525.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${swagger.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

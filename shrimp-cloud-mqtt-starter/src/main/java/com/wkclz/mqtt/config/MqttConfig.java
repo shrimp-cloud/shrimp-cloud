@@ -21,8 +21,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
-@ConfigurationProperties(prefix = "lz.mqtt")
-@ConditionalOnProperty(prefix = "lz.mqtt", value = {"client-id-prefix"})
+@ConfigurationProperties(prefix = "shrimp.cloud.mqtt")
+@ConditionalOnProperty(prefix = "shrimp.cloud.mqtt", value = {"client-id-prefix"})
 public class MqttConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(MqttConfig.class);

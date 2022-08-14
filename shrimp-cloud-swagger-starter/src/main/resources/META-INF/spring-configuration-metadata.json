@@ -1,0 +1,35 @@
+{
+  "properties":[
+    {
+      "name": "shrimp.cloud.swagger.base-package",
+      "type": "java.lang.String",
+      "defaultValue": "com.wkclz",
+      "description": "文档包路径"
+    },
+    {
+      "name": "shrimp.cloud.swagger.title",
+      "type": "java.lang.String",
+      "defaultValue": "无标题",
+      "description": "文档标题"
+    },
+    {
+      "name": "shrimp.cloud.swagger.description",
+      "type": "java.lang.String",
+      "defaultValue": "无项目说明",
+      "description": "项目说明"
+    },
+    {
+      "name": "shrimp.cloud.swagger.service-url",
+      "type": "java.lang.String",
+      "defaultValue": "https://api.example.com",
+      "description": "接口服务器地址"
+    },
+    {
+      "name": "shrimp.cloud.swagger.version",
+      "type": "java.lang.String",
+      "defaultValue": "1.0.0",
+      "description": "文档版本号"
+    }
+  ],
+  "hits": []
+}
