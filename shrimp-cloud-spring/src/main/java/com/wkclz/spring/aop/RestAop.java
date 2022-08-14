@@ -94,7 +94,7 @@ public class RestAop {
         Throwable tb = null;
         try {
 
-            if (!uri.startsWith("/swagger-") && !uri.startsWith("/v2/api-docs")) {
+            if (!uri.startsWith("/swagger-") && !uri.startsWith("/v3/api-docs") && !uri.startsWith("/doc.html") && !uri.startsWith("/webjars/")) {
                 // 非微服务场景，使用 module 标记模块
                 Object module = req.getAttribute("module");
 

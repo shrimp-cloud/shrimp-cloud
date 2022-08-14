@@ -79,7 +79,7 @@ public class AccessHelper {
 
     public static List<String> getLocal() {
         if (ACCESS_URI == null) {
-            return Arrays.asList("/*/public/**", "/swagger-ui/**", "/swagger-resources/**", "/v2/api-docs/**");
+            return Arrays.asList("/*/public/**", "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**", "/doc.html", "/webjars/**");
         }
         return ACCESS_URI;
     }

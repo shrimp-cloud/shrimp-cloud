@@ -103,7 +103,7 @@ public class GwFilter implements Filter {
             return;
         }
 
-        if (uri.startsWith("/swagger-") || uri.startsWith("/v2/api-docs")) {
+        if (uri.startsWith("/swagger-") || uri.startsWith("/v3/api-docs") || uri.startsWith("/doc.html") || uri.startsWith("/webjars/")) {
             chain.doFilter(request, response);
             return;
         }

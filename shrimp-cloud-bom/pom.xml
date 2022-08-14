@@ -46,6 +46,7 @@
         <aliyun-sdk-oss.version>3.15.1</aliyun-sdk-oss.version>
         <dysmsapi20170525.version>2.0.16</dysmsapi20170525.version>
         <swagger.version>3.0.0</swagger.version>
+        <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
     </properties>
 
     <dependencyManagement>
@@ -177,6 +178,12 @@
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-boot-starter</artifactId>
                 <version>${swagger.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>swagger-bootstrap-ui</artifactId>
+                <version>${swagger-bootstrap-ui.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

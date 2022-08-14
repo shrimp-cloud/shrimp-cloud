@@ -28,7 +28,7 @@ public class SwaggerConfig {
     @Bean
     public Docket createRestApi() {
         // DocumentationType.SWAGGER_2 固定的，代表swagger2
-        return new Docket(DocumentationType.SWAGGER_2)
+        return new Docket(DocumentationType.OAS_30)
             // 如果配置多个文档的时候，那么需要配置groupName来分组标识
             // .groupName("分布式任务系统")
             // 用于生成API信息
