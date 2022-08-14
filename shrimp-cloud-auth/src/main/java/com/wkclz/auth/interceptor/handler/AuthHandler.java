@@ -1,10 +1,12 @@
 package com.wkclz.auth.interceptor.handler;
 
-import com.wkclz.auth.config.LzConfig;
+import com.wkclz.auth.config.AuthConfig;
 import com.wkclz.auth.helper.AccessHelper;
 import com.wkclz.auth.helper.ApiDomainHelper;
 import com.wkclz.auth.helper.AuthHelper;
 import com.wkclz.common.entity.Result;
+import com.wkclz.spring.config.Sys;
+import com.wkclz.spring.enums.EnvType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,15 +21,20 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthHandler {
 
     @Autowired
-    private LzConfig lzConfig;
+    private AuthConfig authConfig;
     @Autowired
     private AuthHelper authHelper;
 
     public Result preHandle(HttpServletRequest req, HttpServletResponse rep) {
 
+        // 总开关【只允许测试环境关闭】
+        if (Sys.CURRENT_ENV != EnvType.PROD && !authConfig.getAuthFilter()) {
+            return null;
+        }
+
         // API 安全检测
 
-        if (lzConfig.getSecurityDomainApi()) {
+        if (authConfig.getSecurityDomainApi()) {
             Result apiDomainCheckResult = ApiDomainHelper.checkApiDomains(req, rep);
             if (apiDomainCheckResult != null) {
                 return apiDomainCheckResult;
