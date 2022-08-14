@@ -100,6 +100,10 @@ public class AuthHelper {
     }
 
 
+    public Long getUserId() {
+       return getUser().getUserId();
+    }
+
     public User getUser() {
         User user = getUserIfLogin();
         if (user == null){
