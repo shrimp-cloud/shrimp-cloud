@@ -85,7 +85,6 @@ public class Sys implements ApplicationRunner {
             }
 
             CURRENT_ENV = envType;
-            logger.info("===================>  System Env is changed to {}", CURRENT_ENV);
         }
 
         // set startupDate for the whole system
