@@ -19,11 +19,11 @@ public class AuthConfig {
      * updaate 和 insert 也可以自动赋值 createUser, lastUpadteUser
      * 后期扩展数据权限拦截
      */
-    @Value("${shtimp.cloud.auth-filter:true}")
+    @Value("${shtimp.cloud.auth.auth-filter:true}")
     private Boolean authFilter;
-    @Value("${shtimp.cloud.security.domain.api:true}")
+    @Value("${shtimp.cloud.auth.security.domain.api:true}")
     private Boolean securityDomainApi;
-    @Value("${shtimp.cloud.security.domain.tenant:true}")
+    @Value("${shtimp.cloud.auth.security.domain.tenant:true}")
     private Boolean securityDomainTenant;
 
 
