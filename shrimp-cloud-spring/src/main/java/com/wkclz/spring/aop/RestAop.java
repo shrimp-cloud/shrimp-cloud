@@ -94,21 +94,22 @@ public class RestAop {
         Throwable tb = null;
         try {
 
-            // 非微服务场景，使用 module 标记模块
-            Object module = req.getAttribute("module");
+            if (!uri.startsWith("/swagger-") && !uri.startsWith("/v2/api-docs")) {
+                // 非微服务场景，使用 module 标记模块
+                Object module = req.getAttribute("module");
 
-            if (!systemConfig.isCloud() && module == null){
-                throw BizException.error(ResultStatus.ERROR_ROUTER);
-            }
-            if (module != null){
-                String typeName = point.getSignature().getDeclaringTypeName();
-                if (!typeName.contains("." + module.toString() + ".")){
-                    if (!typeName.startsWith("com.wkclz.core") && !typeName.startsWith("com.wkclz.starter")){
-                        throw BizException.error(ResultStatus.ERROR_ROUTER);
+                if (!systemConfig.isCloud() && module == null) {
+                    throw BizException.error(ResultStatus.ERROR_ROUTER);
+                }
+                if (module != null) {
+                    String typeName = point.getSignature().getDeclaringTypeName();
+                    if (!typeName.contains("." + module + ".")) {
+                        if (!typeName.startsWith("com.wkclz.core") && !typeName.startsWith("com.wkclz.starter")) {
+                            throw BizException.error(ResultStatus.ERROR_ROUTER);
+                        }
                     }
                 }
             }
-
 
             obj = point.proceed();
         } catch (Throwable throwable) {
@@ -119,7 +120,7 @@ public class RestAop {
         responeTime = new Date();
         costTime = responeTime.getTime() - requestTime.getTime();
         if (obj instanceof Result && Sys.CURRENT_ENV != EnvType.PROD) {
-            Result result = (Result)obj;
+            Result result = (Result) obj;
             result.setRequestTime(requestTime);
             result.setResponeTime(responeTime);
             result.setCostTime(costTime);
@@ -130,14 +131,14 @@ public class RestAop {
         boolean isDebug = logger.isDebugEnabled() || ("1".equals(debug));
 
         String args = getArgs(point);
-        if (isDebug){
+        if (isDebug) {
             String value = null;
             try {
                 value = obj == null ? null : objectMapper.writeValueAsString(obj);
             } catch (JsonProcessingException e) {
                 logger.error(e.getMessage(), e);
             }
-            if (logger.isDebugEnabled()){
+            if (logger.isDebugEnabled()) {
                 logger.debug("{}|{}ms|{}|{}|{}", method, costTime, uri, args, value);
             } else {
                 logger.info("{}|{}ms|{}|{}|{}", method, costTime, uri, args, value);
@@ -146,7 +147,7 @@ public class RestAop {
             logger.info("{}|{}ms|{}|{}", method, costTime, uri, args);
         }
 
-        if (tb != null){
+        if (tb != null) {
             throw tb;
         }
 

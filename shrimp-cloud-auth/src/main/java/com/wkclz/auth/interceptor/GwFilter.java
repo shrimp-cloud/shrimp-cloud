@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-@WebFilter(filterName = "gwFilter"  ,urlPatterns = "/*")
+@WebFilter(filterName = "gwFilter", urlPatterns = "/*")
 public class GwFilter implements Filter {
 
     private static Logger logger = LoggerFactory.getLogger(GwFilter.class);
@@ -54,8 +54,8 @@ public class GwFilter implements Filter {
 
         MDC.clear();
 
-        HttpServletRequest httpRequest = (HttpServletRequest)request;
-        HttpServletResponse httpResponse = (HttpServletResponse)response;
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
         try {
             logTraceHelper.checkTraceInfo(httpRequest, httpResponse);
         } catch (Exception e) {
@@ -66,11 +66,10 @@ public class GwFilter implements Filter {
 
 
         // 不走微服务才需要此过程
-        if (systemConfig.isCloud()){
-            chain.doFilter(request,response);
+        if (systemConfig.isCloud()) {
+            chain.doFilter(request, response);
             return;
         }
-
 
 
         // 非微服务 【替代网关上的逻辑】
@@ -78,23 +77,23 @@ public class GwFilter implements Filter {
 
         // 记录日志
         AccessLog accessLog = AccessHelper.getAccessLog(httpRequest);
-        if (accessLog!=null) {
-            String key = Queue.LOGGER_QUEUE_PREFIX + ":" + systemConfig.getProfiles() + ":" +systemConfig.getApplicationGroup();
+        if (accessLog != null) {
+            String key = Queue.LOGGER_QUEUE_PREFIX + ":" + systemConfig.getProfiles() + ":" + systemConfig.getApplicationGroup();
             String jsonString = JSON.toJSONString(accessLog);
             //消息入队列
-            logger.info("access: {}, UA: {}", accessLog.getRequestUri(), accessLog.getUserAgent());
             redisTemplate.opsForList().leftPush(key, jsonString);
         }
 
-
         Result result = authHandler.preHandle(httpRequest, httpResponse);
-        logger.info("request {} status: {}", httpRequest.getRequestURI(), result == null);
+        String uri = httpRequest.getRequestURI();
+        String ua = httpRequest.getHeader("User-Agent");
+        logger.info("request {}, auth: {}, UA: {}", uri, (result == null), ua);
 
-        if (result != null){
+        if (result != null) {
             try {
                 InputStream in = request.getInputStream();
                 String body = StreamUtils.copyToString(in, StandardCharsets.UTF_8);
-                if (StringUtils.isNotBlank(body)){
+                if (StringUtils.isNotBlank(body)) {
                     logger.warn("Request interception, request body: {}", body);
                 }
             } catch (IOException e) {
@@ -104,7 +103,11 @@ public class GwFilter implements Filter {
             return;
         }
 
-        String uri = httpRequest.getRequestURI();
+        if (uri.startsWith("/swagger-") || uri.startsWith("/v2/api-docs")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         String[] uriSplit = uri.split("/");
         if (uriSplit.length < 3) {
             ResponeHelper.responseError(httpResponse, Result.error(ResultStatus.ERROR_ROUTER));
@@ -115,7 +118,7 @@ public class GwFilter implements Filter {
 
         // 标识来源模块
         httpRequest.setAttribute("module", module);
-        httpRequest.getRequestDispatcher(uri).forward(request,response);
+        httpRequest.getRequestDispatcher(uri).forward(request, response);
 
         // 永远不应该走到这里
         // chain.doFilter(request,response);
