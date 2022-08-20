@@ -98,9 +98,6 @@ public class MybatisQueryInterceptor implements Interceptor {
         if (StringUtils.isNotBlank(entity.getKeyword())) {
             entity.setKeyword("%" + entity.getKeyword() + "%");
         }
-        // 时间范围查询处理
-        DateUtil.formatDateRange(entity);
-
         return true;
     }
 

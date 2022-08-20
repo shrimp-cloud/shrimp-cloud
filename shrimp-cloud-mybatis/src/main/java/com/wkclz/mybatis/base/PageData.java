@@ -11,36 +11,38 @@ import java.util.List;
 public class PageData<T> {
 
     private List<T> rows;
-    private Integer totalCount;
-    private Integer totalPage;
-    private Integer pageNo = 1;
-    private Integer pageSize = 10;
-    private Integer offset = 0;
+
+
+    private Long current = 1L;
+    private Long size = 10L;
+    private Long total;
+    private Long page;
+    private Long offset = 0L;
 
     public PageData() {
         init();
     }
 
     public <M extends BaseEntity> PageData(M entity) {
-        this.pageNo = entity.getPageNo();
-        this.pageSize = entity.getPageSize();
-        if (this.pageNo != null && this.pageSize != null){
-            this.offset = (this.pageNo -1) * this.pageSize;
+        this.current = entity.getCurrent();
+        this.size = entity.getSize();
+        if (this.current != null && this.size != null){
+            this.offset = (this.current -1) * this.size;
         }
     }
 
-    public PageData(Integer pageNo, Integer pageSize) {
-        this.pageNo = pageNo;
-        this.pageSize = pageSize;
-        if (this.pageNo != null && this.pageSize != null){
-            this.offset = (this.pageNo -1) * this.pageSize;
+    public PageData(Long current, Long size) {
+        this.current = current;
+        this.size = size;
+        if (this.current != null && this.size != null){
+            this.offset = (this.current -1) * this.size;
         }
     }
 
-    public PageData(Integer pageNo, Integer pageSize, Integer totalCount, List<T> list) {
-        this.pageNo = pageNo;
-        this.pageSize = pageSize;
-        this.totalCount = totalCount;
+    public PageData(Long current, Long size, Long total, List<T> list) {
+        this.current = current;
+        this.size = size;
+        this.total = total;
         init();
         this.rows = list;
     }
@@ -50,10 +52,10 @@ public class PageData<T> {
      * 使用查询数据源构造新分页参数
      */
     public PageData(PageData oldPageData, List<T> pageList) {
-        this.pageNo = oldPageData.getPageNo();
-        this.pageSize = oldPageData.getPageSize();
-        this.totalCount = oldPageData.getTotalCount();
-        this.totalPage = oldPageData.getTotalPage();
+        this.current = oldPageData.getCurrent();
+        this.size = oldPageData.getSize();
+        this.total = oldPageData.getTotal();
+        this.page = oldPageData.getPage();
         this.offset = oldPageData.getOffset();
         this.rows = pageList;
     }
@@ -66,68 +68,68 @@ public class PageData<T> {
         this.rows = data;
     }
 
-    public Integer getTotalCount() {
-        return totalCount;
+    public Long getTotal() {
+        return total;
     }
 
-    public void setTotalCount(Integer totalCount) {
-        this.totalCount = totalCount;
+    public void setTotal(Long total) {
+        this.total = total;
         init(); // 只有设置了总数据数的时候才做分页处理
     }
 
-    public Integer getTotalPage() {
-        return totalPage;
+    public Long getPage() {
+        return page;
     }
 
-    public void setTotalPage(Integer totalPage) {
-        this.totalPage = totalPage;
+    public void setPage(Long page) {
+        this.page = page;
     }
 
-    public Integer getPageNo() {
-        return pageNo;
+    public Long getCurrent() {
+        return current;
     }
 
-    public void setPageNo(Integer pageNo) {
-        this.pageNo = pageNo;
+    public void setCurrent(Long current) {
+        this.current = current;
     }
 
-    public Integer getPageSize() {
-        return pageSize;
+    public Long getSize() {
+        return size;
     }
 
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
+    public void setSize(Long size) {
+        this.size = size;
     }
 
-    public Integer getOffset() {
+    public Long getOffset() {
         return offset;
     }
 
-    public void setOffset(Integer offset) {
+    public void setOffset(Long offset) {
         this.offset = offset;
     }
 
     private void init() {
-        if (this.pageNo == null || this.pageNo < 1) {
-            this.pageNo = 1;
+        if (this.current == null || this.current < 1) {
+            this.current = 1L;
         }
-        if (this.pageSize == null || this.pageSize < 1) {
-            this.pageSize = 10;
+        if (this.size == null || this.size < 1) {
+            this.size = 10L;
         }
-        if (this.totalCount == null) {
-            this.totalCount = 0;
+        if (this.total == null) {
+            this.total = 0L;
         }
 
-        this.totalPage = (int) Math.ceil((double) this.totalCount / (double) this.pageSize);
-        if (this.totalPage == 0) {
-            this.totalPage = 1;
+        this.page = this.total / this.size;
+        if (this.page == 0) {
+            this.page = 1L;
         }
-        this.pageNo = this.pageNo > this.totalPage ? this.totalPage : this.pageNo;
-        this.offset = (this.pageNo -1 ) * this.pageSize;
+        this.current = this.current > this.page ? this.page : this.current;
+        this.offset = (this.current -1 ) * this.size;
         /*
-        this.url = "?pageNo="+pageNo+"&pageSize="+pageSize;
-        this.prevUrl = "?pageNo="+(this.pageNo > 1 ? this.pageNo - 1 : 1)+"&pageSize="+pageSize;
-        this.nextUrl = "?pageNo="+(this.pageNo.equals(this.totalPage) ? this.pageNo : this.pageNo + 1)+"&pageSize="+this.pageSize;
+        this.url = "?current="+current+"&size="+size;
+        this.prevUrl = "?current="+(this.current > 1 ? this.current - 1 : 1)+"&size="+size;
+        this.nextUrl = "?current="+(this.current.equals(this.page) ? this.current : this.current + 1)+"&size="+this.size;
         */
     }
 }

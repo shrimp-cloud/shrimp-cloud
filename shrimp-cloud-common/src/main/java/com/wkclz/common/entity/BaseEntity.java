@@ -1,7 +1,6 @@
 package com.wkclz.common.entity;
 
 import com.wkclz.common.annotation.Desc;
-import com.wkclz.common.emuns.DateRangeType;
 
 import java.util.Date;
 import java.util.List;
@@ -28,14 +27,17 @@ public class BaseEntity {
     @Desc("租户ID")
     private Long tenantId;
 
+    protected long total;
+
     /**
      * 查询辅助
      */
     @Desc("分页页码")
-    private Integer pageNo;
+    private Long current;
     @Desc("分页大小")
-    private Integer pageSize;
-    private Integer offset;
+    private Long size;
+    private Long offset;
+
     @Desc("查询排序规则")
     private String orderBy;
     @Desc("统计数")
@@ -51,8 +53,6 @@ public class BaseEntity {
     private Date timeFrom;
     @Desc("创建时间到")
     private Date timeTo;
-    @Desc("创建时间范围:HOUR(时),YESTERDAY(天),WEEK(周),MONTH(月),QUATER(季),YEAR(年)")
-    private DateRangeType dateRangeType;
 
     /**
      * 数据库规范字段
@@ -81,15 +81,14 @@ public class BaseEntity {
     private Integer debug;
 
     public void init() {
-        if (this.pageNo == null || this.pageNo < 1) {
-            this.pageNo = 1;
+        if (this.current == null || this.current < 1) {
+            this.current = 1L;
         }
-        if (this.pageSize == null || this.pageSize < 1) {
-            this.pageSize = 10;
+        if (this.size == null || this.size < 1) {
+            this.size = 10L;
         }
-        this.offset = (this.pageNo -1 ) * this.pageSize;
+        this.offset = (this.current -1 ) * this.size;
     }
-
 
     public Long getId() {
         return id;
@@ -115,27 +114,35 @@ public class BaseEntity {
         this.tenantId = tenantId;
     }
 
-    public Integer getPageNo() {
-        return pageNo;
+    public long getTotal() {
+        return total;
     }
 
-    public void setPageNo(Integer pageNo) {
-        this.pageNo = pageNo;
+    public void setTotal(long total) {
+        this.total = total;
     }
 
-    public Integer getPageSize() {
-        return pageSize;
+    public Long getCurrent() {
+        return current;
     }
 
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
+    public void setCurrent(Long current) {
+        this.current = current;
     }
 
-    public Integer getOffset() {
+    public Long getSize() {
+        return size;
+    }
+
+    public void setSize(Long size) {
+        this.size = size;
+    }
+
+    public Long getOffset() {
         return offset;
     }
 
-    public void setOffset(Integer offset) {
+    public void setOffset(Long offset) {
         this.offset = offset;
     }
 
@@ -185,14 +192,6 @@ public class BaseEntity {
 
     public void setTimeTo(Date timeTo) {
         this.timeTo = timeTo;
-    }
-
-    public DateRangeType getDateRangeType() {
-        return dateRangeType;
-    }
-
-    public void setDateRangeType(DateRangeType dateRangeType) {
-        this.dateRangeType = dateRangeType;
     }
 
     public Integer getSort() {

@@ -4,7 +4,6 @@ package com.wkclz.mybatis.aop;
 import com.wkclz.common.entity.BaseEntity;
 import com.wkclz.common.exception.BizException;
 import com.wkclz.common.utils.BeanUtil;
-import com.wkclz.common.utils.DateUtil;
 import com.wkclz.common.utils.StringUtil;
 import com.wkclz.mybatis.base.BaseMapper;
 import com.wkclz.mybatis.util.JdbcUtil;
@@ -113,8 +112,6 @@ public class DaoAop {
         if (StringUtils.isNotBlank(entity.getKeyword())) {
             entity.setKeyword("%" + entity.getKeyword() + "%");
         }
-        // 时间范围查询处理
-        DateUtil.formatDateRange(entity);
     }
 
 

@@ -16,7 +16,7 @@ import java.util.List;
 public interface BaseMapper<Entity> {
 
     @Desc("统计")
-    Integer count(Entity entity);
+    Long count(Entity entity);
 
     @Desc("用ID查找")
     Entity getById(@Param("id") Long id);

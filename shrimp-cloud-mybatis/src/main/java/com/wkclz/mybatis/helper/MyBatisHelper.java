@@ -80,18 +80,18 @@ public class MyBatisHelper {
         SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
         String statement = reloadSql(sql);
 
-        Object pageNoObj = param.get("pageNo");
-        Object pageSizeObj = param.get("pageSize");
-        Integer pageNo = (pageNoObj == null)?0:Integer.parseInt(pageNoObj.toString());
-        Integer pageSize = (pageSizeObj == null)?10:Integer.parseInt(pageSizeObj.toString());
+        Object currentObj = param.get("current");
+        Object sizeObj = param.get("size");
+        Long current = (currentObj == null)?0L:Long.parseLong(currentObj.toString());
+        Long size = (sizeObj == null)?10L:Long.parseLong(sizeObj.toString());
 
-        PageHelper.startPage(pageNo, pageSize);
+        PageHelper.startPage(current.intValue(), size.intValue());
         List<Map> list = sqlSession.selectList(statement, param);
 
         Page listPage = (Page) list;
         long total = listPage.getTotal();
-        PageData<Map> pageData = new PageData<>(pageNo, pageSize);
-        pageData.setTotalCount(Long.valueOf(total).intValue());
+        PageData<Map> pageData = new PageData<>(current, size);
+        pageData.setTotal(total);
         list = (List<Map>)list.stream().map(MapUtil::toCamelCaseMap).collect(Collectors.toList());
         pageData.setRows(list);
         return pageData;

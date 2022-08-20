@@ -24,7 +24,7 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
     protected Mapper mapper;
 
     @Desc("统计")
-    public Integer count(@NotNull Entity entity){
+    public Long count(@NotNull Entity entity){
         return mapper.count(entity);
     }
 
@@ -46,7 +46,7 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
     @Desc("查询列分页，不包含Blobs")
     public PageData<Entity> page(@NotNull Entity entity){
         entity.init();
-        Integer count = mapper.count(entity);
+        Long count = mapper.count(entity);
         List<Entity> list = null;
         if (count > 0){
             list = mapper.list(entity);
@@ -54,7 +54,7 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
         if (list == null){
             list = new ArrayList<>();
         }
-        PageData<Entity> pageData = new PageData<>(entity.getPageNo(), entity.getPageSize(), count, list);
+        PageData<Entity> pageData = new PageData<>(entity.getCurrent(), entity.getSize(), count, list);
         return pageData;
     }
 

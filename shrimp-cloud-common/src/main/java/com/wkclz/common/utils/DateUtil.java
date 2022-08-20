@@ -1,8 +1,6 @@
 package com.wkclz.common.utils;
 
 
-import com.wkclz.common.emuns.DateRangeType;
-import com.wkclz.common.entity.BaseEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,42 +51,6 @@ public class DateUtil {
             }
         }
         throw new RuntimeException("Error DateTime string");
-    }
-
-    /**
-     * 时间范围处理。枚举转时间范围
-     *
-     * @param entity
-     */
-    public static void formatDateRange(BaseEntity entity) {
-        DateRangeType type = entity.getDateRangeType();
-        if (type == null) {
-            return;
-        }
-        Date timeTo = new Date();
-        Calendar c = Calendar.getInstance();
-        c.setTime(getDayBegin());
-        if (type == DateRangeType.HOUR) {
-            c.add(Calendar.HOUR_OF_DAY, -1);
-        }
-        if (type == DateRangeType.YESTERDAY) {
-            c.add(Calendar.DATE, -1);
-        }
-        if (type == DateRangeType.WEEK) {
-            c.add(Calendar.DATE, -7);
-        }
-        if (type == DateRangeType.MONTH) {
-            c.add(Calendar.MONTH, -1);
-        }
-        if (type == DateRangeType.QUATER) {
-            c.add(Calendar.MONTH, -3);
-        }
-        if (type == DateRangeType.YEAR) {
-            c.add(Calendar.YEAR, -1);
-        }
-        Date timeFrom = c.getTime();
-        entity.setTimeFrom(timeFrom);
-        entity.setTimeTo(timeTo);
     }
 
 
