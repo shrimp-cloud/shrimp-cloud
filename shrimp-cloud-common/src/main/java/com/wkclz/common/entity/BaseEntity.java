@@ -41,7 +41,7 @@ public class BaseEntity {
     @Desc("查询排序规则")
     private String orderBy;
     @Desc("统计数")
-    private Integer count;
+    private Long count;
 
     /**
      * 查询辅助
@@ -154,11 +154,11 @@ public class BaseEntity {
         this.orderBy = orderBy;
     }
 
-    public Integer getCount() {
+    public Long getCount() {
         return count;
     }
 
-    public void setCount(Integer count) {
+    public void setCount(Long count) {
         this.count = count;
     }
 
