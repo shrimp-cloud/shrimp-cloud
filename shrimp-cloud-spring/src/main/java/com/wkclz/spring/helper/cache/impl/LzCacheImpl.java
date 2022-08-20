@@ -181,12 +181,12 @@
 //    }
 //
 //    private static Map requestMap(String url){
-//        String respone = request(url);
-//        return JSON.parseObject(respone, Map.class);
+//        String response = request(url);
+//        return JSON.parseObject(response, Map.class);
 //    }
 //    private static <T> List<T> requestList(String url, Class<T> clazz){
-//        String respone = request(url);
-//        List<T> arrray = JSON.parseArray(respone, clazz);
+//        String response = request(url);
+//        List<T> arrray = JSON.parseArray(response, clazz);
 //        return arrray;
 //    }
 //

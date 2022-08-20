@@ -10,7 +10,7 @@ import com.wkclz.common.emuns.ResultStatus;
 import com.wkclz.common.entity.Result;
 import com.wkclz.spring.config.SystemConfig;
 import com.wkclz.spring.constant.Queue;
-import com.wkclz.spring.helper.ResponeHelper;
+import com.wkclz.spring.helper.ResponseHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +60,7 @@ public class GwFilter implements Filter {
             logTraceHelper.checkTraceInfo(httpRequest, httpResponse);
         } catch (Exception e) {
             Result error = Result.error(e.getMessage());
-            ResponeHelper.responseError(httpResponse, error);
+            ResponseHelper.responseError(httpResponse, error);
             return;
         }
 
@@ -99,7 +99,7 @@ public class GwFilter implements Filter {
             } catch (IOException e) {
                 logger.error(e.getMessage(), e);
             }
-            ResponeHelper.responseError(httpResponse, result);
+            ResponseHelper.responseError(httpResponse, result);
             return;
         }
 
@@ -110,7 +110,7 @@ public class GwFilter implements Filter {
 
         String[] uriSplit = uri.split("/");
         if (uriSplit.length < 3) {
-            ResponeHelper.responseError(httpResponse, Result.error(ResultStatus.ERROR_ROUTER));
+            ResponseHelper.responseError(httpResponse, Result.error(ResultStatus.ERROR_ROUTER));
             return;
         }
         String module = uriSplit[1];

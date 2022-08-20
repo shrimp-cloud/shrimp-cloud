@@ -3,7 +3,7 @@ package com.wkclz.auth.interceptor.handler;
 import com.wkclz.auth.helper.LogTraceHelper;
 import com.wkclz.common.entity.Result;
 import com.wkclz.common.exception.BizException;
-import com.wkclz.spring.helper.ResponeHelper;
+import com.wkclz.spring.helper.ResponseHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -32,7 +32,7 @@ public class LogTraceHandler implements HandlerInterceptor {
             } else {
                 error = Result.error(e.getMessage());
             }
-            ResponeHelper.responseError(rep, error);
+            ResponseHelper.responseError(rep, error);
             return false;
         }
         return true;

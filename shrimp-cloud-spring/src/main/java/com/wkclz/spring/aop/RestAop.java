@@ -86,7 +86,7 @@ public class RestAop {
         String method = req.getMethod();
         String uri = req.getRequestURI();
         Date requestTime = new Date();
-        Date responeTime;
+        Date responseTime;
         Long costTime;
 
         // 请求具体方法
@@ -117,12 +117,12 @@ public class RestAop {
         }
 
         // 返回参数处理
-        responeTime = new Date();
-        costTime = responeTime.getTime() - requestTime.getTime();
+        responseTime = new Date();
+        costTime = responseTime.getTime() - requestTime.getTime();
         if (obj instanceof Result && Sys.CURRENT_ENV != EnvType.PROD) {
             Result result = (Result) obj;
             result.setRequestTime(requestTime);
-            result.setResponeTime(responeTime);
+            result.setResponseTime(responseTime);
             result.setCostTime(costTime);
         }
 

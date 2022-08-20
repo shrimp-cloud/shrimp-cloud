@@ -24,7 +24,7 @@ public class Result<T> {
 
     private Date requestTime;
 
-    private Date responeTime;
+    private Date responseTime;
 
     private Long costTime;
 
@@ -91,12 +91,12 @@ public class Result<T> {
         this.requestTime = requestTime;
     }
 
-    public Date getResponeTime() {
-        return responeTime;
+    public Date getResponseTime() {
+        return responseTime;
     }
 
-    public void setResponeTime(Date responeTime) {
-        this.responeTime = responeTime;
+    public void setResponseTime(Date responseTime) {
+        this.responseTime = responseTime;
     }
 
     public Long getCostTime() {

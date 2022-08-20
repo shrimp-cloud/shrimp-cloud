@@ -9,13 +9,13 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class ResponeHelper {
-    private final static Logger logger = LoggerFactory.getLogger(ResponeHelper.class);
+public class ResponseHelper {
+    private final static Logger logger = LoggerFactory.getLogger(ResponseHelper.class);
 
     public static boolean responseError(HttpServletResponse rep, Result result) {
         try {
             result.setRequestTime(null);
-            result.setResponeTime(null);
+            result.setResponseTime(null);
             result.setCostTime(null);
             String string = JSON.toJSONString(result);
             rep.setHeader("Content-Type", "application/json;charset=UTF-8");
