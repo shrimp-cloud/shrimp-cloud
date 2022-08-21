@@ -95,6 +95,9 @@ public class Apis {
         if (StringUtils.isBlank(router)) {
             throw BizException.error("router can not be null");
         }
+        if (!router.startsWith("/")) {
+            router = "/" + router;
+        }
         List<RestInfo> mappings = RestUtil.getMapping("com.wkclz." + router.replace("/",""));
         return mappings;
     }
