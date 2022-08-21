@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class Apis {
@@ -99,8 +100,8 @@ public class Apis {
             router = "/" + router;
         }
         List<RestInfo> mappings = RestUtil.getMapping("com.wkclz." + router.replace("/",""));
+        mappings = mappings.stream().filter(m->!m.getUri().contains("{")).collect(Collectors.toList());
         return mappings;
     }
-
 
 }
