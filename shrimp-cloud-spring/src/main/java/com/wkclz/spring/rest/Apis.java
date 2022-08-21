@@ -24,17 +24,9 @@ public class Apis {
 
     @GetMapping(Routes.APIS_CODE_V1)
     public Result apisCodeV1(HttpServletRequest request, String router){
-        Object module = request.getAttribute("module");
-        if (module != null){
-            router = "/" + module.toString();
-        }
-        if (StringUtils.isBlank(router)) {
-            throw BizException.error("router can not be null");
-        }
+        List<RestInfo> mappings = getMappings(request, router);
 
         String lineSeparator = System.getProperty("line.separator");
-        List<RestInfo> mappings = RestUtil.getMapping("com.wkclz." + router.replace("/",""));
-
         StringBuilder sb = new StringBuilder();
         sb.append("import request from '@/utils/request';");
         sb.append(lineSeparator).append(lineSeparator);
@@ -53,16 +45,9 @@ public class Apis {
 
     @GetMapping(Routes.APIS_CODE_V2)
     public Result apisCodeV2(HttpServletRequest request, String router){
-        Object module = request.getAttribute("module");
-        if (module != null){
-            router = "/" + module.toString();
-        }
-        if (StringUtils.isBlank(router)) {
-            throw BizException.error("router can not be null");
-        }
-        String lineSeparator = System.getProperty("line.separator");
-        List<RestInfo> mappings = RestUtil.getMapping("com.wkclz." + router.replace("/",""));
+        List<RestInfo> mappings = getMappings(request, router);
 
+        String lineSeparator = System.getProperty("line.separator");
         StringBuilder sb = new StringBuilder();
         sb.append("import request from '@/utils/request';");
         sb.append(lineSeparator).append(lineSeparator);
@@ -81,17 +66,9 @@ public class Apis {
 
     @GetMapping(Routes.APIS_CODE_V3)
     public Result apisCodeV3(HttpServletRequest request, String router){
-        Object module = request.getAttribute("module");
-        if (module != null){
-            router = "/" + module.toString();
-        }
-        if (StringUtils.isBlank(router)) {
-            throw BizException.error("router can not be null");
-        }
+        List<RestInfo> mappings = getMappings(request, router);
 
         String lineSeparator = System.getProperty("line.separator");
-        List<RestInfo> mappings = RestUtil.getMapping("com.wkclz." + router.replace("/",""));
-
         StringBuilder sb = new StringBuilder();
         sb.append("import request from '@/utils/request';");
         sb.append(lineSeparator).append(lineSeparator);
@@ -106,6 +83,20 @@ public class Apis {
             sb.append(fun).append(lineSeparator);
         }
         return Result.data(sb.toString());
+    }
+
+    private static List<RestInfo> getMappings(HttpServletRequest request, String router) {
+        if (StringUtils.isBlank(router)) {
+            Object module = request.getAttribute("module");
+            if (module != null){
+                router = "/" + module;
+            }
+        }
+        if (StringUtils.isBlank(router)) {
+            throw BizException.error("router can not be null");
+        }
+        List<RestInfo> mappings = RestUtil.getMapping("com.wkclz." + router.replace("/",""));
+        return mappings;
     }
 
 
