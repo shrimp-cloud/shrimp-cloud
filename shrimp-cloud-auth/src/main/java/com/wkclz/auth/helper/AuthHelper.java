@@ -190,7 +190,8 @@ public class AuthHelper {
         MDC.remove("user");
         Token token = Token.decodeToken(tokenStr);
         stringRedisTemplate.expireAt(token.contactRedisKey(), new Date());
-        expireCookie(req, rep, "token");
+        // 有 cookie 场景再添加此逻辑
+        // expireCookie(req, rep, "token");
     }
 
 
