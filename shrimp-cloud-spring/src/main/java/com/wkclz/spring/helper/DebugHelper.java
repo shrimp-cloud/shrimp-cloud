@@ -3,7 +3,7 @@ package com.wkclz.spring.helper;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.wkclz.common.exception.BizException;
-import com.wkclz.common.utils.UniqueCodeUtil;
+import com.wkclz.common.utils.SecretUtil;
 import com.wkclz.spring.constant.LogTraceConstant;
 import com.wkclz.spring.entity.DebugInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import java.util.Date;
-import java.util.UUID;
 
 public class DebugHelper {
 
@@ -58,7 +57,7 @@ public class DebugHelper {
 
         String debugId = MDC.get(LogTraceConstant.TRACE_ID);
         if (debugId == null){
-            debugId = UniqueCodeUtil.getJavaUuid();
+            debugId = SecretUtil.getJavaUuid();
         }
 
         if (debugInfo == null){

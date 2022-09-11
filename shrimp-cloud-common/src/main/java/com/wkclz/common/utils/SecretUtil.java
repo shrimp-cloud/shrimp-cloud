@@ -102,15 +102,6 @@ public class SecretUtil {
      */
 
 
-    /**
-     * getKey for AES
-     *
-     * @return
-     */
-    public static String getKey() {
-        String uuid = UUID.randomUUID().toString();
-        return md5(uuid);
-    }
 
     /**
      * String 2 MD5
@@ -205,35 +196,23 @@ public class SecretUtil {
         return new String(result);
     }
 
-
-    /**
-     * Test
-     * @param args
-     * @throws Exception
-     */
-    /*
-    public static void main(String[] args) throws Exception {
-        String xx = "admin";
-        System.out.println("xx：" + xx);
-        String key = getKey();
-        System.out.println("key：" + key);
-        String aesEncrypt = aesEncrypt(xx, key);
-        System.out.println("aesEncrypt：" + aesEncrypt);
-        String aesDecrypt = aesDecrypt(aesEncrypt, key);
-        System.out.println("aesDecrypt：" + aesDecrypt);
+    public static String getJavaUuid() {
+        UUID uuid = UUID.randomUUID();
+        String s = uuid.toString();
+        return s.replaceAll("-", "").toLowerCase();
     }
-    */
-
 
     /**
-     * 密码简单对称加密示例
+     * getKey for AES
      *
-     * @param args
+     * @return
      */
-    public static void main(String[] args) {
-        String encryptPassword = SecretUtil.getEncryptPassword("your password");
-        System.out.println(encryptPassword);
+    public static String getKey() {
+        String javaUuid = getJavaUuid();
+        long l = System.currentTimeMillis();
+        return md5(javaUuid + l);
     }
+
 
 
     /**
@@ -255,5 +234,36 @@ public class SecretUtil {
         return new String(buf);
     }
 
+
+    /**
+     * Test
+     * @param args
+     * @throws Exception
+     */
+    /*
+    public static void main(String[] args) throws Exception {
+        String xx = "admin";
+        System.out.println("xx：" + xx);
+        String key = getKey();
+        System.out.println("key：" + key);
+        String aesEncrypt = aesEncrypt(xx, key);
+        System.out.println("aesEncrypt：" + aesEncrypt);
+        String aesDecrypt = aesDecrypt(aesEncrypt, key);
+        System.out.println("aesDecrypt：" + aesDecrypt);
+    }
+    */
+
+
+
+
+    /**
+     * 密码简单对称加密示例
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+        String encryptPassword = SecretUtil.getEncryptPassword("your password");
+        System.out.println(encryptPassword);
+    }
 
 }

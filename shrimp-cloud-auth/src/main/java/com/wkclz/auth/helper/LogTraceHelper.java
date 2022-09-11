@@ -2,7 +2,7 @@ package com.wkclz.auth.helper;
 
 import com.wkclz.auth.entity.TraceInfo;
 import com.wkclz.auth.entity.User;
-import com.wkclz.common.utils.UniqueCodeUtil;
+import com.wkclz.common.utils.SecretUtil;
 import com.wkclz.spring.config.Sys;
 import com.wkclz.spring.constant.LogTraceConstant;
 import com.wkclz.spring.enums.EnvType;
@@ -32,7 +32,7 @@ public class LogTraceHelper {
         if (StringUtils.isBlank(traceId)){
             traceId = req.getHeader(LogTraceConstant.TRACE_ID);
             if (StringUtils.isBlank(traceId)) {
-                traceId = UniqueCodeUtil.getJavaUuid();
+                traceId = SecretUtil.getJavaUuid();
             }
         } else {
             // 说明已经处理过了，不需要再生成相关信息

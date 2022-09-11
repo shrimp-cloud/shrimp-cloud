@@ -35,7 +35,7 @@ public class ClassUtil {
      * @param methodName
      * @return
      */
-    public static Method getModelMethod(Class clazz, String methodName) {
+    public static Method getModelMethod(Class<?> clazz, String methodName) {
         if (StringUtils.isBlank(methodName)) {
             throw new RuntimeException("method name can not be null");
         }
@@ -49,7 +49,7 @@ public class ClassUtil {
                 return method;
             }
         }
-        Class superClazz = clazz.getSuperclass();
+        Class<?> superClazz = clazz.getSuperclass();
         return getModelMethod(superClazz, methodName);
     }
 
@@ -67,8 +67,7 @@ public class ClassUtil {
         // 是否循环迭代
         boolean recursive = true;
         // 获取包的名字 并进行替换
-        String packageName = pack;
-        String packageDirName = packageName.replace('.', '/');
+        String packageDirName = pack.replace('.', '/');
         // 定义一个枚举的集合 并进行循环来处理这个目录下的things
         Enumeration<URL> dirs;
         try {
@@ -81,12 +80,16 @@ public class ClassUtil {
                 String protocol = url.getProtocol();
                 // 如果是以文件的形式保存在服务器上
                 if ("file".equals(protocol)) {
+                    String packageName = pack;
                     // System.err.println("file类型的扫描");
                     // 获取包的物理路径
                     String filePath = URLDecoder.decode(url.getFile(), StandardCharsets.UTF_8);
                     // 以文件的方式扫描整个包下的文件 并添加到集合中
                     findAndAddClassesInPackageByFile(packageName, filePath, recursive, classes);
-                } else if ("jar".equals(protocol)) {
+                }
+
+                if ("jar".equals(protocol)) {
+                    String packageName = pack;
                     // 如果是jar包文件
                     // 定义一个JarFile
                     JarFile jar;
@@ -122,7 +125,7 @@ public class ClassUtil {
                                         try {
                                             // 添加到classes
                                             String clazzName = packageName + '.' + className;
-                                            Class clazz = Class.forName(clazzName);
+                                            Class<?> clazz = Class.forName(clazzName);
                                             classes.add(clazz);
                                         } catch (ClassNotFoundException e) {
                                             logger.error(e.getMessage(), e);
@@ -136,6 +139,8 @@ public class ClassUtil {
                         logger.error(e.getMessage(), e);
                     }
                 }
+
+                // 没有其他可能了
             }
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
