@@ -69,6 +69,9 @@ public class AuthHelper {
     }
     private String getClaimValue(String claimKey) {
         String token = geToken();
+        if (token == null) {
+            throw BizException.error(ResultStatus.TOKEN_UNLL);
+        }
         Claims claims = getClaims(token);
         Object o = claims.get(claimKey);
         return o == null ? null:o.toString();
