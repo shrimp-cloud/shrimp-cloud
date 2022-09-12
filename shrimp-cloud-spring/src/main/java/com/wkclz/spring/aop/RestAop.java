@@ -4,9 +4,7 @@ package com.wkclz.spring.aop;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wkclz.common.emuns.ResultStatus;
 import com.wkclz.common.entity.Result;
-import com.wkclz.common.exception.BizException;
 import com.wkclz.spring.config.Sys;
 import com.wkclz.spring.config.SystemConfig;
 import com.wkclz.spring.enums.EnvType;
@@ -92,25 +90,27 @@ public class RestAop {
         // 请求具体方法
         Object obj = null;
         Throwable tb = null;
-        try {
 
-            if (!uri.startsWith("/swagger-") && !uri.startsWith("/v3/api-docs") && !uri.startsWith("/doc.html") && !uri.startsWith("/webjars/")) {
-                // 非微服务场景，使用 module 标记模块
-                Object module = req.getAttribute("module");
+        /*
+        if (!uri.startsWith("/swagger-") && !uri.startsWith("/v3/api-docs") && !uri.startsWith("/doc.html") && !uri.startsWith("/webjars/")) {
+            // 非微服务场景，使用 module 标记模块
+            Object module = req.getAttribute("module");
 
-                if (!systemConfig.isCloud() && module == null) {
-                    throw BizException.error(ResultStatus.ERROR_ROUTER);
-                }
-                if (module != null) {
-                    String typeName = point.getSignature().getDeclaringTypeName();
-                    if (!typeName.contains("." + module + ".")) {
-                        if (!typeName.startsWith("com.wkclz.core") && !typeName.startsWith("com.wkclz.starter")) {
-                            throw BizException.error(ResultStatus.ERROR_ROUTER);
-                        }
+            if (!systemConfig.isCloud() && module == null) {
+                throw BizException.error(ResultStatus.ERROR_ROUTER);
+            }
+            if (module != null) {
+                String typeName = point.getSignature().getDeclaringTypeName();
+                if (!typeName.contains("." + module + ".")) {
+                    if (!typeName.startsWith("com.wkclz.core") && !typeName.startsWith("com.wkclz.starter")) {
+                        throw BizException.error(ResultStatus.ERROR_ROUTER);
                     }
                 }
             }
+        }
+        */
 
+        try {
             obj = point.proceed();
         } catch (Throwable throwable) {
             tb = throwable;
