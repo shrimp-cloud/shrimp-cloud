@@ -22,16 +22,6 @@
         <mybatis-spring-boot-starter.version>2.2.2</mybatis-spring-boot-starter.version>
         <pagehelper-spring-boot-starter.version>1.4.3</pagehelper-spring-boot-starter.version>
 
-        <!-- shrimp 相关依赖 -->
-        <shrimp-common.version>4.0.0-SNAPSHOT</shrimp-common.version>
-        <shrimp-redis.version>4.0.0-SNAPSHOT</shrimp-redis.version>
-        <shrimp-spring.version>4.0.0-SNAPSHOT</shrimp-spring.version>
-        <shrimp-auth.version>4.0.0-SNAPSHOT</shrimp-auth.version>
-        <shrimp-mybatis.version>4.0.0-SNAPSHOT</shrimp-mybatis.version>
-        <shrimp-mqtt.version>4.0.0-SNAPSHOT</shrimp-mqtt.version>
-        <shrimp-cloud-gen-plugin.version>4.0.0-SNAPSHOT</shrimp-cloud-gen-plugin.version>
-        <shrimp-cloud-swagger-starter.version>4.0.0-SNAPSHOT</shrimp-cloud-swagger-starter.version>
-
         <!-- 三方静态依赖 -->
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
@@ -47,6 +37,9 @@
         <dysmsapi20170525.version>2.0.16</dysmsapi20170525.version>
         <swagger.version>3.0.0</swagger.version>
         <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
+
+        <jjwt.version>0.9.1</jjwt.version>
+        <kaptcha.version>2.3.2</kaptcha.version>
     </properties>
 
     <dependencyManagement>
@@ -74,40 +67,6 @@
                 <artifactId>pagehelper-spring-boot-starter</artifactId>
                 <version>${pagehelper-spring-boot-starter.version}</version>
             </dependency>
-
-
-            <!-- wkclz -->
-            <dependency>
-                <groupId>com.wkclz.common</groupId>
-                <artifactId>shrimp-cloud-common</artifactId>
-                <version>${shrimp-common.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.wkclz.redis</groupId>
-                <artifactId>shrimp-cloud-redis</artifactId>
-                <version>${shrimp-redis.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.wkclz.spring</groupId>
-                <artifactId>shrimp-cloud-spring</artifactId>
-                <version>${shrimp-spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.wkclz.auth</groupId>
-                <artifactId>shrimp-cloud-auth</artifactId>
-                <version>${shrimp-auth.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.wkclz.mybatis</groupId>
-                <artifactId>shrimp-cloud-mybatis</artifactId>
-                <version>${shrimp-mybatis.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.wkclz.swagger</groupId>
-                <artifactId>shrimp-cloud-swagger-starter</artifactId>
-                <version>${shrimp-cloud-swagger-starter.version}</version>
-            </dependency>
-
 
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -174,6 +133,7 @@
                 <artifactId>dysmsapi20170525</artifactId>
                 <version>${dysmsapi20170525.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-boot-starter</artifactId>
@@ -185,6 +145,24 @@
                 <artifactId>swagger-bootstrap-ui</artifactId>
                 <version>${swagger-bootstrap-ui.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.github.penggle</groupId>
+                <artifactId>kaptcha</artifactId>
+                <version>${kaptcha.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

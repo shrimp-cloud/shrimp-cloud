@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.wkclz.parent</groupId>
+        <artifactId>shrimp-cloud-parent</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+        <relativePath>../shrimp-cloud-parent/pom.xml</relativePath>
+    </parent>
+
+    <groupId>com.wkclz.cas</groupId>
+    <artifactId>shrimp-cloud-cas-starter</artifactId>
+    <version>4.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>shrimp-cloud-cas-starter</name>
+    <description>shrimp-cloud-cas-starter</description>
+
+    <properties>
+        <java.version>17</java.version>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.wkclz.common</groupId>
+            <artifactId>shrimp-cloud-common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

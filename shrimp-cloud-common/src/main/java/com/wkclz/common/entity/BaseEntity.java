@@ -22,8 +22,8 @@ public class BaseEntity {
     private String messageId;
     */
 
-    @Desc("用户ID")
-    private Long userId;
+    @Desc("用户编码")
+    private String usercode;
     @Desc("租户ID")
     private Long tenantId;
 
@@ -61,14 +61,14 @@ public class BaseEntity {
     private Integer sort;
     @Desc("创建时间")
     private Date createTime;
-    @Desc("创建人ID")
-    private Long createBy;
+    @Desc("创建人code")
+    private String createBy;
     @Desc("创建人昵称")
     private String createByName;
     @Desc("更新时间")
     private Date updateTime;
-    @Desc("更新人ID")
-    private Long updateBy;
+    @Desc("更新人code")
+    private String updateBy;
     @Desc("更新人昵称")
     private String updateByName;
     @Desc("备注")
@@ -90,6 +90,7 @@ public class BaseEntity {
         this.offset = (this.current -1 ) * this.size;
     }
 
+
     public Long getId() {
         return id;
     }
@@ -98,12 +99,12 @@ public class BaseEntity {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getUsercode() {
+        return usercode;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUsercode(String usercode) {
+        this.usercode = usercode;
     }
 
     public Long getTenantId() {
@@ -210,11 +211,11 @@ public class BaseEntity {
         this.createTime = createTime;
     }
 
-    public Long getCreateBy() {
+    public String getCreateBy() {
         return createBy;
     }
 
-    public void setCreateBy(Long createBy) {
+    public void setCreateBy(String createBy) {
         this.createBy = createBy;
     }
 
@@ -234,11 +235,11 @@ public class BaseEntity {
         this.updateTime = updateTime;
     }
 
-    public Long getUpdateBy() {
+    public String getUpdateBy() {
         return updateBy;
     }
 
-    public void setUpdateBy(Long updateBy) {
+    public void setUpdateBy(String updateBy) {
         this.updateBy = updateBy;
     }
 

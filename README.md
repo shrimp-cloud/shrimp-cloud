@@ -7,7 +7,7 @@
 - shrimp-cloud-common: 常用静态工具
 - shrimp-cloud-redis: Redis 封装
 - shrimp-cloud-spring: Spring 封装
-- shrimp-cloud-auth: 权限相关
+- shrimp-cloud-cas-starter: 权限相关
 - shrimp-cloud-mybatis: MyBatis 封装
 - shrimp-cloud-gen-plugin: 代码生成器maven 插件
 - shrimp-cloud-mqtt-starter: MQTT 封装

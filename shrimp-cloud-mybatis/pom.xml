@@ -29,8 +29,8 @@
             <artifactId>shrimp-cloud-spring</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.wkclz.auth</groupId>
-            <artifactId>shrimp-cloud-auth</artifactId>
+            <groupId>com.wkclz.cas</groupId>
+            <artifactId>shrimp-cloud-cas-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

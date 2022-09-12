@@ -22,6 +22,18 @@
     <properties>
         <spring-cloud.version>2021.0.3</spring-cloud.version>
         <shrimp.cloud.bom.version>4.0.0-SNAPSHOT</shrimp.cloud.bom.version>
+
+
+        <!-- shrimp 相关依赖 -->
+        <shrimp-common.version>4.0.0-SNAPSHOT</shrimp-common.version>
+        <shrimp-redis.version>4.0.0-SNAPSHOT</shrimp-redis.version>
+        <shrimp-spring.version>4.0.0-SNAPSHOT</shrimp-spring.version>
+        <shrimp-cas-starter.version>4.0.0-SNAPSHOT</shrimp-cas-starter.version>
+        <shrimp-mybatis.version>4.0.0-SNAPSHOT</shrimp-mybatis.version>
+        <shrimp-mqtt.version>4.0.0-SNAPSHOT</shrimp-mqtt.version>
+        <shrimp-cloud-gen-plugin.version>4.0.0-SNAPSHOT</shrimp-cloud-gen-plugin.version>
+        <shrimp-cloud-swagger-starter.version>4.0.0-SNAPSHOT</shrimp-cloud-swagger-starter.version>
+
         <!--
         <spring-boot-admin.version>2.6.7</spring-boot-admin.version>
         -->
@@ -52,6 +64,39 @@
                 <scope>import</scope>
             </dependency>
             -->
+
+            <!-- wkclz -->
+            <dependency>
+                <groupId>com.wkclz.common</groupId>
+                <artifactId>shrimp-cloud-common</artifactId>
+                <version>${shrimp-common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wkclz.redis</groupId>
+                <artifactId>shrimp-cloud-redis</artifactId>
+                <version>${shrimp-redis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wkclz.spring</groupId>
+                <artifactId>shrimp-cloud-spring</artifactId>
+                <version>${shrimp-spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wkclz.cas</groupId>
+                <artifactId>shrimp-cloud-cas-starter</artifactId>
+                <version>${shrimp-cas-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wkclz.mybatis</groupId>
+                <artifactId>shrimp-cloud-mybatis</artifactId>
+                <version>${shrimp-mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wkclz.swagger</groupId>
+                <artifactId>shrimp-cloud-swagger-starter</artifactId>
+                <version>${shrimp-cloud-swagger-starter.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

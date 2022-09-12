@@ -1,7 +1,7 @@
 package com.wkclz.mybatis.plugins;
 
-import com.wkclz.auth.entity.User;
-import com.wkclz.auth.helper.AuthHelper;
+import com.wkclz.cas.sdk.helper.AuthHelper;
+import com.wkclz.cas.sdk.pojo.UserInfo;
 import com.wkclz.common.emuns.ResultStatus;
 import com.wkclz.common.entity.BaseEntity;
 import com.wkclz.common.exception.BizException;
@@ -30,10 +30,10 @@ public class MybatisUpdateInterceptor implements Interceptor {
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
 
-        User user = authHelper.getUserIfLogin();
-        Long userId = -1L;
-        if (user != null) {
-            userId = user.getUserId();
+        UserInfo userInfo = authHelper.getUserInfoIfLogin();
+        String usercode = "guest";
+        if (userInfo != null) {
+            usercode = userInfo.getUsercode();
         }
 
         // 参数处理
@@ -52,7 +52,7 @@ public class MybatisUpdateInterceptor implements Interceptor {
 
         // 参数为对象
         if (parameter instanceof BaseEntity) {
-            checkEntity(parameter, commandType, userId, chechVersion, checkId);
+            checkEntity(parameter, commandType, usercode, chechVersion, checkId);
         }
 
         // 参数为 List 【在 Map 里面】
@@ -63,7 +63,7 @@ public class MybatisUpdateInterceptor implements Interceptor {
                 if (parameterObj instanceof Collection){
                     Collection parameters = (Collection)parameterObj;
                     for (Object p:parameters) {
-                        boolean isBaseEntity = checkEntity(p, commandType, userId, chechVersion, checkId);
+                        boolean isBaseEntity = checkEntity(p, commandType, usercode, chechVersion, checkId);
                         if (!isBaseEntity) {
                             break;
                         }
@@ -71,7 +71,7 @@ public class MybatisUpdateInterceptor implements Interceptor {
                 }
             }
         }
-        logger.debug("mybatis.update.interceptor: operate user: {}", userId);
+        logger.debug("mybatis.update.interceptor: operate user: {}", usercode);
 
         Object proceedReslut = invocation.proceed();
         return proceedReslut;
@@ -86,13 +86,13 @@ public class MybatisUpdateInterceptor implements Interceptor {
     public void setProperties(Properties properties) {
     }
 
-    private static boolean checkEntity(Object paramter, SqlCommandType commandType, Long userId, boolean chechVersion, boolean checkId){
+    private static boolean checkEntity(Object paramter, SqlCommandType commandType, String usercode, boolean chechVersion, boolean checkId){
         if (!(paramter instanceof BaseEntity)) {
             return false;
         }
         BaseEntity clearPatameter = (BaseEntity) paramter;
         // insert, upadte, delete 修改人/时间
-        clearPatameter.setUpdateBy(userId);
+        clearPatameter.setUpdateBy(usercode);
         clearPatameter.setStatus(1);
         if (clearPatameter.getUpdateTime() != null) {
             clearPatameter.setUpdateTime(new Date());
@@ -101,7 +101,7 @@ public class MybatisUpdateInterceptor implements Interceptor {
         if (commandType == SqlCommandType.INSERT) {
             clearPatameter.setId(null);
             clearPatameter.setVersion(null);
-            clearPatameter.setCreateBy(userId);
+            clearPatameter.setCreateBy(usercode);
             if (clearPatameter.getSort() == null){
                 clearPatameter.setSort(0);
             }

@@ -1,0 +1,23 @@
+{
+  "properties":[
+    {
+      "name": "cas.sso.token.secret",
+      "type": "java.lang.String",
+      "defaultValue": null,
+      "description": "token加密密钥"
+    },
+    {
+      "name": "cas.sso.captcha.type",
+      "type": "java.lang.String",
+      "defaultValue": "math",
+      "description": "验证码类型"
+    },
+    {
+      "name": "scas.sso.captcha.timeout",
+      "type": "java.lang.Integer",
+      "defaultValue": 180,
+      "description": "图片验证码过期时间(秒)"
+    }
+  ],
+  "hits": []
+}
