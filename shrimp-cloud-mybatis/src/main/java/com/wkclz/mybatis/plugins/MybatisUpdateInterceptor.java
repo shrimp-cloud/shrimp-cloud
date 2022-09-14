@@ -109,7 +109,7 @@ public class MybatisUpdateInterceptor implements Interceptor {
         // update 时 id 不能为空
         if (commandType == SqlCommandType.UPDATE) {
             if (checkId && clearPatameter.getId() == null) {
-                throw BizException.error(ResultStatus.UPDATE_NO_ID);
+                throw BizException.error(ResultStatus.PARAM_NO_ID);
             }
             // 批量更新不处理 version
             if (chechVersion && clearPatameter.getVersion() == null) {
@@ -119,7 +119,7 @@ public class MybatisUpdateInterceptor implements Interceptor {
         // delete 时 id, ids 不能同时为空, 删除不校验 version
         if (commandType == SqlCommandType.DELETE) {
             if (clearPatameter.getId() == null && CollectionUtils.isEmpty(clearPatameter.getIds())) {
-                throw BizException.error(ResultStatus.UPDATE_NO_ID);
+                throw BizException.error(ResultStatus.PARAM_NO_ID);
             }
         }
         return true;

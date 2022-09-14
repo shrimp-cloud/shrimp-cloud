@@ -116,71 +116,62 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
         return mapper.updateBatch(entitys);
     }
 
+    @Desc("批量删除")
+    public Integer deleteByEntitys(@NotNull List<Entity> entitys){
+        if (CollectionUtils.isEmpty(entitys)){
+            throw BizException.error("entitys can not be null");
+        }
+        List<Long> ids = new ArrayList<>();
+        entitys.forEach(entity -> ids.addAll(getIds(entity)));
+        return delete(ids);
+    }
+
     @Desc("删除")
     public Integer delete(@NotNull Long id){
         BaseEntity baseEntity = new BaseEntity();
         baseEntity.setId(id);
-        Entity entity = (Entity)baseEntity;
-        return mapper.delete(entity);
+        return deleteByBaseEntity(baseEntity);
     }
 
     @Desc("删除")
     public Integer delete(@NotNull List<Long> ids){
         BaseEntity baseEntity = new BaseEntity();
         baseEntity.setIds(ids);
-        Entity entity = (Entity)baseEntity;
-        return mapper.delete(entity);
+        return deleteByBaseEntity(baseEntity);
     }
-    /*
-    @Desc("批量删除")
-    public Integer delete(@NotNull List<Entity> entitys){
-        if (CollectionUtils.isEmpty(entitys)){
-            throw BizException.error("entitys can not be null");
-        }
-        List<Long> ids = new ArrayList<>();
-        entitys.forEach(entity -> {
-            Long tmpId = entity.getId();
-            List<Long> tmpIds = entity.getIds();
-            if (tmpId != null){
-                ids.add(tmpId);
-            }
-            if (CollectionUtils.isNotEmpty(tmpIds)){
-                ids.addAll(tmpIds);
-            }
-        });
-        Entity entity = entitys.get(0);
-        entity.setId(null);
-        entity.setIds(ids);
-        return mapper.delete(entity);
-    }
-    */
     @Desc("批量删除")
     public Integer delete(@NotNull Entity entity){
-        List<Long> ids = new ArrayList<>();
-        Long tmpId = entity.getId();
-        List<Long> tmpIds = entity.getIds();
-        if (tmpId != null){
-            ids.add(tmpId);
-        }
-        if (CollectionUtils.isNotEmpty(tmpIds)){
-            ids.addAll(tmpIds);
-        }
-        if (CollectionUtils.isEmpty(ids)){
+        List<Long> ids = getIds(entity);
+        BaseEntity baseEntity = new BaseEntity();
+        baseEntity.setIds(ids);
+        return deleteByBaseEntity(baseEntity);
+    }
+
+    private Integer deleteByBaseEntity(@NotNull BaseEntity baseEntity){
+        if (baseEntity.getId() == null && (baseEntity.getIds() == null || baseEntity.getIds().size() == 0)) {
             throw BizException.error("id or ids can not be null at the same time");
         }
-        // id 和 ids 保证只有一个存在
-        if (ids.size() == 1){
-            entity.setId(ids.get(0));
-            entity.setIds(null);
-        } else {
-            entity.setId(null);
-            entity.setIds(ids);
-        }
-        Integer delete = mapper.delete(entity);
+        Entity entity = (Entity) baseEntity;
+         Integer delete = mapper.delete(entity);
         if (delete == 0){
             throw BizException.error(ResultStatus.RECORD_NOT_EXIST);
         }
         return delete;
     }
 
+    public static <Entity extends BaseEntity> List<Long> getIds(Entity entity) {
+        List<Long> ids = new ArrayList<>();
+        Long tmpId = entity.getId();
+        if (tmpId != null){
+            ids.add(tmpId);
+        }
+        List<Long> tmpIds = entity.getIds();
+        if (CollectionUtils.isNotEmpty(tmpIds)){
+            ids.addAll(tmpIds);
+        }
+        if (CollectionUtils.isEmpty(ids)){
+            throw BizException.error("id or ids can not be null at the same time");
+        }
+        return ids;
+    }
 }

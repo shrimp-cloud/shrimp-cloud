@@ -31,7 +31,8 @@ public enum ResultStatus {
     UPDATE_NO_VERSION(40001, "操作需要带数据版本号！"),
     RECORD_NOT_EXIST_OR_OUT_OF_DATE(40002, "数据不存在或已不是最新的！"),
     RECORD_NOT_EXIST(40003, "数据不存在！"),
-    UPDATE_NO_ID(40004, "操作需要带数据标识！"),
+    PARAM_NO_ID(40004, "ID 不存在！"),
+    UPDATE_NO_ID(40004, "ID 不存在！"),
 
     NETWORK_ERROR(50001, "network error！"),
     NO_AVAILABLE_SERVER(50002, "no available server！"),
