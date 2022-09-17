@@ -27,7 +27,7 @@ public class AuthHelper {
     public String getUserCode() {
         return getClaimValue(SdkConstant.USER_INFO_USER_CODE);
     }
-    public String getUserName() {
+    public String getUsername() {
         return getClaimValue(SdkConstant.USER_INFO_USER_NAME);
     }
     public String getNickName() {
@@ -54,7 +54,7 @@ public class AuthHelper {
         UserInfo userInfo = new UserInfo();
         userInfo.setAppCode(getClaimValue(claims, SdkConstant.USER_INFO_APP_CODE));
         userInfo.setUserCode(getClaimValue(claims, SdkConstant.USER_INFO_USER_CODE));
-        userInfo.setUserName(getClaimValue(claims, SdkConstant.USER_INFO_USER_NAME));
+        userInfo.setUsername(getClaimValue(claims, SdkConstant.USER_INFO_USER_NAME));
         userInfo.setNickName(getClaimValue(claims, SdkConstant.USER_INFO_NICK_NAME));
         userInfo.setAvatar(getClaimValue(claims, SdkConstant.USER_INFO_USER_AVATAR));
         return userInfo;

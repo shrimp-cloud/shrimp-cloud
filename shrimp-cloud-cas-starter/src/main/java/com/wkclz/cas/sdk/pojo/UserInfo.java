@@ -2,11 +2,19 @@ package com.wkclz.cas.sdk.pojo;
 
 public class UserInfo {
 
+    private String username;
     private String appCode;
     private String userCode;
-    private String userName;
     private String nickName;
     private String avatar;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getAppCode() {
         return appCode;
@@ -22,14 +30,6 @@ public class UserInfo {
 
     public void setUserCode(String userCode) {
         this.userCode = userCode;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public String getNickName() {
