@@ -32,7 +32,7 @@ public enum ResultStatus {
     RECORD_NOT_EXIST_OR_OUT_OF_DATE(40002, "数据不存在或已不是最新的！"),
     RECORD_NOT_EXIST(40003, "数据不存在！"),
     PARAM_NO_ID(40004, "ID 不存在！"),
-    UPDATE_NO_ID(40004, "ID 不存在！"),
+    RECORD_DUPLICATE(40005, "数据重复，唯一性校验失败！"),
 
     NETWORK_ERROR(50001, "network error！"),
     NO_AVAILABLE_SERVER(50002, "no available server！"),

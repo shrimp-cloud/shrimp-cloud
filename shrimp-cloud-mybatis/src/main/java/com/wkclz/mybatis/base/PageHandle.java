@@ -6,6 +6,7 @@ import com.wkclz.common.entity.BaseEntity;
 
 import java.util.List;
 
+@Deprecated
 public class PageHandle<T extends BaseEntity> {
 
     private T entity;

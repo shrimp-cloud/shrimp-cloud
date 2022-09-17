@@ -43,8 +43,8 @@ public class GwFilter extends OncePerRequestFilter {
         }
 
         try {
-            String usercode = authHelper.getUsercode();
-            logger.info("request: {}, usercode: {}, UA: {}", uri, usercode, ua);
+            String userCode = authHelper.getUserCode();
+            logger.info("request: {}, userCode: {}, UA: {}", uri, userCode, ua);
         } catch (Exception e) {
             String msg = e.getMessage();
             Result error = Result.error(msg);

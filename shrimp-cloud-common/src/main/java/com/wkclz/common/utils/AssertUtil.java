@@ -8,6 +8,12 @@ import java.util.Date;
 
 public class AssertUtil {
 
+    public static void notNull(Object obj){
+        if (obj == null){
+            throw BizException.error("object can not be null;");
+        }
+    }
+
     public static void notNull(String obj, String errMsg){
         if (StringUtils.isBlank(obj)){
             throw BizException.error(errMsg);

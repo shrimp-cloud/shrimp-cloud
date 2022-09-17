@@ -2,33 +2,42 @@ package com.wkclz.cas.sdk.pojo;
 
 public class UserInfo {
 
-    private String usercode;
-    private String username;
-    private String nickname;
+    private String appCode;
+    private String userCode;
+    private String userName;
+    private String nickName;
     private String avatar;
 
-    public String getUsercode() {
-        return usercode;
+    public String getAppCode() {
+        return appCode;
     }
 
-    public void setUsercode(String usercode) {
-        this.usercode = usercode;
+    public void setAppCode(String appCode) {
+        this.appCode = appCode;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserCode() {
+        return userCode;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public String getAvatar() {

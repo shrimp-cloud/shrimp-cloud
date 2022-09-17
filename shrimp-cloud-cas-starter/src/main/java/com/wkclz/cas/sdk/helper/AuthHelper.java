@@ -21,13 +21,16 @@ public class AuthHelper {
     @Autowired
     private CasSdkConfig casSdkConfig;
 
-    public String getUsercode() {
+    public String getAppCode() {
+        return getClaimValue(SdkConstant.USER_INFO_APP_CODE);
+    }
+    public String getUserCode() {
         return getClaimValue(SdkConstant.USER_INFO_USER_CODE);
     }
-    public String getUsername() {
+    public String getUserName() {
         return getClaimValue(SdkConstant.USER_INFO_USER_NAME);
     }
-    public String getNickname() {
+    public String getNickName() {
         return getClaimValue(SdkConstant.USER_INFO_NICK_NAME);
     }
     public String getAvatar() {
@@ -49,9 +52,10 @@ public class AuthHelper {
         }
         Claims claims = getClaims(token);
         UserInfo userInfo = new UserInfo();
-        userInfo.setUsercode(getClaimValue(claims, SdkConstant.USER_INFO_USER_CODE));
-        userInfo.setUsername(getClaimValue(claims, SdkConstant.USER_INFO_USER_NAME));
-        userInfo.setNickname(getClaimValue(claims, SdkConstant.USER_INFO_NICK_NAME));
+        userInfo.setAppCode(getClaimValue(claims, SdkConstant.USER_INFO_APP_CODE));
+        userInfo.setUserCode(getClaimValue(claims, SdkConstant.USER_INFO_USER_CODE));
+        userInfo.setUserName(getClaimValue(claims, SdkConstant.USER_INFO_USER_NAME));
+        userInfo.setNickName(getClaimValue(claims, SdkConstant.USER_INFO_NICK_NAME));
         userInfo.setAvatar(getClaimValue(claims, SdkConstant.USER_INFO_USER_AVATAR));
         return userInfo;
     }
