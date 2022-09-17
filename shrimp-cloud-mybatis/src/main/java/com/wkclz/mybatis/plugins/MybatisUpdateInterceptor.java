@@ -33,7 +33,7 @@ public class MybatisUpdateInterceptor implements Interceptor {
         UserInfo userInfo = authHelper.getUserInfoIfLogin();
         String usercode = "guest";
         if (userInfo != null) {
-            usercode = userInfo.getUsercode();
+            usercode = userInfo.getUserCode();
         }
 
         // 参数处理
