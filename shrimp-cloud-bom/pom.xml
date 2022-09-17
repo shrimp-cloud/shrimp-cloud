@@ -17,21 +17,21 @@
         <maven.compiler.target>17</maven.compiler.target>
 
         <!-- Spring 依赖(非spring-cloud-dependencies定义的依赖)  -->
-        <feign-okhttp.version>11.9</feign-okhttp.version>
-        <druid-spring-boot-starter.version>1.2.11</druid-spring-boot-starter.version>
+        <feign-okhttp.version>11.9.1</feign-okhttp.version>
+        <druid-spring-boot-starter.version>1.2.12</druid-spring-boot-starter.version>
         <mybatis-spring-boot-starter.version>2.2.2</mybatis-spring-boot-starter.version>
-        <pagehelper-spring-boot-starter.version>1.4.3</pagehelper-spring-boot-starter.version>
+        <pagehelper-spring-boot-starter.version>1.4.4</pagehelper-spring-boot-starter.version>
 
         <!-- 三方静态依赖 -->
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
-        <spring-beans.version>5.3.21</spring-beans.version>
-        <fastjson2.version>2.0.11</fastjson2.version>
-        <hutool.version>5.8.5</hutool.version>
+        <spring-beans.version>5.3.23</spring-beans.version>
+        <fastjson2.version>2.0.13</fastjson2.version>
+        <hutool.version>5.8.7</hutool.version>
         <guava.version>31.1-jre</guava.version>
-        <jsoup.version>1.15.2</jsoup.version>
+        <jsoup.version>1.15.3</jsoup.version>
         <zxing.version>3.5.0</zxing.version>
-        <jasypt-spring-boot.version>3.0.3</jasypt-spring-boot.version>
+        <jasypt-spring-boot.version>3.0.4</jasypt-spring-boot.version>
         <wkclz-excel.version>1.0.11.RELEASE</wkclz-excel.version>
         <aliyun-sdk-oss.version>3.15.1</aliyun-sdk-oss.version>
         <dysmsapi20170525.version>2.0.16</dysmsapi20170525.version>
