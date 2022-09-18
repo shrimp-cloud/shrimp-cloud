@@ -43,7 +43,7 @@ public class RedisIdGenHelper {
     /**
      * yyMMddHHmmssiiii 再转换为32进制，减小总长度
      */
-    private String nextShot() {
+    public String nextShot() {
         String id = nextId();
         String shotId = id.substring(2);
         long longId = Long.parseLong(shotId);
