@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import com.wkclz.spring.constant.ServiceIdConstant;
 import com.wkclz.spring.enums.EnvType;
+import com.wkclz.spring.helper.EnumDictHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,10 @@ public class Sys implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
+        // 初始化环境信息
         initEnv();
+        // 初始化字典
+        EnumDictHelper.init();
 
         if (!systemConfig.isCloud() || !ServiceIdConstant.LZ_SYS.equalsIgnoreCase(systemConfig.getApplicationName())){
             logger.info("not cloud or monomer application mode, do not sync cache by {}", ServiceIdConstant.LZ_SYS);

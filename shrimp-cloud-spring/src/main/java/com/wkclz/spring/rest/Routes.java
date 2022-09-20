@@ -35,22 +35,8 @@ public interface Routes {
     String MONITOR_PROPERTIES = "/monitor/properties";
 
 
-    /**
-     * 获取Cache
-     */
-    @Desc("0. 缓存-刷新全局缓存")
-    String CACHE_REFRESH = "/cache/refresh";
-    @Desc("1. 缓存-sysConfig")
-    String CACHE_SYS_CONFIG = "/cache/sys/config";
-    @Desc("2. 缓存-apiDomain")
-    String CACHE_API_DOMAIN = "/cache/api/domain";
-    @Desc("3. 缓存-tenantDomain")
-    String CACHE_TENANT_DOMAIN = "/cache/tenant/domain";
-    @Desc("4. 缓存-accessUri")
-    String CACHE_ACCESS_URI = "/cache/access/uri";
-    @Desc("1. 缓存-Dict")
-    String CACHE_SYS_DICT = "/cache/sys/dict";
-
+    // 从接口获取枚举
+    String ENUMS_DICT = "/enums/dict";
 
 
 }
