@@ -1,26 +1,16 @@
 package com.wkclz.spring.entity;
 
-import java.util.List;
-
 public class RestInfo {
 
     private String method;
-
     private String uri;
-
     private String name;
-
-    private String path;
-
     private String desc;
-
-    private String module;
-
-
+    private String appCode;
+    /*
     private Class<?> returnType;
-
     private List<Class<?>> parameterTypes;
-
+    */
 
     public String getMethod() {
         return method;
@@ -46,14 +36,6 @@ public class RestInfo {
         this.name = name;
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
     public String getDesc() {
         return desc;
     }
@@ -62,27 +44,11 @@ public class RestInfo {
         this.desc = desc;
     }
 
-    public String getModule() {
-        return module;
+    public String getAppCode() {
+        return appCode;
     }
 
-    public void setModule(String module) {
-        this.module = module;
-    }
-
-    public Class<?> getReturnType() {
-        return returnType;
-    }
-
-    public void setReturnType(Class<?> returnType) {
-        this.returnType = returnType;
-    }
-
-    public List<Class<?>> getParameterTypes() {
-        return parameterTypes;
-    }
-
-    public void setParameterTypes(List<Class<?>> parameterTypes) {
-        this.parameterTypes = parameterTypes;
+    public void setAppCode(String appCode) {
+        this.appCode = appCode;
     }
 }
