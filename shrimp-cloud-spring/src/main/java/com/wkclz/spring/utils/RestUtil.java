@@ -29,19 +29,15 @@ public class RestUtil {
      * @return
      */
     public static List<RestInfo> getMapping() {
-        return getMapping("default");
-    }
-
-    public static List<RestInfo> getMapping(String module) {
         // 获取二级域下的所有 Class
         String clazzName = RestUtil.class.getName();
         int index = clazzName.indexOf(".", clazzName.indexOf(".") + 1);
         String packagePath = clazzName.substring(0, index);
-        List<RestInfo> mappings = getMapping(packagePath, module);
+        List<RestInfo> mappings = getMapping(packagePath);
         return mappings;
     }
 
-    public static List<RestInfo> getMapping(String packagePath, String module) {
+    public static List<RestInfo> getMapping(String packagePath) {
         List<RestInfo> rests = new ArrayList<>();
         logger.info("package {} mappings...", packagePath);
 
@@ -78,7 +74,6 @@ public class RestUtil {
         }
 
         appendDesc(classes, rests);
-        rests.forEach(t->t.setAppCode(module));
         return rests;
     }
 

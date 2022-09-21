@@ -6,7 +6,6 @@ public class RestInfo {
     private String uri;
     private String name;
     private String desc;
-    private String appCode;
     /*
     private Class<?> returnType;
     private List<Class<?>> parameterTypes;
@@ -44,11 +43,4 @@ public class RestInfo {
         this.desc = desc;
     }
 
-    public String getAppCode() {
-        return appCode;
-    }
-
-    public void setAppCode(String appCode) {
-        this.appCode = appCode;
-    }
 }
