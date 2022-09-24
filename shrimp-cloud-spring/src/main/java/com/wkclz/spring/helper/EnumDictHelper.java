@@ -27,9 +27,6 @@ public class EnumDictHelper {
             boolean value = false;
             Field[] declaredFields = clazz.getDeclaredFields();
             for (Field f : declaredFields) {
-                if (f.getType() != String.class) {
-                    continue;
-                }
                 if ("key".equals(f.getName())) {
                     key = true;
                 }
@@ -45,7 +42,6 @@ public class EnumDictHelper {
             String simpleName = clazz.getSimpleName();
             simpleName = StringUtil.camelToUnderline(simpleName).toUpperCase();
             List<EnumDict> dicts = new ArrayList<>();
-
             try {
                 Object[] enumConstants = clazz.getEnumConstants();
                 Method keyGetter = clazz.getMethod("getKey");
@@ -53,7 +49,7 @@ public class EnumDictHelper {
                 for (Object enumConstant : enumConstants) {
                     EnumDict dict = new EnumDict();
                     dict.setType(simpleName);
-                    dict.setKey(keyGetter.invoke(enumConstant).toString());
+                    dict.setKey(keyGetter.invoke(enumConstant));
                     dict.setValue(valueGetter.invoke(enumConstant));
                     dicts.add(dict);
                 }
@@ -69,6 +65,10 @@ public class EnumDictHelper {
             return null;
         }
         return ENUM_DICT_MAP.get(name);
+    }
+
+    public static void main(String[] args) {
+        init();
     }
 }
 
