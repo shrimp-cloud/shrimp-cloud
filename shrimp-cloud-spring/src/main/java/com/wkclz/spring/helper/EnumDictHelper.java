@@ -23,19 +23,19 @@ public class EnumDictHelper {
             if (Enum.class != clazz.getSuperclass()) {
                 continue;
             }
-            boolean key = false;
             boolean value = false;
+            boolean label = false;
             Field[] declaredFields = clazz.getDeclaredFields();
             for (Field f : declaredFields) {
-                if ("key".equals(f.getName())) {
-                    key = true;
-                }
                 if ("value".equals(f.getName())) {
                     value = true;
                 }
+                if ("label".equals(f.getName())) {
+                    label = true;
+                }
             }
-            // 没有 key 或 value
-            if (!key || !value) {
+            // 没有 value 或 label
+            if (!value || !label) {
                 continue;
             }
 
@@ -44,13 +44,13 @@ public class EnumDictHelper {
             List<EnumDict> dicts = new ArrayList<>();
             try {
                 Object[] enumConstants = clazz.getEnumConstants();
-                Method keyGetter = clazz.getMethod("getKey");
                 Method valueGetter = clazz.getMethod("getValue");
+                Method labelGetter = clazz.getMethod("getLabel");
                 for (Object enumConstant : enumConstants) {
                     EnumDict dict = new EnumDict();
                     dict.setType(simpleName);
-                    dict.setKey(keyGetter.invoke(enumConstant));
                     dict.setValue(valueGetter.invoke(enumConstant));
+                    dict.setLabel(labelGetter.invoke(enumConstant));
                     dicts.add(dict);
                 }
             } catch (Exception e) {

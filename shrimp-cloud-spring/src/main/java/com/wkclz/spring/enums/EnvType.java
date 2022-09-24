@@ -14,19 +14,19 @@ public enum EnvType {
     UAT("UAT", "验收测试环境"),
     PROD("PROD", "生产环境");
 
-    private String key;
     private String value;
+    private String label;
 
-    EnvType(String key, String value) {
-        this.key = key;
+    EnvType(String value, String label) {
         this.value = value;
-    }
-
-    public String getKey() {
-        return key;
+        this.label = label;
     }
 
     public String getValue() {
         return value;
+    }
+
+    public String getLabel() {
+        return label;
     }
 }

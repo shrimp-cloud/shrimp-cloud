@@ -22,28 +22,20 @@ public enum Qos {
 	 */
 	QOS_2(2, "cleanSession=true 无离线消息，在线消息保证只推一次 cleanSession=false 暂不支持");
 
-	private int value;
+	private Integer value;
+	private String label;
 
-	private String desc;
-
-    Qos(int value, String desc) {
+    Qos(int value, String label) {
 		this.value = value;
-		this.desc = desc;
+		this.label = label;
 	}
 
 	public int getValue() {
 		return value;
 	}
 
-	public void setValue(int value) {
-		this.value = value;
+	public String getLabel() {
+		return label;
 	}
 
-	public String getDesc() {
-		return desc;
-	}
-
-	public void setDesc(String desc) {
-		this.desc = desc;
-	}
 }

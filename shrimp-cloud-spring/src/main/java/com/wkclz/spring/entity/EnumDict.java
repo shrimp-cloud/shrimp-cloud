@@ -3,8 +3,8 @@ package com.wkclz.spring.entity;
 public class EnumDict {
 
     private String type;
-    private Object key;
     private Object value;
+    private Object label;
 
     public String getType() {
         return type;
@@ -14,19 +14,19 @@ public class EnumDict {
         this.type = type;
     }
 
-    public Object getKey() {
-        return key;
-    }
-
-    public void setKey(Object key) {
-        this.key = key;
-    }
-
     public Object getValue() {
         return value;
     }
 
     public void setValue(Object value) {
         this.value = value;
+    }
+
+    public Object getLabel() {
+        return label;
+    }
+
+    public void setLabel(Object label) {
+        this.label = label;
     }
 }
