@@ -111,11 +111,11 @@ public class BaseEntity {
         this.tenantId = tenantId;
     }
 
-    public long getTotal() {
+    public Long getTotal() {
         return total;
     }
 
-    public void setTotal(long total) {
+    public void setTotal(Long total) {
         this.total = total;
     }
 
