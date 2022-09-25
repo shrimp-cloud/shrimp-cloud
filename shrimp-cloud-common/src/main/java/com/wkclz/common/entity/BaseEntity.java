@@ -15,19 +15,12 @@ public class BaseEntity {
 
     @Desc("主键ID")
     private Long id;
-    /*
-    private String mobile;
-    private String email;
-    private String code;
-    private String messageId;
-    */
 
     @Desc("用户编码")
     private String userCode;
     @Desc("租户ID")
     private Long tenantId;
 
-    protected long total;
 
     /**
      * 查询辅助
@@ -36,7 +29,10 @@ public class BaseEntity {
     private Long current;
     @Desc("分页大小")
     private Long size;
+    @Desc("偏移量")
     private Long offset;
+    @Desc("总数据量")
+    protected Long total;
 
     @Desc("查询排序规则")
     private String orderBy;
