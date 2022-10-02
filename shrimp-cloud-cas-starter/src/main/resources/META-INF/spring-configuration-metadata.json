@@ -1,22 +1,16 @@
 {
   "properties":[
     {
-      "name": "cas.sso.token.secret",
+      "name": "cas.sdk.app-code",
       "type": "java.lang.String",
-      "defaultValue": null,
-      "description": "token加密密钥"
+      "defaultValue": "default",
+      "description": "应用编码"
     },
     {
-      "name": "cas.sso.captcha.type",
+      "name": "cas.sdk.token.secret",
       "type": "java.lang.String",
-      "defaultValue": "math",
-      "description": "验证码类型"
-    },
-    {
-      "name": "scas.sso.captcha.timeout",
-      "type": "java.lang.Integer",
-      "defaultValue": 180,
-      "description": "图片验证码过期时间(秒)"
+      "defaultValue": "太长了",
+      "description": "token加密盐"
     }
   ],
   "hits": []

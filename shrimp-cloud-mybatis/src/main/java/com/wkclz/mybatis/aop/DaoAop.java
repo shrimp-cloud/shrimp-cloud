@@ -166,7 +166,7 @@ public class DaoAop {
             return sqlCommandType;
         }
 
-        throw BizException.error("unknown dao operation: {}", pointId);
+        throw BizException.error("unknown dao operation: %s", pointId);
     }
 
 
