@@ -33,6 +33,9 @@ public class AuthHelper {
     public String getNickName() {
         return getClaimValue(SdkConstant.USER_INFO_NICK_NAME);
     }
+    public String getTenantCode() {
+        return getTenantCodeFromRequest();
+    }
     public String getAvatar() {
         return getClaimValue(SdkConstant.USER_INFO_USER_AVATAR);
     }
@@ -60,7 +63,11 @@ public class AuthHelper {
         return userInfo;
     }
 
-    private String geToken() {
+    private static String getTenantCodeFromRequest() {
+        HttpServletRequest request = getRequest();
+        return request.getHeader(SdkConstant.TENANT_CODE);
+    }
+    private static String geToken() {
         HttpServletRequest request = getRequest();
         return request.getHeader(SdkConstant.TOKEN_NAME);
     }

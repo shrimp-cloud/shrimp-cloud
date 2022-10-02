@@ -3,6 +3,7 @@ package com.wkclz.cas.sdk.pojo;
 public interface SdkConstant {
 
     String TOKEN_NAME = "token";
+    String TENANT_CODE = "tenant-code";
 
     String USER_INFO_USER_NAME = "username";
     String USER_INFO_APP_CODE = "appCode";

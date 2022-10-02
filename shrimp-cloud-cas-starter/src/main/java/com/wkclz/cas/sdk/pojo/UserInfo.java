@@ -6,6 +6,7 @@ public class UserInfo {
     private String appCode;
     private String userCode;
     private String nickName;
+    private String tenantCode;
     private String avatar;
 
     public String getUsername() {
@@ -38,6 +39,14 @@ public class UserInfo {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public String getTenantCode() {
+        return tenantCode;
+    }
+
+    public void setTenantCode(String tenantCode) {
+        this.tenantCode = tenantCode;
     }
 
     public String getAvatar() {
