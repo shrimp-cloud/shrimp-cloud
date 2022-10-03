@@ -19,7 +19,7 @@ import java.util.Map;
 public class GenHelper {
 
     // 已经部署好的机器
-    private static String BASE_URL = "http://gen.wkclz.com/gen";
+    private static String BASE_URL = "http://api-gen.uat.wkclz.com/gen";
     private static String AUTH_CODE = null;
 
 
@@ -46,7 +46,7 @@ public class GenHelper {
         long start = System.currentTimeMillis();
 
         try {
-            String urlStr = getGenAddr(authCode, log);
+            String urlStr = getGenZipAddr(authCode, log);
             URL url = new URL(urlStr);
             System.out.println("=======> download addr: "+ url.getPath());
 
@@ -280,18 +280,18 @@ public class GenHelper {
     }
 
 
-    private static String getGenAddr(String authCode, Log log){
+    private static String getGenZipAddr(String authCode, Log log){
         if (StringUtils.isBlank(authCode)){
             log.error("authCode can not be blank");
             return null;
         }
-        return BASE_URL + "/gen/" + authCode;
+        return BASE_URL + "/public/gen/zip/" + authCode;
     }
     private static String getGenRule(String authCode, Log log){
         if (StringUtils.isBlank(authCode)){
             log.error("authCode can not be blank");
         }
-        return BASE_URL + "/gen/rule/" + authCode;
+        return BASE_URL + "/public/gen/rule/" + authCode;
     }
 
 
