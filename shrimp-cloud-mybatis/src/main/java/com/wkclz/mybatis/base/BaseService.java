@@ -1,6 +1,5 @@
 package com.wkclz.mybatis.base;
 
-import com.sun.istack.NotNull;
 import com.wkclz.common.annotation.Desc;
 import com.wkclz.common.emuns.ResultStatus;
 import com.wkclz.common.entity.BaseEntity;
@@ -24,27 +23,52 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
     protected Mapper mapper;
 
     @Desc("统计")
-    public Long count(@NotNull Entity entity){
+    public Long count(Entity entity){
+        checkEntity(entity);
         return mapper.count(entity);
     }
 
     @Desc("用ID查找")
-    public Entity get(@NotNull Long id){
+    public Entity get(Long id){
+        checkId(id);
         return mapper.getById(id);
     }
 
+    @Desc("用ID查找, 若不存在则报错")
+    public Entity getAndCheck(Long id){
+        checkId(id);
+        Entity entity = mapper.getById(id);
+        if (entity == null) {
+            throw BizException.error(ResultStatus.RECORD_NOT_EXIST);
+        }
+        return entity;
+    }
+
     @Desc("用 Entity 查找")
-    public Entity get(@NotNull Entity entity){
+    public Entity get(Entity entity){
+        checkEntity(entity);
         return mapper.getByEntity(entity);
     }
 
+    @Desc("用 Entity 查找, 若不存在则报错")
+    public Entity getAndCheck(Entity entity){
+        checkEntity(entity);
+        entity = mapper.getByEntity(entity);
+        if (entity == null) {
+            throw BizException.error(ResultStatus.RECORD_NOT_EXIST);
+        }
+        return entity;
+    }
+
     @Desc("查询列表，不包含Blobs")
-    public List<Entity> list(@NotNull Entity entity){
+    public List<Entity> list(Entity entity){
+        checkEntity(entity);
         return mapper.list(entity);
     }
 
     @Desc("查询列分页，不包含Blobs")
-    public PageData<Entity> page(@NotNull Entity entity){
+    public PageData<Entity> page(Entity entity){
+        checkEntity(entity);
         entity.init();
         Long count = mapper.count(entity);
         List<Entity> list = null;
@@ -59,13 +83,14 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
     }
 
     @Desc("(选择性)插入")
-    public Long insert(@NotNull Entity entity){
+    public Long insert(Entity entity){
+        checkEntity(entity);
         mapper.insert(entity);
         return entity.getId();
     }
 
     @Desc("全量批量插入")
-    public Integer insert(@NotNull List<Entity> entitys){
+    public Integer insert(List<Entity> entitys){
         if (CollectionUtils.isEmpty(entitys)) {
             return 0;
         }
@@ -85,7 +110,8 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
     }
 
     @Desc("更新(带乐观锁)")
-    public Integer updateAll(@NotNull Entity entity){
+    public Integer updateAll(Entity entity){
+        checkEntity(entity);
         Integer update = mapper.updateAll(entity);
         if (update == 0){
             throw BizException.error(ResultStatus.RECORD_NOT_EXIST_OR_OUT_OF_DATE);
@@ -94,7 +120,8 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
     }
 
     @Desc("选择性更新(带乐观锁)")
-    public Integer updateSelective(@NotNull Entity entity){
+    public Integer updateSelective(Entity entity){
+        checkEntity(entity);
         Integer update = mapper.updateSelective(entity);
         if (update == 0){
             throw BizException.error(ResultStatus.RECORD_NOT_EXIST_OR_OUT_OF_DATE);
@@ -103,7 +130,8 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
     }
 
     @Desc("选择性更新(不带乐观锁)")
-    public Integer updateSelectiveWithoutLock(@NotNull Entity entity){
+    public Integer updateSelectiveWithoutLock(Entity entity){
+        checkEntity(entity);
         Integer update = mapper.updateSelectiveWithoutLock(entity);
         if (update == 0){
             throw BizException.error(ResultStatus.RECORD_NOT_EXIST);
@@ -112,42 +140,59 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
     }
 
     @Desc("批量更新(不带乐观锁)")
-    public Integer update(@NotNull List<Entity> entitys){
+    public Integer update(List<Entity> entitys){
+        if (CollectionUtils.isEmpty(entitys)){
+            throw BizException.error("entitys can not be null");
+        }
         return mapper.updateBatch(entitys);
     }
 
     @Desc("批量删除")
-    public Integer deleteByEntitys(@NotNull List<Entity> entitys){
+    public Integer deleteByEntitys(List<Entity> entitys){
         if (CollectionUtils.isEmpty(entitys)){
             throw BizException.error("entitys can not be null");
         }
         List<Long> ids = new ArrayList<>();
         entitys.forEach(entity -> ids.addAll(getIds(entity)));
+        if (ids.isEmpty()) {
+            throw BizException.error(ResultStatus.PARAM_NULL);
+        }
         return delete(ids);
     }
 
     @Desc("删除")
-    public Integer delete(@NotNull Long id){
+    public Integer delete(Long id){
+        if (id == null) {
+            throw BizException.error(ResultStatus.PARAM_NO_ID);
+        }
         BaseEntity baseEntity = new BaseEntity();
         baseEntity.setId(id);
         return deleteByBaseEntity(baseEntity);
     }
 
     @Desc("删除")
-    public Integer delete(@NotNull List<Long> ids){
+    public Integer delete(List<Long> ids){
+        if (ids == null || ids.size() == 0) {
+            throw BizException.error(ResultStatus.PARAM_NULL);
+        }
         BaseEntity baseEntity = new BaseEntity();
         baseEntity.setIds(ids);
         return deleteByBaseEntity(baseEntity);
     }
+
     @Desc("批量删除")
-    public Integer delete(@NotNull Entity entity){
+    public Integer delete(Entity entity){
+        checkEntity(entity);
         List<Long> ids = getIds(entity);
         BaseEntity baseEntity = new BaseEntity();
         baseEntity.setIds(ids);
         return deleteByBaseEntity(baseEntity);
     }
 
-    private Integer deleteByBaseEntity(@NotNull BaseEntity baseEntity){
+    private Integer deleteByBaseEntity(BaseEntity baseEntity){
+        if (baseEntity == null) {
+            throw BizException.error(ResultStatus.PARAM_NULL);
+        }
         if (baseEntity.getId() == null && (baseEntity.getIds() == null || baseEntity.getIds().size() == 0)) {
             throw BizException.error("id or ids can not be null at the same time");
         }
@@ -173,5 +218,17 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
             throw BizException.error("id or ids can not be null at the same time");
         }
         return ids;
+    }
+
+    private void checkEntity(Entity entity) {
+        if (entity == null) {
+            throw BizException.error(ResultStatus.PARAM_NULL);
+        }
+    }
+
+    private void checkId(Long id) {
+        if (id == null) {
+            throw BizException.error(ResultStatus.PARAM_NO_ID);
+        }
     }
 }
