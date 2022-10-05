@@ -36,7 +36,7 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
     }
 
     @Desc("用ID查找, 若不存在则报错")
-    public Entity getAndCheck(Long id){
+    public Entity getWithCheck(Long id){
         checkId(id);
         Entity entity = mapper.getById(id);
         if (entity == null) {
@@ -52,7 +52,7 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
     }
 
     @Desc("用 Entity 查找, 若不存在则报错")
-    public Entity getAndCheck(Entity entity){
+    public Entity getWithCheck(Entity entity){
         checkEntity(entity);
         entity = mapper.getByEntity(entity);
         if (entity == null) {
@@ -149,7 +149,7 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
     }
 
     @Desc("保存，无id则新增，有id则修改，带乐观锁, 选择性更新")
-    public Entity save(Entity entity) {
+    public Entity saveWithCheck(Entity entity) {
         checkEntity(entity);
         if (entity.getId() == null) {
             mapper.insert(entity);
@@ -187,6 +187,21 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
         BaseEntity baseEntity = new BaseEntity();
         baseEntity.setId(id);
         return deleteByBaseEntity(baseEntity);
+    }
+
+    @Desc("删除，若成功，返回删除前的对象")
+    public Entity deleteWithCheck(Long id){
+        if (id == null) {
+            throw BizException.error(ResultStatus.PARAM_NO_ID);
+        }
+        Entity entity = get(id);
+        if (entity == null) {
+            throw BizException.error(ResultStatus.RECORD_NOT_EXIST);
+        }
+        BaseEntity baseEntity = new BaseEntity();
+        baseEntity.setId(id);
+        deleteByBaseEntity(baseEntity);
+        return entity;
     }
 
     @Desc("删除")
