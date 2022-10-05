@@ -1,6 +1,7 @@
 package com.wkclz.common.entity;
 
 import com.wkclz.common.annotation.Desc;
+import com.wkclz.common.utils.BeanUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -278,4 +279,41 @@ public class BaseEntity {
     public void setDebug(Integer debug) {
         this.debug = debug;
     }
+
+    public static <T extends BaseEntity> T copy(T source, T target) {
+        T newTarget = checkSourceAndTarget(source, target);
+        if(newTarget != null) {
+            return target;
+        }
+        BeanUtil.cpAll(source, newTarget);
+        return target;
+    }
+
+    public static <T extends BaseEntity> T copyIfNotNull(T source, T target) {
+        T newTarget = checkSourceAndTarget(source, target);
+        if(newTarget == null) {
+            return target;
+        }
+        BeanUtil.cpNotNull(source, newTarget);
+        return newTarget;
+    }
+
+    // 生成 new target
+    private static <T extends BaseEntity> T checkSourceAndTarget(T source, T target) {
+        if (source == null && target == null) {
+            return null;
+        }
+        if (source == null) {
+            return null;
+        }
+        if (target == null) {
+            try {
+                target = (T)source.getClass().getDeclaredConstructor().newInstance();
+            } catch (Exception e) {
+                // who care ?
+            }
+        }
+        return target;
+    }
+
 }

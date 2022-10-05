@@ -4,6 +4,7 @@ import com.wkclz.common.annotation.Desc;
 import com.wkclz.common.emuns.ResultStatus;
 import com.wkclz.common.entity.BaseEntity;
 import com.wkclz.common.exception.BizException;
+import com.wkclz.common.utils.AssertUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -145,6 +146,24 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
             throw BizException.error("entitys can not be null");
         }
         return mapper.updateBatch(entitys);
+    }
+
+    @Desc("保存，无id则新增，有id则修改，带乐观锁, 选择性更新")
+    public Entity save(Entity entity) {
+        checkEntity(entity);
+        if (entity.getId() == null) {
+            mapper.insert(entity);
+            return entity;
+        } else {
+            AssertUtil.notNull(entity.getVersion(), "请求错误！参数[version]不能为空");
+            Entity oldEntity = get(entity.getId());
+            if (oldEntity == null) {
+                throw BizException.error(ResultStatus.RECORD_NOT_EXIST);
+            }
+            Entity.copyIfNotNull(entity, oldEntity);
+            updateSelective(oldEntity);
+            return oldEntity;
+        }
     }
 
     @Desc("批量删除")

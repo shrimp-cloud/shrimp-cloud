@@ -102,11 +102,22 @@ public class BeanUtil {
      * @param <S>    Source
      * @param <T>    Target
      */
-    public static <S, T> void cp(S source, T target) {
+    public static <S, T> T cpAll(S source, T target) {
+        return cp(source, target, true);
+    }
+    public static <S, T> T cpNotNull(S source, T target) {
+        return cp(source, target, false);
+    }
+    public static <S, T> T cp(S source, T target, boolean cpoyNull) {
         if (source == null || target == null) {
-            return;
+            return null;
         }
-        BeanUtils.copyProperties(source, target, getNullPropertyNames(source));
+        if (cpoyNull) {
+            BeanUtils.copyProperties(source, target);
+        } else {
+            BeanUtils.copyProperties(source, target, getNullPropertyNames(source));
+        }
+        return target;
     }
 
     /**
@@ -126,7 +137,7 @@ public class BeanUtil {
         try {
             for (S s : source) {
                 T t = clazz.getDeclaredConstructor().newInstance();
-                cp(s, t);
+                cp(s, t, true);
                 list.add(t);
             }
         } catch (InstantiationException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
