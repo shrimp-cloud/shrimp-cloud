@@ -67,20 +67,14 @@ public class RequestHelper {
             return null;
         }
         ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) requestAttributes;
-        HttpServletRequest request = servletRequestAttributes.getRequest();
-        return request;
+        return servletRequestAttributes.getRequest();
     }
+
 
     private static String getFrontUrl(HttpServletRequest req) {
         String domain = req.getHeader("Origin");
         if (StringUtils.isBlank(domain) || "null".equals(domain)) {
             domain = req.getHeader("Referer");
-        }
-        if (StringUtils.isBlank(domain)) {
-            domain = req.getParameter("Origin");
-        }
-        if (StringUtils.isBlank(domain)) {
-            domain = req.getParameter("Referer");
         }
         // 非前后分离的情况，为当前域名
         if (StringUtils.isBlank(domain)) {

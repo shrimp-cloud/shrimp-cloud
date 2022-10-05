@@ -1,17 +1,18 @@
 package com.wkclz.cas.sdk.helper;
 
+import com.wkclz.cas.sdk.cache.TenantDomainCache;
 import com.wkclz.cas.sdk.config.CasSdkConfig;
 import com.wkclz.cas.sdk.pojo.SdkConstant;
 import com.wkclz.cas.sdk.pojo.UserInfo;
 import com.wkclz.common.emuns.ResultStatus;
 import com.wkclz.common.exception.BizException;
+import com.wkclz.spring.helper.RequestHelper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -64,20 +65,52 @@ public class AuthHelper {
     }
 
     private static String getTenantCodeFromRequest() {
-        HttpServletRequest request = getRequest();
-        return request.getHeader(SdkConstant.TENANT_CODE);
+
+        String tenantCode = MDC.get(SdkConstant.TENANT_CODE);
+        if (tenantCode != null){
+            return tenantCode;
+        }
+
+        HttpServletRequest request = RequestHelper.getRequest();
+        if (request == null) {
+            throw BizException.error("request is not from the web");
+        }
+        tenantCode = request.getHeader(SdkConstant.TENANT_CODE);
+        if (tenantCode != null) {
+            MDC.put(SdkConstant.TENANT_CODE, tenantCode);
+            return tenantCode;
+        }
+
+        String domain = RequestHelper.getFrontDomain(request);
+        if (StringUtils.isBlank(domain)) {
+            throw BizException.error("can not get domain from the request: {}", RequestHelper.getRequestUrl());
+        }
+
+        tenantCode = TenantDomainCache.get(domain);
+        if (tenantCode != null) {
+            MDC.put(SdkConstant.TENANT_CODE, tenantCode);
+        }
+
+        if (tenantCode == null) {
+            throw BizException.error("can not get tenant info, please set tenant-code in header or set tenant-domain-cache");
+        }
+        return tenantCode;
     }
+
     private static String geToken() {
-        HttpServletRequest request = getRequest();
+        HttpServletRequest request = RequestHelper.getRequest();
         return request.getHeader(SdkConstant.TOKEN_NAME);
     }
+
     private static Claims parseToken(String secret, String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
+
     private Claims getClaims(String token) {
         String tokenSecret = casSdkConfig.getTokenSecret();
         return parseToken(tokenSecret, token);
     }
+
     private String getClaimValue(String claimKey) {
         String token = geToken();
         if (token == null) {
@@ -87,22 +120,10 @@ public class AuthHelper {
         Object o = claims.get(claimKey);
         return o == null ? null:o.toString();
     }
+
     private String getClaimValue(Claims claims, String claimKey) {
         Object o = claims.get(claimKey);
         return o == null ? null:o.toString();
-    }
-
-    /**
-     * 获取当前请求
-     * @return
-     */
-    private static HttpServletRequest getRequest(){
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        if (requestAttributes == null){
-            return null;
-        }
-        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) requestAttributes;
-        return servletRequestAttributes.getRequest();
     }
 
 }

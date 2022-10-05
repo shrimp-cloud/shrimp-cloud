@@ -17,6 +17,7 @@
         <module>shrimp-cloud-spring</module>
         <module>shrimp-cloud-cas-starter</module>
         <module>shrimp-cloud-mybatis</module>
+
         <module>shrimp-cloud-gen-plugin</module>
         <module>shrimp-cloud-mqtt-starter</module>
         <module>shrimp-cloud-swagger-starter</module>
