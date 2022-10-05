@@ -7,6 +7,7 @@ import com.wkclz.common.exception.BizException;
 import com.wkclz.common.utils.AssertUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,6 +92,7 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
     }
 
     @Desc("全量批量插入")
+    @Transactional(rollbackFor = Exception.class)
     public Integer insert(List<Entity> entitys){
         if (CollectionUtils.isEmpty(entitys)) {
             return 0;
