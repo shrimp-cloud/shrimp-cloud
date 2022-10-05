@@ -115,6 +115,7 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
     @Desc("更新(带乐观锁)")
     public Integer updateAll(Entity entity){
         checkEntity(entity);
+        checkId(entity.getId());
         Integer update = mapper.updateAll(entity);
         if (update == 0){
             throw BizException.error(ResultStatus.RECORD_NOT_EXIST_OR_OUT_OF_DATE);
@@ -125,6 +126,7 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
     @Desc("选择性更新(带乐观锁)")
     public Integer updateSelective(Entity entity){
         checkEntity(entity);
+        checkId(entity.getId());
         Integer update = mapper.updateSelective(entity);
         if (update == 0){
             throw BizException.error(ResultStatus.RECORD_NOT_EXIST_OR_OUT_OF_DATE);
@@ -135,6 +137,7 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
     @Desc("选择性更新(不带乐观锁)")
     public Integer updateSelectiveWithoutLock(Entity entity){
         checkEntity(entity);
+        checkId(entity.getId());
         Integer update = mapper.updateSelectiveWithoutLock(entity);
         if (update == 0){
             throw BizException.error(ResultStatus.RECORD_NOT_EXIST);
@@ -183,9 +186,7 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
 
     @Desc("删除")
     public Integer delete(Long id){
-        if (id == null) {
-            throw BizException.error(ResultStatus.PARAM_NO_ID);
-        }
+        checkId(id);
         BaseEntity baseEntity = new BaseEntity();
         baseEntity.setId(id);
         return deleteByBaseEntity(baseEntity);
@@ -193,9 +194,7 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
 
     @Desc("删除，若成功，返回删除前的对象")
     public Entity deleteWithCheck(Long id){
-        if (id == null) {
-            throw BizException.error(ResultStatus.PARAM_NO_ID);
-        }
+        checkId(id);
         Entity entity = get(id);
         if (entity == null) {
             throw BizException.error(ResultStatus.RECORD_NOT_EXIST);
