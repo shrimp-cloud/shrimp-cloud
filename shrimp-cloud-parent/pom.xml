@@ -20,7 +20,7 @@
     <description>shrimp-parent 定义公共依赖</description>
 
     <properties>
-        <spring-cloud.version>2021.0.3</spring-cloud.version>
+        <spring-cloud.version>2021.0.4</spring-cloud.version>
         <shrimp.cloud.bom.version>4.0.0-SNAPSHOT</shrimp.cloud.bom.version>
 
 
@@ -49,7 +49,7 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-            <groupId>org.springframework.cloud</groupId>
+                <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>${spring-cloud.version}</version>
                 <type>pom</type>
