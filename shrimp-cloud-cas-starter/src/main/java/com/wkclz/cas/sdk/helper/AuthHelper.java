@@ -102,6 +102,9 @@ public class AuthHelper {
 
     private static String geToken() {
         HttpServletRequest request = RequestHelper.getRequest();
+        if (request == null) {
+            return null;
+        }
         return request.getHeader(SdkConstant.TOKEN_NAME);
     }
 
