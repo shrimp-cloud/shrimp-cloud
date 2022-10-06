@@ -40,6 +40,9 @@ public class AuthHelper {
     public String getAvatar() {
         return getClaimValue(SdkConstant.USER_INFO_USER_AVATAR);
     }
+    public String getOpenId() {
+        return getClaimValue(SdkConstant.USER_INFO_OPEN_ID);
+    }
 
     public UserInfo getUserInfoIfLogin() {
         String token = geToken();
