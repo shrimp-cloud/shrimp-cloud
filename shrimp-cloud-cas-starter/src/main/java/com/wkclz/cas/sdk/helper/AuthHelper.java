@@ -23,7 +23,7 @@ public class AuthHelper {
     private CasSdkConfig casSdkConfig;
 
     public String getAppCode() {
-        return getClaimValue(SdkConstant.USER_INFO_APP_CODE);
+        return getAppCodeFromRequest();
     }
     public String getUserCode() {
         return getClaimValue(SdkConstant.USER_INFO_USER_CODE);
@@ -59,7 +59,6 @@ public class AuthHelper {
         }
         Claims claims = getClaims(token);
         UserInfo userInfo = new UserInfo();
-        userInfo.setAppCode(getClaimValue(claims, SdkConstant.USER_INFO_APP_CODE));
         userInfo.setUserCode(getClaimValue(claims, SdkConstant.USER_INFO_USER_CODE));
         userInfo.setUsername(getClaimValue(claims, SdkConstant.USER_INFO_USER_NAME));
         userInfo.setNickName(getClaimValue(claims, SdkConstant.USER_INFO_NICK_NAME));
@@ -67,9 +66,41 @@ public class AuthHelper {
         return userInfo;
     }
 
+    private static String getAppCodeFromRequest() {
+
+        String appCode = MDC.get(SdkConstant.HEADER_APP_CODE);
+        if (appCode != null){
+            return appCode;
+        }
+
+        HttpServletRequest request = RequestHelper.getRequest();
+        if (request == null) {
+            throw BizException.error("request is not from the web");
+        }
+        appCode = request.getHeader(SdkConstant.HEADER_APP_CODE);
+        if (appCode != null) {
+            MDC.put(SdkConstant.HEADER_APP_CODE, appCode);
+            return appCode;
+        }
+        throw BizException.error("can not get tenant info, please set tenant-code in header or set tenant-domain-cache");
+        /*
+        String domain = RequestHelper.getFrontDomain(request);
+        if (StringUtils.isBlank(domain)) {
+            throw BizException.error("can not get domain from the request: {}", RequestHelper.getRequestUrl());
+        }
+
+        tenantCode = TenantDomainCache.get(domain);
+        if (tenantCode != null) {
+            MDC.put(SdkConstant.TENANT_CODE, tenantCode);
+            return tenantCode;
+        }
+        throw BizException.error("can not get tenant info, please set tenant-code in header or set tenant-domain-cache");
+        */
+    }
+
     private static String getTenantCodeFromRequest() {
 
-        String tenantCode = MDC.get(SdkConstant.TENANT_CODE);
+        String tenantCode = MDC.get(SdkConstant.HEADER_TENANT_CODE);
         if (tenantCode != null){
             return tenantCode;
         }
@@ -78,9 +109,9 @@ public class AuthHelper {
         if (request == null) {
             throw BizException.error("request is not from the web");
         }
-        tenantCode = request.getHeader(SdkConstant.TENANT_CODE);
+        tenantCode = request.getHeader(SdkConstant.HEADER_TENANT_CODE);
         if (tenantCode != null) {
-            MDC.put(SdkConstant.TENANT_CODE, tenantCode);
+            MDC.put(SdkConstant.HEADER_TENANT_CODE, tenantCode);
             return tenantCode;
         }
 
@@ -91,7 +122,7 @@ public class AuthHelper {
 
         tenantCode = TenantDomainCache.get(domain);
         if (tenantCode != null) {
-            MDC.put(SdkConstant.TENANT_CODE, tenantCode);
+            MDC.put(SdkConstant.HEADER_TENANT_CODE, tenantCode);
         }
 
         if (tenantCode == null) {
@@ -105,7 +136,7 @@ public class AuthHelper {
         if (request == null) {
             return null;
         }
-        return request.getHeader(SdkConstant.TOKEN_NAME);
+        return request.getHeader(SdkConstant.HEADER_TOKEN_NAME);
     }
 
     private static Claims parseToken(String secret, String token) {
