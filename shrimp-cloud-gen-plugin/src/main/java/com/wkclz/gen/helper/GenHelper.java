@@ -19,7 +19,7 @@ import java.util.Map;
 public class GenHelper {
 
     // 已经部署好的机器
-    private static String BASE_URL = "http://api-gen.uat.wkclz.com/gen";
+    private static String BASE_URL = "https://api.uat.wkclz.com/gen";
     private static String AUTH_CODE = null;
 
 
