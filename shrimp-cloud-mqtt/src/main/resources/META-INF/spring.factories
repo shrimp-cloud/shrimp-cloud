@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.wkclz.mqtt.StarterAutoConfigure
+  com.wkclz.mqtt.MqttAutoConfigure
