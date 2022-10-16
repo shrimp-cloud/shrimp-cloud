@@ -14,7 +14,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Component
-public @interface RocketMqController {
+public @interface RocketMqTopic {
 
     /**
      * 监听的父topic

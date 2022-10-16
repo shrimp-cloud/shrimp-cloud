@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface RocketMqTagMapping {
+public @interface RocketMqTag {
 
     /**
      * 筛选 Topic 下的 tag
