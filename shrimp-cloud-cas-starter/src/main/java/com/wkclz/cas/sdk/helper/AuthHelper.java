@@ -22,6 +22,16 @@ public class AuthHelper {
     @Autowired
     private CasSdkConfig casSdkConfig;
 
+    public String getToken() {
+        return getToken();
+    }
+    public String getToken(boolean force) {
+        String token = getToken();
+        if (force && token == null) {
+            throw BizException.error(ResultStatus.TOKEN_UNLL);
+        }
+        return token;
+    }
     public String getAppCode() {
         return getAppCodeFromRequest();
     }
