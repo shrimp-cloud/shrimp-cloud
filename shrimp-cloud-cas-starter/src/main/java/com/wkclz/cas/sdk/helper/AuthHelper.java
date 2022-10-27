@@ -1,6 +1,6 @@
 package com.wkclz.cas.sdk.helper;
 
-import com.wkclz.cas.sdk.cache.TenantDomainCache;
+import com.wkclz.cas.sdk.cache.ATenantDomainCache;
 import com.wkclz.cas.sdk.config.CasSdkConfig;
 import com.wkclz.cas.sdk.pojo.SdkConstant;
 import com.wkclz.cas.sdk.pojo.UserInfo;
@@ -21,6 +21,8 @@ public class AuthHelper {
 
     @Autowired
     private CasSdkConfig casSdkConfig;
+    @Autowired
+    private ATenantDomainCache aTenantDomainCache;
 
     public String getToken() {
         return getToken();
@@ -76,7 +78,7 @@ public class AuthHelper {
         return userInfo;
     }
 
-    private static String getAppCodeFromRequest() {
+    private String getAppCodeFromRequest() {
 
         String appCode = MDC.get(SdkConstant.HEADER_APP_CODE);
         if (appCode != null){
@@ -108,7 +110,7 @@ public class AuthHelper {
         */
     }
 
-    private static String getTenantCodeFromRequest() {
+    private String getTenantCodeFromRequest() {
 
         String tenantCode = MDC.get(SdkConstant.HEADER_TENANT_CODE);
         if (tenantCode != null){
@@ -130,7 +132,7 @@ public class AuthHelper {
             throw BizException.error("can not get domain from the request: {}", RequestHelper.getRequestUrl());
         }
 
-        tenantCode = TenantDomainCache.get(domain);
+        tenantCode = aTenantDomainCache.get(domain);
         if (tenantCode != null) {
             MDC.put(SdkConstant.HEADER_TENANT_CODE, tenantCode);
         }

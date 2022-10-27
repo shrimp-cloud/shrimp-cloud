@@ -56,6 +56,11 @@ public class GwFilter extends OncePerRequestFilter {
             ResponseHelper.responseError(response, error);
             return;
         }
+
+        // URI 权限
+
+
+
         chain.doFilter(request, response);
     }
 

@@ -30,4 +30,5 @@ public class CasSdkConfig {
     public void setTokenSecret(String tokenSecret) {
         this.tokenSecret = tokenSecret;
     }
+
 }

@@ -1,0 +1,29 @@
+{
+  "properties":[
+    {
+      "name": "shrimp.cloud.mqtt.username",
+      "type": "java.lang.String",
+      "defaultValue": null,
+      "description": "MQTT服务器用户名"
+    },
+    {
+      "name": "shrimp.cloud.mqtt.password",
+      "type": "java.lang.String",
+      "defaultValue": null,
+      "description": "MQTT服务器密码"
+    },
+    {
+      "name": "shrimp.cloud.mqtt.end-point",
+      "type": "java.lang.String",
+      "defaultValue": null,
+      "description": "MQTT服务器地址,示例: tcp://127.0.0.1:11883。若不配置，则不启用mqtt支持"
+    },
+    {
+      "name": "shrimp.cloud.mqtt.client-id-prefix",
+      "type": "java.lang.String",
+      "defaultValue": "server",
+      "description": "服务器作为client接入时的clientId前缀。后缀会默认拼接上IP"
+    }
+  ],
+  "hits": []
+}
