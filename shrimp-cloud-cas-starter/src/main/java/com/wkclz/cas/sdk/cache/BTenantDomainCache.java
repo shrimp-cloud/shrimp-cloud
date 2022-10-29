@@ -15,7 +15,7 @@ import java.util.Map;
  * @date : wangkaicun @ 2019-02-13 20:55:11
  */
 @Component
-public class ATenantDomainCache {
+public class BTenantDomainCache {
 
     @Autowired
     private AppInfoFacade appInfoFacade;
