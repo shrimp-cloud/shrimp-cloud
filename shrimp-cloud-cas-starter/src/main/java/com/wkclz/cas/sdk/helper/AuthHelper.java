@@ -21,8 +21,6 @@ public class AuthHelper {
 
     @Autowired
     private CasSdkConfig casSdkConfig;
-    @Autowired
-    private BTenantDomainCache bTenantDomainCache;
 
     public String getToken() {
         return getToken();
@@ -132,7 +130,7 @@ public class AuthHelper {
             throw BizException.error("can not get domain from the request: {}", RequestHelper.getRequestUrl());
         }
 
-        tenantCode = bTenantDomainCache.get(domain);
+        tenantCode = BTenantDomainCache.get(domain);
         if (tenantCode != null) {
             MDC.put(SdkConstant.HEADER_TENANT_CODE, tenantCode);
         }

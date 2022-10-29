@@ -2,14 +2,10 @@ package com.wkclz.cas.sdk.facade.impl;
 
 import com.wkclz.cas.sdk.facade.AppInfoFacade;
 import com.wkclz.cas.sdk.pojo.appinfo.*;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-@ConditionalOnMissingBean
 public class AppInfoImpl implements AppInfoFacade {
 
     @Override

@@ -1,7 +1,12 @@
 package com.wkclz.cas.sdk.config;
 
+import com.wkclz.cas.sdk.facade.AppInfoFacade;
+import com.wkclz.cas.sdk.facade.impl.AppInfoImpl;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 
 @Configuration
 public class CasSdkConfig {
@@ -29,6 +34,12 @@ public class CasSdkConfig {
 
     public void setTokenSecret(String tokenSecret) {
         this.tokenSecret = tokenSecret;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public AppInfoFacade getAppInfoFacade() {
+        return new AppInfoImpl();
     }
 
 }
