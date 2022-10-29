@@ -12,8 +12,6 @@ public interface AppInfoFacade {
     List<RoleRes> roleReses(String appCode);
     List<ResApi> resApis(String appCode);
 
-
-    AppInfo getAppInfo(String appCode);
     List<App> getApps();
     List<String> getUserRoles(String appCode, String userCode);
 

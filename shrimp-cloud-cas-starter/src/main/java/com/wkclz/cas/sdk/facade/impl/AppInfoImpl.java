@@ -37,11 +37,6 @@ public class AppInfoImpl implements AppInfoFacade {
         return null;
     }
 
-
-    @Override
-    public AppInfo getAppInfo(String appCode) {
-        return null;
-    }
     @Override
     public List<App> getApps() {
         return new ArrayList<>();
