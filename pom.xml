@@ -10,16 +10,20 @@
     <version>4.0.0-SNAPSHOT</version>
 
     <modules>
+        <!-- 依赖管理 -->
         <module>shrimp-cloud-bom</module>
         <module>shrimp-cloud-parent</module>
+        <!-- 基础模块，或基础强关联中间件 -->
         <module>shrimp-cloud-common</module>
         <module>shrimp-cloud-redis</module>
         <module>shrimp-cloud-spring</module>
         <module>shrimp-cloud-cas-starter</module>
         <module>shrimp-cloud-mybatis</module>
-
+        <!-- 业务相关中间件 -->
+        <module>shrimp-cloud-mqtt</module>
+        <module>shrimp-cloud-rocketmq</module>
+        <!-- 工具 -->
         <module>shrimp-cloud-gen-plugin</module>
-        <module>shrimp-cloud-mqtt-starter</module>
         <module>shrimp-cloud-swagger-starter</module>
     </modules>
 
