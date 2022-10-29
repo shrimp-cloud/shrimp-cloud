@@ -1,6 +1,5 @@
 package com.wkclz.cas.sdk.cache;
 
-import cn.hutool.core.text.AntPathMatcher;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.wkclz.cas.sdk.helper.AuthHelper;
@@ -13,6 +12,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;

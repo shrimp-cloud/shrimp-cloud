@@ -1,15 +1,19 @@
 package com.wkclz.cas.sdk.filter;
 
-import cn.hutool.core.text.AntPathMatcher;
+import com.wkclz.cas.sdk.cache.AppInfoCache;
+import com.wkclz.cas.sdk.cache.DUserApiCache;
 import com.wkclz.cas.sdk.helper.AuthHelper;
 import com.wkclz.cas.sdk.helper.ResponseHelper;
+import com.wkclz.cas.sdk.pojo.appinfo.AppInfo;
 import com.wkclz.common.entity.Result;
 import com.wkclz.common.exception.BizException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -26,6 +30,10 @@ public class GwFilter extends OncePerRequestFilter {
 
     @Autowired
     private AuthHelper authHelper;
+    @Autowired
+    private DUserApiCache dUserApiCache;
+    @Autowired
+    private AppInfoCache appInfoCache;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
@@ -56,12 +64,29 @@ public class GwFilter extends OncePerRequestFilter {
             ResponseHelper.responseError(response, error);
             return;
         }
+        String appCode = authHelper.getAppCode();
 
-        // URI 权限
+        AppInfo appInfo = appInfoCache.get(appCode);
+        String authType = appInfo.getApp().getAuthType();
 
+        if ("TOKEN".equals(authType)) {
+            chain.doFilter(request, response);
+            return;
+        }
+        if ("TOKEN_API".equals(authType) || "TOKEN_API_BUTTON".equals(authType) ) {
+            String method = request.getMethod();
+            boolean b = dUserApiCache.get(method, uri);
+            if (!b) {
+                Result msg = Result.error("没有接口权限: " + uri);
+                msg.setCode(HttpStatus.FORBIDDEN.value());
+                ResponseHelper.responseError(response, msg);
+                return;
+            }
+        }
 
-
-        chain.doFilter(request, response);
+        Result msg = Result.error("应用 " + appCode + " 鉴权配置异常:" + uri);
+        msg.setCode(HttpStatus.FORBIDDEN.value());
+        ResponseHelper.responseError(response, msg);
     }
 
 }

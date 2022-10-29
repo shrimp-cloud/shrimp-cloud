@@ -23,10 +23,10 @@ public class AuthHelper {
     private CasSdkConfig casSdkConfig;
 
     public String getToken() {
-        return getToken();
+        return geTokenFromRequest();
     }
     public String getToken(boolean force) {
-        String token = getToken();
+        String token = geTokenFromRequest();
         if (force && token == null) {
             throw BizException.error(ResultStatus.TOKEN_UNLL);
         }
@@ -55,7 +55,7 @@ public class AuthHelper {
     }
 
     public UserInfo getUserInfoIfLogin() {
-        String token = geToken();
+        String token = geTokenFromRequest();
         if (token == null) {
             return null;
         }
@@ -63,7 +63,7 @@ public class AuthHelper {
     }
 
     public UserInfo getUserInfo() {
-        String token = geToken();
+        String token = geTokenFromRequest();
         if (token == null) {
             throw BizException.error(ResultStatus.TOKEN_UNLL);
         }
@@ -141,7 +141,7 @@ public class AuthHelper {
         return tenantCode;
     }
 
-    private static String geToken() {
+    private static String geTokenFromRequest() {
         HttpServletRequest request = RequestHelper.getRequest();
         if (request == null) {
             return null;
@@ -159,7 +159,7 @@ public class AuthHelper {
     }
 
     private String getClaimValue(String claimKey) {
-        String token = geToken();
+        String token = geTokenFromRequest();
         if (token == null) {
             throw BizException.error(ResultStatus.TOKEN_UNLL);
         }
