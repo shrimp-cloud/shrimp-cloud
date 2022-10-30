@@ -15,4 +15,6 @@ public interface AppInfoFacade {
     List<App> getApps();
     List<String> getUserRoles(String appCode, String userCode);
 
+    List<CacheRecord> getCacheRecord();
+
 }

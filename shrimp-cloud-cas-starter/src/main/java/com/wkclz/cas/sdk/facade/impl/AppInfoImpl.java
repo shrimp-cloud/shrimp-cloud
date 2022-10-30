@@ -42,5 +42,9 @@ public class AppInfoImpl implements AppInfoFacade {
         return new ArrayList<>();
     }
 
+    @Override
+    public List<CacheRecord> getCacheRecord() {
+        return null;
+    }
 
 }
