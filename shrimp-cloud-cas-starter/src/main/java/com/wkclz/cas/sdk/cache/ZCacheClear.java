@@ -30,7 +30,7 @@ public class ZCacheClear {
     @Autowired
     private DUserApiCache dUserApiCache;
 
-    @Scheduled(fixedRate=5000)
+    @Scheduled(fixedDelay = 5000)
     public void clearCache() {
 
         List<CacheRecord> cacheRecord = appInfoFacade.getCacheRecord();
@@ -41,20 +41,20 @@ public class ZCacheClear {
         if (FIRST_TIME == null) {
             FIRST_TIME = System.currentTimeMillis();
         }
-        long now = System.currentTimeMillis();
 
         List<CacheRecord> newRecord = new ArrayList<>();
         for (CacheRecord record : cacheRecord) {
             String key = record.getAppCode() + ":" + record.getCacheType();
-            // 比第一次扫描还早，10 秒以上，不刷新。系统会自动加载
-            if (FIRST_TIME - record.getCreateTime().getTime() > 10_000) {
-                CACHE_COMMAND.put(key, FIRST_TIME);
-                continue;
-            }
 
             // 已经存在的旧指令，不刷新
             Long lastTime = CACHE_COMMAND.get(key);
-            if (lastTime != null && lastTime < now) {
+            if (lastTime != null && lastTime >= record.getCreateTime().getTime()) {
+                continue;
+            }
+
+            // 比第一次扫描还早，10 秒以上，不刷新。系统会自动加载
+            if (FIRST_TIME - record.getCreateTime().getTime() > 10_000) {
+                CACHE_COMMAND.put(key, FIRST_TIME);
                 continue;
             }
 
@@ -81,8 +81,6 @@ public class ZCacheClear {
             String appCode = entry.getKey();
             String types = StringUtils.join(entry.getValue(), ",");
 
-            logger.info("应用: {}, 缓存: {} 更新...", appCode, types);
-
             // AppInfo 的更新，无需关心类型
             appInfoCache.refresh(appCode, types);
 
@@ -103,9 +101,7 @@ public class ZCacheClear {
                 // ROLE,RES,API,ROLE_RES,RES_API
                 dUserApiCache.invalidateAll();
             }
-
+            logger.info("应用: {}, 缓存: {} 更新...完成", appCode, types);
         }
-
     }
-
 }
