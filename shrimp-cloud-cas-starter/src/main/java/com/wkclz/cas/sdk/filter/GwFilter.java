@@ -82,6 +82,8 @@ public class GwFilter extends OncePerRequestFilter {
                 ResponseHelper.responseError(response, msg);
                 return;
             }
+            chain.doFilter(request, response);
+            return;
         }
 
         Result msg = Result.error("应用 " + appCode + " 鉴权配置异常:" + uri);
