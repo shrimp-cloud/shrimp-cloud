@@ -1,6 +1,6 @@
 package com.wkclz.cas.sdk.config;
 
-import com.wkclz.cas.sdk.cache.BTenantDomainCache;
+import com.wkclz.cas.sdk.cache.ATenantDomainCache;
 import com.wkclz.cas.sdk.facade.AppInfoFacade;
 import com.wkclz.cas.sdk.pojo.appinfo.App;
 import org.apache.commons.collections4.CollectionUtils;
@@ -25,7 +25,7 @@ public class CasSdkDomainInit {
     public void initDomain() {
         List<App> apps = appInfoFacade.getApps();
         if (CollectionUtils.isNotEmpty(apps)) {
-            BTenantDomainCache.setTenantDomains(apps);
+            ATenantDomainCache.setTenantDomains(apps);
             logger.info("应用域名解析 {} 条", apps.size());
         }
     }

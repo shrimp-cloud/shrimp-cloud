@@ -1,10 +1,8 @@
 package com.wkclz.cas.sdk.filter;
 
-import com.wkclz.cas.sdk.cache.AppInfoCache;
 import com.wkclz.cas.sdk.cache.DUserApiCache;
 import com.wkclz.cas.sdk.helper.AuthHelper;
 import com.wkclz.cas.sdk.helper.ResponseHelper;
-import com.wkclz.cas.sdk.pojo.appinfo.AppInfo;
 import com.wkclz.common.entity.Result;
 import com.wkclz.common.exception.BizException;
 import org.slf4j.Logger;
@@ -32,8 +30,6 @@ public class GwFilter extends OncePerRequestFilter {
     private AuthHelper authHelper;
     @Autowired
     private DUserApiCache dUserApiCache;
-    @Autowired
-    private AppInfoCache appInfoCache;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
@@ -50,9 +46,15 @@ public class GwFilter extends OncePerRequestFilter {
             return;
         }
 
+        String userCode;
+        // String appCode;
+        // AppInfo appInfo;
+
         try {
-            String userCode = authHelper.getUserCode();
+            userCode = authHelper.getUserCode();
             logger.info("request: {}, userCode: {}, UA: {}", uri, userCode, ua);
+            // appCode = authHelper.getAppCode();
+            // appInfo = appInfoCache.get(appCode);
         } catch (Exception e) {
             String msg = e.getMessage();
             Result error = Result.error(msg);
@@ -64,11 +66,9 @@ public class GwFilter extends OncePerRequestFilter {
             ResponseHelper.responseError(response, error);
             return;
         }
-        String appCode = authHelper.getAppCode();
 
-        AppInfo appInfo = appInfoCache.get(appCode);
+        /*
         String authType = appInfo.getApp().getAuthType();
-
         if ("TOKEN".equals(authType)) {
             chain.doFilter(request, response);
             return;
@@ -85,10 +85,24 @@ public class GwFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
             return;
         }
+        */
+        // 全部都启用接口级鉴权 begin
+        String method = request.getMethod();
+        boolean b = dUserApiCache.get(method, uri);
+        if (!b) {
+            Result msg = Result.error("没有接口权限: " + uri);
+            msg.setCode(HttpStatus.FORBIDDEN.value());
+            ResponseHelper.responseError(response, msg);
+            return;
+        }
+        chain.doFilter(request, response);
+        // 全部都启用接口级鉴权 end
 
+        /*
         Result msg = Result.error("应用 " + appCode + " 鉴权配置异常:" + uri);
         msg.setCode(HttpStatus.FORBIDDEN.value());
         ResponseHelper.responseError(response, msg);
+        */
     }
 
 }

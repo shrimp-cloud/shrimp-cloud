@@ -1,6 +1,6 @@
 package com.wkclz.cas.sdk.helper;
 
-import com.wkclz.cas.sdk.cache.BTenantDomainCache;
+import com.wkclz.cas.sdk.cache.ATenantDomainCache;
 import com.wkclz.cas.sdk.config.CasSdkConfig;
 import com.wkclz.cas.sdk.pojo.SdkConstant;
 import com.wkclz.cas.sdk.pojo.UserInfo;
@@ -92,7 +92,7 @@ public class AuthHelper {
             MDC.put(SdkConstant.HEADER_APP_CODE, appCode);
             return appCode;
         }
-        throw BizException.error("can not get tenant info, please set tenant-code in header or set tenant-domain-cache");
+        throw BizException.error("can not get app-code, please set app-code in header or set app-domain-cache");
         /*
         String domain = RequestHelper.getFrontDomain(request);
         if (StringUtils.isBlank(domain)) {
@@ -130,7 +130,7 @@ public class AuthHelper {
             throw BizException.error("can not get domain from the request: {}", RequestHelper.getRequestUrl());
         }
 
-        tenantCode = BTenantDomainCache.get(domain);
+        tenantCode = ATenantDomainCache.get(domain);
         if (tenantCode != null) {
             MDC.put(SdkConstant.HEADER_TENANT_CODE, tenantCode);
         }

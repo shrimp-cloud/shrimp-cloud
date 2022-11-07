@@ -7,18 +7,34 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-public class AppInfoCache {
+public class BAppInfoCache {
 
     private static final Map<String, AppInfo> APP_RESOURCE_CACHE_MAP = new ConcurrentHashMap<>();
 
     @Autowired
     private AppInfoFacade appInfoFacade;
+
+    public synchronized List<AppInfo> get() {
+        Map<String, String> domainAppCodes = ATenantDomainCache.get();
+        if (domainAppCodes == null) {
+            return null;
+        }
+        List<AppInfo> apps = new ArrayList<>();
+        for (String appCode : domainAppCodes.values()) {
+            AppInfo appInfo = get(appCode);
+            if (appInfo != null) {
+                apps.add(appInfo);
+            }
+        }
+        return apps;
+    }
 
     public synchronized AppInfo get(String appCode) {
         if (StringUtils.isBlank(appCode)) {

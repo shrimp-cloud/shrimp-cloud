@@ -26,7 +26,7 @@ public class ZCacheClear {
     @Autowired
     private AppInfoFacade appInfoFacade;
     @Autowired
-    private AppInfoCache appInfoCache;
+    private BAppInfoCache appInfoCache;
     @Autowired
     private DUserApiCache dUserApiCache;
 
@@ -89,7 +89,7 @@ public class ZCacheClear {
                 if ("APP".equals(type)) {
                     List<App> apps = appInfoFacade.getApps();
                     if (CollectionUtils.isNotEmpty(apps)) {
-                        BTenantDomainCache.setTenantDomains(apps);
+                        ATenantDomainCache.setTenantDomains(apps);
                     }
                 }
                 if ("USER_ROLE".equals(type)) {

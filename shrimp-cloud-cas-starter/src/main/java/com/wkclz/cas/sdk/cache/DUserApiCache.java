@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -31,12 +32,12 @@ public class DUserApiCache {
     @Autowired
     private AuthHelper authHelper;
     @Autowired
-    private AppInfoCache appInfoCache;
+    private BAppInfoCache appInfoCache;
     @Autowired
     private CUserRoleCache cUserRoleCache;
 
     public synchronized boolean get(String mathod, String uri) {
-        String appCode = authHelper.getAppCode();
+        String appCode = "cas"; //authHelper.getAppCode();
         String userCode = authHelper.getUserCode();
         String key = appCode + ":" + userCode + ":" + mathod + ":" + uri;
         Boolean access = USER_APIS.getIfPresent(key);
@@ -60,32 +61,42 @@ public class DUserApiCache {
             USER_APIS.put(key, false);
             return;
         }
-        AppInfo appinfo = appInfoCache.get(appCode);
-        if (appinfo == null) {
+        List<AppInfo> appinfos = appInfoCache.get();
+        if (CollectionUtils.isEmpty(appinfos)) {
             USER_APIS.put(key, false);
             return;
         }
-        List<String> resCodes = appinfo.getRoleReses().stream().filter(t -> userRoles.contains(t.getRoleCode())).map(RoleRes::getResCode).toList();
+
+        // 获取所有 roleRes
+        List<RoleRes> roleReses = new ArrayList<>();
+        appinfos.forEach(t -> roleReses.addAll(t.getRoleReses()));
+        List<String> resCodes = roleReses.stream().filter(t -> userRoles.contains(t.getRoleCode())).map(RoleRes::getResCode).toList();
         if (CollectionUtils.isEmpty(resCodes)) {
             USER_APIS.put(key, false);
             return;
         }
-        List<String> apiCodes = appinfo.getResApis().stream().filter(t -> resCodes.contains(t.getResCode())).map(ResApi::getApiCode).toList();
+
+
+        // 获取所有 apiCodes
+        List<ResApi> resApis = new ArrayList<>();
+        appinfos.forEach(t -> resApis.addAll(t.getResApis()));
+        List<String> apiCodes = resApis.stream().filter(t -> resCodes.contains(t.getResCode())).map(ResApi::getApiCode).toList();
         if (CollectionUtils.isEmpty(apiCodes)) {
             USER_APIS.put(key, false);
             return;
         }
-        List<Api> apis = appinfo.getApis().stream().filter(t -> apiCodes.contains(t.getApiCode())).toList();
-        if (CollectionUtils.isEmpty(apis)) {
-            USER_APIS.put(key, false);
-            return;
-        }
-        for (Api api : apis) {
-            if (ANT_PATH_MATCHER.match(api.getApiUri(), uri) && mathod.equals(api.getApiMathod())) {
-                USER_APIS.put(key, true);
-                return;
+
+        // 获取所有 apis
+        for (AppInfo appinfo : appinfos) {
+            List<Api> apis = appinfo.getApis();
+            for (Api api : apis) {
+                if (ANT_PATH_MATCHER.match(api.getApiUri(), uri) && mathod.equals(api.getApiMathod())) {
+                    USER_APIS.put(key, true);
+                    return;
+                }
             }
         }
+
         // 无权限
         USER_APIS.put(key, false);
     }
