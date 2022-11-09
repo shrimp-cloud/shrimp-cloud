@@ -38,6 +38,10 @@ public class AppInfoImpl implements AppInfoFacade {
         return new ArrayList<>();
     }
     @Override
+    public List<String> getUserRoles(String userCode) {
+        return new ArrayList<>();
+    }
+    @Override
     public List<String> getUserRoles(String appCode, String userCode) {
         return new ArrayList<>();
     }
