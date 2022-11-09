@@ -37,7 +37,7 @@ public class DUserApiCache {
     @Autowired
     private CUserRoleCache cUserRoleCache;
 
-    public synchronized ConcurrentMap<String, Boolean> get()  {
+    public synchronized ConcurrentMap<String, Boolean> getCache()  {
         return USER_APIS.asMap();
     }
 

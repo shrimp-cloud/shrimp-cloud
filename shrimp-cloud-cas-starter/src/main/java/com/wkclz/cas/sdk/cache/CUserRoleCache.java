@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 
@@ -29,6 +30,11 @@ public class CUserRoleCache {
     private AuthHelper authHelper;
     @Autowired
     private AppInfoFacade appInfoFacade;
+
+    public synchronized ConcurrentMap<String, List<String>> getAll() {
+        return USER_ROLES.asMap();
+    }
+
 
     public synchronized List<String> get() {
         String token = authHelper.getToken(true);

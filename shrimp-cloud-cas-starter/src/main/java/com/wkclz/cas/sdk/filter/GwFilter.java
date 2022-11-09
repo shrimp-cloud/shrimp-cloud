@@ -3,12 +3,15 @@ package com.wkclz.cas.sdk.filter;
 import com.wkclz.cas.sdk.cache.DUserApiCache;
 import com.wkclz.cas.sdk.helper.AuthHelper;
 import com.wkclz.cas.sdk.helper.ResponseHelper;
+import com.wkclz.common.emuns.ResultStatus;
 import com.wkclz.common.entity.Result;
 import com.wkclz.common.exception.BizException;
+import com.wkclz.common.utils.SecretUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
@@ -19,6 +22,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class GwFilter extends OncePerRequestFilter {
@@ -30,6 +34,8 @@ public class GwFilter extends OncePerRequestFilter {
     private AuthHelper authHelper;
     @Autowired
     private DUserApiCache dUserApiCache;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
@@ -43,6 +49,30 @@ public class GwFilter extends OncePerRequestFilter {
         if (match) {
             logger.info("request: {}, write list, UA: {}", uri, ua);
             chain.doFilter(request, response);
+            return;
+        }
+
+        String token;
+        try {
+            token = authHelper.getToken(true);
+        } catch (Exception e) {
+            String msg = e.getMessage();
+            Result error = Result.error(msg);
+            if (e instanceof BizException) {
+                BizException be = (BizException)e;
+                error.setCode(be.getCode());
+            }
+            logger.info("request: {}, no token: {}, UA: {}", uri, msg, ua);
+            ResponseHelper.responseError(response, error);
+            return;
+        }
+
+        String tokenKey = SecretUtil.md5(token);
+        token = stringRedisTemplate.boundValueOps(tokenKey).getAndExpire(30, TimeUnit.MINUTES);
+        if (token == null) {
+            Result msg = Result.error(ResultStatus.LOGIN_TIMEOUT);
+            msg.setCode(HttpStatus.FORBIDDEN.value());
+            ResponseHelper.responseError(response, msg);
             return;
         }
 
@@ -62,7 +92,7 @@ public class GwFilter extends OncePerRequestFilter {
                 BizException be = (BizException)e;
                 error.setCode(be.getCode());
             }
-            logger.info("request: {}, auth faild: {}, UA: {}", uri, msg, ua);
+            logger.info("request: {}, err token: {}, UA: {}", uri, msg, ua);
             ResponseHelper.responseError(response, error);
             return;
         }
