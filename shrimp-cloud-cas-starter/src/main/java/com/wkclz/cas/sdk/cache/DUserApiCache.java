@@ -16,6 +16,7 @@ import org.springframework.util.AntPathMatcher;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -35,6 +36,10 @@ public class DUserApiCache {
     private BAppInfoCache appInfoCache;
     @Autowired
     private CUserRoleCache cUserRoleCache;
+
+    public synchronized ConcurrentMap<String, Boolean> get()  {
+        return USER_APIS.asMap();
+    }
 
     public synchronized boolean get(String mathod, String uri) {
         String appCode = "cas"; //authHelper.getAppCode();
