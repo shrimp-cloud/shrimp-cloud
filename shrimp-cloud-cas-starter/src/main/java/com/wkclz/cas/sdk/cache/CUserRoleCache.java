@@ -38,18 +38,30 @@ public class CUserRoleCache {
 
     public synchronized List<String> get() {
         String token = authHelper.getToken(true);
-        String appCode = authHelper.getAppCode();
+        // String appCode = authHelper.getAppCode();
         String userCode = authHelper.getUserCode();
         String key = SecretUtil.md5(token);
         List<String> roles = USER_ROLES.getIfPresent(key);
         if (roles != null) {
             return roles;
         }
-        refresh(appCode, userCode, key);
+        // refresh(appCode, userCode, key);
+        refresh(userCode, key);
         roles = USER_ROLES.getIfPresent(key);
         return roles;
     }
 
+    public void refresh(String userCode, String key) {
+        if (StringUtils.isBlank(userCode)) {
+            return;
+        }
+        List<String> userRoles = appInfoFacade.getUserRoles(userCode);
+        if (CollectionUtils.isEmpty(userRoles)) {
+            USER_ROLES.put(key, new ArrayList<>());
+            return;
+        }
+        USER_ROLES.put(key, userRoles);
+    }
     public void refresh(String appCode, String userCode, String key) {
         if (StringUtils.isBlank(appCode) || StringUtils.isBlank(userCode)) {
             return;
