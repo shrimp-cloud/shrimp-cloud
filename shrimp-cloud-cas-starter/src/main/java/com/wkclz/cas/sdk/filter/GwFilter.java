@@ -53,18 +53,11 @@ public class GwFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token;
-        try {
-            token = authHelper.getToken(true);
-        } catch (Exception e) {
-            String msg = e.getMessage();
-            Result error = Result.error(msg);
-            if (e instanceof BizException) {
-                BizException be = (BizException)e;
-                error.setCode(be.getCode());
-            }
+        String token = authHelper.getToken();
+        if (token == null) {
+            Result msg = Result.error(ResultStatus.TOKEN_UNLL);
+            ResponseHelper.responseError(response, msg);
             logger.info("request: {}, no token: {}, UA: {}", uri, msg, ua);
-            ResponseHelper.responseError(response, error);
             return;
         }
 
@@ -73,7 +66,6 @@ public class GwFilter extends OncePerRequestFilter {
         token = ops.get();
         if (token == null) {
             Result msg = Result.error(ResultStatus.LOGIN_TIMEOUT);
-            msg.setCode(HttpStatus.FORBIDDEN.value());
             ResponseHelper.responseError(response, msg);
             return;
         }
