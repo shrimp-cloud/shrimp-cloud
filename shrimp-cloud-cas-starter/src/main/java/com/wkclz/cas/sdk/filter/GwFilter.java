@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.BoundValueOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -68,13 +69,15 @@ public class GwFilter extends OncePerRequestFilter {
         }
 
         String tokenKey = SecretUtil.md5(token);
-        token = stringRedisTemplate.boundValueOps(tokenKey).getAndExpire(30, TimeUnit.MINUTES);
+        BoundValueOperations<String, String> ops = stringRedisTemplate.boundValueOps(tokenKey);
+        token = ops.get();
         if (token == null) {
             Result msg = Result.error(ResultStatus.LOGIN_TIMEOUT);
             msg.setCode(HttpStatus.FORBIDDEN.value());
             ResponseHelper.responseError(response, msg);
             return;
         }
+        ops.expire(30L, TimeUnit.MINUTES);
 
         String userCode;
         // String appCode;
