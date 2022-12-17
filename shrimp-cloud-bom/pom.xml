@@ -18,25 +18,26 @@
 
         <!-- Spring 依赖(非spring-cloud-dependencies定义的依赖)  -->
         <feign-okhttp.version>11.9.1</feign-okhttp.version>
-        <druid-spring-boot-starter.version>1.2.12</druid-spring-boot-starter.version>
+        <druid-spring-boot-starter.version>1.2.15</druid-spring-boot-starter.version>
         <mybatis-spring-boot-starter.version>2.2.2</mybatis-spring-boot-starter.version>
-        <pagehelper-spring-boot-starter.version>1.4.4</pagehelper-spring-boot-starter.version>
+        <pagehelper-spring-boot-starter.version>1.4.6</pagehelper-spring-boot-starter.version>
 
         <!-- 三方静态依赖 -->
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
-        <spring-beans.version>5.3.23</spring-beans.version>
-        <fastjson2.version>2.0.13</fastjson2.version>
-        <hutool.version>5.8.7</hutool.version>
+        <spring-beans.version>5.3.24</spring-beans.version>
+        <fastjson2.version>2.0.21</fastjson2.version>
+        <hutool.version>5.8.10</hutool.version>
         <guava.version>31.1-jre</guava.version>
         <jsoup.version>1.15.3</jsoup.version>
-        <zxing.version>3.5.0</zxing.version>
-        <jasypt-spring-boot.version>3.0.4</jasypt-spring-boot.version>
+        <zxing.version>3.5.1</zxing.version>
+        <jasypt-spring-boot.version>3.0.5</jasypt-spring-boot.version>
         <wkclz-excel.version>1.0.11.RELEASE</wkclz-excel.version>
-        <aliyun-sdk-oss.version>3.15.1</aliyun-sdk-oss.version>
+        <aliyun-sdk-oss.version>3.16.0</aliyun-sdk-oss.version>
         <dysmsapi20170525.version>2.0.16</dysmsapi20170525.version>
         <swagger.version>3.0.0</swagger.version>
         <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
+        <weixin-java.version>4.4.0</weixin-java.version>
 
         <jjwt.version>0.9.1</jjwt.version>
         <kaptcha.version>2.3.2</kaptcha.version>
@@ -161,6 +162,37 @@
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt</artifactId>
                 <version>${jjwt.version}</version>
+            </dependency>
+
+            <!--微信小程序：weixin-java-miniapp -->
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-miniapp</artifactId>
+                <version>${weixin-java.version}</version>
+            </dependency>
+            <!--微信支付：weixin-java-pay -->
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-pay</artifactId>
+                <version>${weixin-java.version}</version>
+            </dependency>
+            <!--微信开放平台：weixin-java-open -->
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-open</artifactId>
+                <version>${weixin-java.version}</version>
+            </dependency>
+            <!--公众号（包括订阅号和服务号）：weixin-java-mp -->
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-mp</artifactId>
+                <version>${weixin-java.version}</version>
+            </dependency>
+            <!--企业号/企业微信：weixin-java-cp -->
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-cp</artifactId>
+                <version>${weixin-java.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

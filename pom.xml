@@ -21,7 +21,9 @@
         <module>shrimp-cloud-mybatis</module>
         <!-- 业务相关中间件 -->
         <module>shrimp-cloud-mqtt</module>
+        <!--
         <module>shrimp-cloud-rocketmq</module>
+        -->
         <!-- 工具 -->
         <module>shrimp-cloud-gen-plugin</module>
         <module>shrimp-cloud-swagger-starter</module>
