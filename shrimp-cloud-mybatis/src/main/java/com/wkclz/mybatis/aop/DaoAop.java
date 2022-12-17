@@ -166,7 +166,7 @@ public class DaoAop {
             return sqlCommandType;
         }
 
-        throw BizException.error("unknown dao operation: %s", pointId);
+        throw BizException.error("unknown dao operation: %s, please check the config: mybatis.mapper-locations", pointId);
     }
 
 
