@@ -26,12 +26,12 @@ public enum SysConfigEnum {
 
     private String key;
     private String value;
-    private String comments;
+    private String remark;
 
-    SysConfigEnum(String key, String value, String comments) {
+    SysConfigEnum(String key, String value, String remark) {
         this.key = key;
         this.value = value;
-        this.comments = comments;
+        this.remark = remark;
     }
 
     public String getKey() {
@@ -42,8 +42,8 @@ public enum SysConfigEnum {
         return value;
     }
 
-    public String getComments() {
-        return comments;
+    public String getRemark() {
+        return remark;
     }
 
 

@@ -69,13 +69,17 @@ public class BaseEntity {
     @Desc("更新人昵称")
     private String updateByName;
     @Desc("备注")
-    private String comments;
+    private String remark;
     @Desc("数据版本")
     private Integer version;
     @Desc("数据状态:0(已删除),1(有效)")
     private Integer status;
 
     private Integer debug;
+
+
+    @Deprecated
+    private String comments;
 
     public void init() {
         if (this.current == null || this.current < 1) {
@@ -248,12 +252,12 @@ public class BaseEntity {
         this.updateByName = updateByName;
     }
 
-    public String getComments() {
-        return comments;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setComments(String comments) {
-        this.comments = comments;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public Integer getVersion() {
@@ -278,6 +282,14 @@ public class BaseEntity {
 
     public void setDebug(Integer debug) {
         this.debug = debug;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
     public static <T extends BaseEntity> T copy(T source, T target) {
