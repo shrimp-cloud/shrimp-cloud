@@ -45,7 +45,18 @@ public class AuthHelper {
         return getClaimValue(SdkConstant.USER_INFO_NICK_NAME);
     }
     public String getTenantCode() {
-        return getTenantCodeFromRequest();
+        String tenantCode = getTenantCodeFromRequest();
+        if (tenantCode == null) {
+            throw BizException.error(ResultStatus.TENANT_NULL);
+        }
+        return tenantCode;
+    }
+    public String getTenantCode(boolean nullable) {
+        String tenantCode = getTenantCodeFromRequest();
+        if (!nullable && tenantCode == null) {
+            throw BizException.error(ResultStatus.TENANT_NULL);
+        }
+        return tenantCode;
     }
     public String getAvatar() {
         return getClaimValue(SdkConstant.USER_INFO_USER_AVATAR);
@@ -92,7 +103,7 @@ public class AuthHelper {
             MDC.put(SdkConstant.HEADER_APP_CODE, appCode);
             return appCode;
         }
-        throw BizException.error("can not get app-code, please set app-code in header or set app-domain-cache");
+        throw BizException.error(ResultStatus.APP_CODE_NULL);
         /*
         String domain = RequestHelper.getFrontDomain(request);
         if (StringUtils.isBlank(domain)) {
@@ -135,9 +146,6 @@ public class AuthHelper {
             MDC.put(SdkConstant.HEADER_TENANT_CODE, tenantCode);
         }
 
-        if (tenantCode == null) {
-            throw BizException.error("can not get tenant info, please set tenant-code in header or set tenant-domain-cache");
-        }
         return tenantCode;
     }
 

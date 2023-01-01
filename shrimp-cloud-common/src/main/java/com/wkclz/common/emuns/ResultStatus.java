@@ -16,6 +16,8 @@ public enum ResultStatus {
     TOKEN_SIGN_FAILD(10005, "token 签名效验失败！"),
     LOGIN_TIMEOUT(10006, "登录已失效，请重新登录！"),
     LOGIN_FORCE_TIMEOUT(10007, "登录时间过长，强制失效，请重新登录！"),
+    APP_CODE_NULL(10008, "无法识别应用编码，请设置请求头或应用域名"),
+    TENANT_NULL(10009, "无法识别租户编码，请设置请求头或租户域名"),
 
     CLIENT_CHANGE(20001, "用户登录环境改变！"),
     API_CORS(20002, "api url can not be cors"),
