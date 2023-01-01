@@ -40,8 +40,8 @@ public class OssHelper {
         String appGroup = Sys.APPLICATION_GROUP.toLowerCase();
         String env = Sys.CURRENT_ENV.toString().toLowerCase();
         businessType = businessType.toLowerCase();
-        String date = DateUtil.format(new Date(), "yyyyMMddHHmmss");
-        String path = appGroup + "/" + env + "/" + businessType + "/" + date;
+        String day = DateUtil.format(new Date(), "yyyyMMdd");
+        String path = appGroup + "/" + env + "/" + businessType + "/" + day;
         return path;
     }
 
