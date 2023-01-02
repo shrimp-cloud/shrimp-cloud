@@ -94,6 +94,7 @@ public class DUserApiCache {
         // 获取所有 apis
         for (AppInfo appinfo : appinfos) {
             List<Api> apis = appinfo.getApis();
+            apis = apis.stream().filter(t -> apiCodes.contains(t.getApiCode())).toList();
             for (Api api : apis) {
                 if (ANT_PATH_MATCHER.match(api.getApiUri(), uri) && mathod.equals(api.getApiMathod())) {
                     USER_APIS.put(key, true);
