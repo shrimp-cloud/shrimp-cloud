@@ -28,6 +28,16 @@ public class ErrorHandler {
     }
 
 
+    @ExceptionHandler(BizException.class)
+    public Result bizExceptionHandler(BizException e){
+        logger.error(e.getMessage(), e);
+        Result result = new Result();
+        result.setError(e.getMessage());
+        result.setCode(-1);
+        return result;
+    }
+
+
     @ExceptionHandler(value = Exception.class)
     public Result errorHandler(Exception e) {
         logger.error(e.getMessage(), e);

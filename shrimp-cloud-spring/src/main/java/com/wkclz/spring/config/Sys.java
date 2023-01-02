@@ -58,7 +58,7 @@ public class Sys implements ApplicationRunner {
         EnumDictHelper.init();
 
         if (!systemConfig.isCloud() || !ServiceIdConstant.LZ_SYS.equalsIgnoreCase(systemConfig.getApplicationName())){
-            logger.info("not cloud or monomer application mode, do not sync cache by {}", ServiceIdConstant.LZ_SYS);
+            logger.info("not cloud but single application mode, do not sync cache by {}", ServiceIdConstant.LZ_SYS);
             return;
         }
 
