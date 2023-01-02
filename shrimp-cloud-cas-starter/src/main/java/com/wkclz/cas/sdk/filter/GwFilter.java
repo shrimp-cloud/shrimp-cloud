@@ -115,6 +115,7 @@ public class GwFilter extends OncePerRequestFilter {
         String method = request.getMethod();
         boolean b = dUserApiCache.get(method, uri);
         if (!b) {
+            logger.info("request: {}, no permission: user: {} UA: {}", uri, userCode, ua);
             Result msg = Result.error("没有接口权限: " + uri);
             msg.setCode(HttpStatus.FORBIDDEN.value());
             ResponseHelper.responseError(response, msg);

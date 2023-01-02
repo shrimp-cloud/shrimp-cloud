@@ -51,6 +51,13 @@ public class AuthHelper {
         }
         return tenantCode;
     }
+    public String getTenantCodeWithDefault() {
+        String tenantCode = getTenantCodeFromRequest();
+        if (tenantCode == null) {
+            tenantCode = "default";
+        }
+        return tenantCode;
+    }
     public String getTenantCode(boolean nullable) {
         String tenantCode = getTenantCodeFromRequest();
         if (!nullable && tenantCode == null) {

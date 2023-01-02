@@ -42,24 +42,25 @@ public class DUserApiCache {
     }
 
     public synchronized boolean get(String mathod, String uri) {
-        String appCode = "cas"; //authHelper.getAppCode();
+        String appCode = authHelper.getAppCode();
         String userCode = authHelper.getUserCode();
-        String key = appCode + ":" + userCode + ":" + mathod + ":" + uri;
+        String tenantCode = authHelper.getTenantCodeWithDefault();
+        String key = tenantCode + ":" + appCode + ":" + userCode + ":" + mathod + ":" + uri;
         Boolean access = USER_APIS.getIfPresent(key);
         if (access != null) {
             return access;
         }
-        refresh(appCode, userCode, mathod, uri);
+        refresh(tenantCode, appCode, userCode, mathod, uri);
         access = USER_APIS.getIfPresent(key);
         return access != null && access;
     }
 
-    public void refresh(String appCode, String userCode, String mathod, String uri) {
-        if (StringUtils.isBlank(appCode) || StringUtils.isBlank(userCode) || StringUtils.isBlank(uri) || StringUtils.isBlank(mathod)) {
+    public void refresh(String tenantCode, String appCode, String userCode, String mathod, String uri) {
+        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(appCode) || StringUtils.isBlank(userCode) || StringUtils.isBlank(uri) || StringUtils.isBlank(mathod)) {
             throw BizException.error("应用信息不全，无法鉴权！");
         }
 
-        String key = appCode + ":" + userCode + ":" + mathod + ":" + uri;
+        String key = tenantCode + ":" + appCode + ":" + userCode + ":" + mathod + ":" + uri;
 
         List<String> userRoles = cUserRoleCache.get();
         if (CollectionUtils.isEmpty(userRoles)) {
@@ -80,7 +81,6 @@ public class DUserApiCache {
             USER_APIS.put(key, false);
             return;
         }
-
 
         // 获取所有 apiCodes
         List<ResApi> resApis = new ArrayList<>();
