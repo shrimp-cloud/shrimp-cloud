@@ -13,8 +13,8 @@ public interface AppInfoFacade {
     List<ResApi> resApis(String appCode);
 
     List<App> getApps();
-    List<String> getUserRoles(String userCode);
-    List<String> getUserRoles(String appCode, String userCode);
+    List<String> getUserRoles(String tenantCode, String userCode);
+    List<String> getUserRoles(String tenantCode, String userCode, String appCode);
 
     List<CacheRecord> getCacheRecord();
 

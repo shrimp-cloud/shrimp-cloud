@@ -2,9 +2,18 @@ package com.wkclz.cas.sdk.pojo.appinfo;
 
 public class UserRole {
 
+    private String tenantCode;
     private String appCode;
     private String userCode;
     private String roleCode;
+
+    public String getTenantCode() {
+        return tenantCode;
+    }
+
+    public void setTenantCode(String tenantCode) {
+        this.tenantCode = tenantCode;
+    }
 
     public String getAppCode() {
         return appCode;

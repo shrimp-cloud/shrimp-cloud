@@ -1,5 +1,6 @@
 package com.wkclz.cas.sdk.filter;
 
+import com.wkclz.cas.sdk.cache.BAppInfoCache;
 import com.wkclz.cas.sdk.cache.DUserApiCache;
 import com.wkclz.cas.sdk.helper.AuthHelper;
 import com.wkclz.cas.sdk.helper.ResponseHelper;
@@ -33,6 +34,8 @@ public class GwFilter extends OncePerRequestFilter {
 
     @Autowired
     private AuthHelper authHelper;
+    @Autowired
+    private BAppInfoCache appInfoCache;
     @Autowired
     private DUserApiCache dUserApiCache;
     @Autowired
@@ -72,14 +75,9 @@ public class GwFilter extends OncePerRequestFilter {
         ops.expire(30L, TimeUnit.MINUTES);
 
         String userCode;
-        // String appCode;
-        // AppInfo appInfo;
-
         try {
             userCode = authHelper.getUserCode();
             logger.info("request: {}, userCode: {}, UA: {}", uri, userCode, ua);
-            // appCode = authHelper.getAppCode();
-            // appInfo = appInfoCache.get(appCode);
         } catch (Exception e) {
             String msg = e.getMessage();
             Result error = Result.error(msg);
@@ -92,7 +90,8 @@ public class GwFilter extends OncePerRequestFilter {
             return;
         }
 
-        /*
+        /* 因为所有应用都走同一个入口，无法获取模块应用编码。无法使用区分授权方式
+        AppInfo appInfo = appInfoCache.get(authHelper.getAppCode());
         String authType = appInfo.getApp().getAuthType();
         if ("TOKEN".equals(authType)) {
             chain.doFilter(request, response);
@@ -111,6 +110,7 @@ public class GwFilter extends OncePerRequestFilter {
             return;
         }
         */
+
         // 全部都启用接口级鉴权 begin
         String method = request.getMethod();
         boolean b = dUserApiCache.get(method, uri);
@@ -120,8 +120,9 @@ public class GwFilter extends OncePerRequestFilter {
             ResponseHelper.responseError(response, msg);
             return;
         }
-        chain.doFilter(request, response);
         // 全部都启用接口级鉴权 end
+
+        chain.doFilter(request, response);
 
         /*
         Result msg = Result.error("应用 " + appCode + " 鉴权配置异常:" + uri);

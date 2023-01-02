@@ -6,7 +6,6 @@ import com.wkclz.cas.sdk.facade.AppInfoFacade;
 import com.wkclz.cas.sdk.helper.AuthHelper;
 import com.wkclz.common.utils.SecretUtil;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,38 +34,25 @@ public class CUserRoleCache {
         return USER_ROLES.asMap();
     }
 
-
     public synchronized List<String> get() {
         String token = authHelper.getToken(true);
-        // String appCode = authHelper.getAppCode();
-        String userCode = authHelper.getUserCode();
-        String key = SecretUtil.md5(token);
+        String tenantCode = authHelper.getTenantCode();
+        String appCode = authHelper.getAppCode();
+        String key = SecretUtil.md5(tenantCode + ":" + appCode + ":" + token);
         List<String> roles = USER_ROLES.getIfPresent(key);
         if (roles != null) {
             return roles;
         }
-        // refresh(appCode, userCode, key);
-        refresh(userCode, key);
+        refresh(key);
         roles = USER_ROLES.getIfPresent(key);
         return roles;
     }
 
-    public void refresh(String userCode, String key) {
-        if (StringUtils.isBlank(userCode)) {
-            return;
-        }
-        List<String> userRoles = appInfoFacade.getUserRoles(userCode);
-        if (CollectionUtils.isEmpty(userRoles)) {
-            USER_ROLES.put(key, new ArrayList<>());
-            return;
-        }
-        USER_ROLES.put(key, userRoles);
-    }
-    public void refresh(String appCode, String userCode, String key) {
-        if (StringUtils.isBlank(appCode) || StringUtils.isBlank(userCode)) {
-            return;
-        }
-        List<String> userRoles = appInfoFacade.getUserRoles(appCode, userCode);
+    public void refresh(String key) {
+        String userCode = authHelper.getUserCode();
+        String tenantCode = authHelper.getTenantCode();
+        String appCode = authHelper.getAppCode();
+        List<String> userRoles = appInfoFacade.getUserRoles(tenantCode, userCode, appCode);
         if (CollectionUtils.isEmpty(userRoles)) {
             USER_ROLES.put(key, new ArrayList<>());
             return;
