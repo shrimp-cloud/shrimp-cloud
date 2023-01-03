@@ -7,7 +7,7 @@ import com.wkclz.redis.topic.RedisTopicConfig;
 import com.wkclz.spring.config.SpringContextHolder;
 import com.wkclz.spring.config.SystemConfig;
 import com.wkclz.spring.entity.Dict;
-import com.wkclz.spring.entity.DictType;
+import com.wkclz.spring.entity.DictItem;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.CollectionUtils;
@@ -20,26 +20,26 @@ import java.util.List;
  */
 public class DictHelper {
 
-    private static List<DictType> DICT_TYPES = null;
+    private static List<Dict> DICTS = null;
 
     /**
      * 更新全部缓存
      */
     public static boolean reflash() {
-        return reflash(DICT_TYPES);
+        return reflash(DICTS);
     }
-    public static boolean reflash(List<DictType> dictTypes) {
-        if (CollectionUtils.isEmpty(dictTypes)) {
+    public static boolean reflash(List<Dict> dicts) {
+        if (CollectionUtils.isEmpty(dicts)) {
             throw BizException.error("dictTypes can not be null or empty!");
         }
 
         if (!SpringContextHolder.getBean(SystemConfig.class).isCloud()){
-            DICT_TYPES = dictTypes;
+            DICTS = dicts;
             return true;
         }
         RedisMsgBody body = new RedisMsgBody();
         body.setTag(DictHelper.class.getName());
-        body.setMsg(dictTypes);
+        body.setMsg(dicts);
 
         String msg = JSON.toJSONString(body);
         StringRedisTemplate stringRedisTemplate = SpringContextHolder.getBean(StringRedisTemplate.class);
@@ -53,41 +53,41 @@ public class DictHelper {
      */
     public static boolean setLocal(Object msg) {
         if (msg == null) {
-            throw BizException.error("dictTypes can not be null or empty!");
+            throw BizException.error("dicts can not be null or empty!");
         }
-        List<DictType> dictTypes = JSON.parseArray(msg.toString(), DictType.class);
-        return setLocal(dictTypes);
+        List<Dict> dicts = JSON.parseArray(msg.toString(), Dict.class);
+        return setLocal(dicts);
     }
 
-    public static boolean setLocal(List<DictType> dictTypes) {
-        if (CollectionUtils.isEmpty(dictTypes)) {
-            throw BizException.error("dictTypes can not be null or empty!");
+    public static boolean setLocal(List<Dict> dicts) {
+        if (CollectionUtils.isEmpty(dicts)) {
+            throw BizException.error("dicts can not be null or empty!");
         }
-        DICT_TYPES = dictTypes;
+        DICTS = dicts;
         return true;
     }
 
-    public static List<DictType> getLocal() {
-        return DICT_TYPES;
+    public static List<Dict> getLocal() {
+        return DICTS;
     }
 
 
     /**
      * 获取字典列表
-     * @param dictType
+     * @param dict
      * @return
      */
-    public static List<Dict> get(String dictType){
-        if (StringUtils.isBlank(dictType)){
+    public static List<DictItem> get(String dict){
+        if (StringUtils.isBlank(dict)){
             return null;
         }
-        if (DICT_TYPES == null){
+        if (DICTS == null){
             throw BizException.error("do not init dict yet, please wait!");
         }
 
-        for (DictType type : DICT_TYPES) {
-            if (dictType.equals(type.getDictType())){
-                return type.getDicts();
+        for (Dict type : DICTS) {
+            if (dict.equals(type.getDictType())){
+                return type.getItems();
             }
         }
         return null;
@@ -95,21 +95,21 @@ public class DictHelper {
 
     /**
      * 获取字典详情
-     * @param dictType
+     * @param dict
      * @return
      */
-    public static Dict get(String dictType, String dictKey){
+    public static DictItem get(String dict, String dictKey){
         if (StringUtils.isBlank(dictKey)){
             return null;
         }
-        List<Dict> dicts = get(dictType);
+        List<DictItem> dicts = get(dict);
         if (CollectionUtils.isEmpty(dicts)) {
             return null;
         }
 
-        for (Dict dict : dicts) {
-            if (dictKey.equals(dict.getDictKey())){
-                return dict;
+        for (DictItem item : dicts) {
+            if (dictKey.equals(item.getDictKey())){
+                return item;
             }
         }
         return null;
@@ -117,16 +117,16 @@ public class DictHelper {
 
     /**
      * 获取字典值
-     * @param dictType
+     * @param dict
      * @param dictKey
      * @return
      */
-    public static String getValue(String dictType, String dictKey){
-        Dict dict = get(dictType, dictKey);
-        if (dict == null){
+    public static String getValue(String dict, String dictKey){
+        DictItem item = get(dict, dictKey);
+        if (item == null){
             return null;
         }
-        return dict.getDictValue();
+        return item.getDictValue();
     }
 }
 
