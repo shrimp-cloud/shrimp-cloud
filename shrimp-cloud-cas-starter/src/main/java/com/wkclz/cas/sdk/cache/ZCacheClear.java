@@ -1,7 +1,6 @@
 package com.wkclz.cas.sdk.cache;
 
 import com.wkclz.cas.sdk.facade.AppInfoFacade;
-import com.wkclz.cas.sdk.pojo.appinfo.App;
 import com.wkclz.cas.sdk.pojo.appinfo.CacheRecord;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -87,10 +86,12 @@ public class ZCacheClear {
             String[] typeArr = types.split(",");
             for (String type : typeArr) {
                 if ("APP".equals(type)) {
+                    /* TODO APP_DOMAIN
                     List<App> apps = appInfoFacade.getApps();
                     if (CollectionUtils.isNotEmpty(apps)) {
                         ATenantDomainCache.setTenantDomains(apps);
                     }
+                    */
                 }
                 if ("USER_ROLE".equals(type)) {
                     // 用户需要重新登录，不管

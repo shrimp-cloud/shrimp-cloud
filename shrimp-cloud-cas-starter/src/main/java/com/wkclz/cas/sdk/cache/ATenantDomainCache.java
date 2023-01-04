@@ -11,6 +11,7 @@ import java.util.Map;
  * Description: 若需要域名转 tenantCode, 需要提前 set 缓存信息。否则只能用header 取租户信息
  * @date : wangkaicun @ 2019-02-13 20:55:11
  */
+@Deprecated
 public class ATenantDomainCache {
 
     private static Map<String, String> TENANT_DOMAINS = null;
@@ -26,6 +27,7 @@ public class ATenantDomainCache {
         return TENANT_DOMAINS.get(domain);
     }
 
+    // 此处是 AppDomain
     public static void setTenantDomains(List<App> apps) {
         TENANT_DOMAINS = new HashedMap();
         try {

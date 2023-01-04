@@ -7,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -22,18 +21,7 @@ public class BAppInfoCache {
     private AppInfoFacade appInfoFacade;
 
     public synchronized List<AppInfo> get() {
-        Map<String, String> domainAppCodes = ATenantDomainCache.get();
-        if (domainAppCodes == null) {
-            return null;
-        }
-        List<AppInfo> apps = new ArrayList<>();
-        for (String appCode : domainAppCodes.values()) {
-            AppInfo appInfo = get(appCode);
-            if (appInfo != null) {
-                apps.add(appInfo);
-            }
-        }
-        return apps;
+        return APP_RESOURCE_CACHE_MAP.values().stream().toList();
     }
 
     public synchronized AppInfo get(String appCode) {

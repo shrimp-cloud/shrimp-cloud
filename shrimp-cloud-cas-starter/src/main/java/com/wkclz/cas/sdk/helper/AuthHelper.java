@@ -1,6 +1,5 @@
 package com.wkclz.cas.sdk.helper;
 
-import com.wkclz.cas.sdk.cache.ATenantDomainCache;
 import com.wkclz.cas.sdk.config.CasSdkConfig;
 import com.wkclz.cas.sdk.pojo.SdkConstant;
 import com.wkclz.cas.sdk.pojo.UserInfo;
@@ -9,7 +8,6 @@ import com.wkclz.common.exception.BizException;
 import com.wkclz.spring.helper.RequestHelper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -143,12 +141,14 @@ public class AuthHelper {
             return tenantCode;
         }
 
+        /*
         String domain = RequestHelper.getFrontDomain(request);
         if (StringUtils.isBlank(domain)) {
             throw BizException.error("can not get domain from the request: {}", RequestHelper.getRequestUrl());
         }
-
         tenantCode = ATenantDomainCache.get(domain);
+        */
+
         if (tenantCode != null) {
             MDC.put(SdkConstant.HEADER_TENANT_CODE, tenantCode);
         }
