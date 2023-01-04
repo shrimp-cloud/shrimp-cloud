@@ -45,10 +45,17 @@ public class GwFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         MDC.clear();
         String uri = request.getRequestURI();
+
+        // druid 自身带密码，跳过验证
+        boolean druid = ANT_PATH_MATCHER.match("/druid/**", uri);
+        if (druid) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         String ua = request.getHeader("User-Agent");
 
         // TODO 请求日志
-
         boolean match = ANT_PATH_MATCHER.match("/public/**", uri);
         if (match) {
             logger.info("request: {}, write list, UA: {}", uri, ua);

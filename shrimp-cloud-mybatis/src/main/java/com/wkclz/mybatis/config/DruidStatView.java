@@ -15,11 +15,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class DruidStatView {
 
-    @Value("${lz.druid.username:admin}")
+    @Value("${shrimp.druid.username:admin}")
     private String username;
-    @Value("${lz.druid.password:adminPassword}")
+    @Value("${shrimp.druid.password:adminPassword}")
     private String password;
-    @Value("${lz.druid.reset-enable:true}")
+    @Value("${shrimp.druid.reset-enable:true}")
     private String resetEnable;
 
     /**
