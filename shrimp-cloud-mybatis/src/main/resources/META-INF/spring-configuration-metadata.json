@@ -1,19 +1,19 @@
 {
   "properties":[
     {
-      "name": "lz.druid.username",
+      "name": "shrimp.druid.username",
       "type": "java.lang.String",
       "defaultValue": "admin",
       "description": "druid监控用户名"
     },
     {
-      "name": "lz.druid.password",
+      "name": "shrimp.druid.password",
       "type": "java.lang.String",
       "defaultValue": "adminPassword",
       "description": "druid监控密码"
     },
     {
-      "name": "lz.druid.reset-enable",
+      "name": "shrimp.druid.reset-enable",
       "type": "java.lang.Boolean",
       "defaultValue": true,
       "description": "druid监控数据是否可重置"
