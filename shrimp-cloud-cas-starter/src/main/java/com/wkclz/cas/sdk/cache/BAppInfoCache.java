@@ -38,6 +38,14 @@ public class BAppInfoCache {
         return (appInfo == null || appInfo.getApp() == null) ? null : appInfo;
     }
 
+    public void refresh(List<String> appCodes) {
+        if (appCodes != null) {
+            for (String appCode : appCodes) {
+                refresh(appCode, "APP,ROLE,RES,API,ROLE_RES,RES_API");
+            }
+        }
+    }
+
     public void refresh(String appCode) {
         refresh(appCode, "APP,ROLE,RES,API,ROLE_RES,RES_API");
     }

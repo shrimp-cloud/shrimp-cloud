@@ -147,13 +147,12 @@ public class AuthHelper {
             throw BizException.error("can not get domain from the request: {}", RequestHelper.getRequestUrl());
         }
         tenantCode = ATenantDomainCache.get(domain);
-        */
-
         if (tenantCode != null) {
             MDC.put(SdkConstant.HEADER_TENANT_CODE, tenantCode);
         }
+        */
 
-        return tenantCode;
+        return null;
     }
 
     private static String geTokenFromRequest() {
