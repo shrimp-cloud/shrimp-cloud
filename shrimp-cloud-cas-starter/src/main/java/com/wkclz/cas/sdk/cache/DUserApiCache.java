@@ -96,9 +96,12 @@ public class DUserApiCache {
             List<Api> apis = appinfo.getApis();
             apis = apis.stream().filter(t -> apiCodes.contains(t.getApiCode())).toList();
             for (Api api : apis) {
-                if (ANT_PATH_MATCHER.match(api.getApiUri(), uri) && mathod.equals(api.getApiMathod())) {
-                    USER_APIS.put(key, true);
-                    return;
+                if (ANT_PATH_MATCHER.match(api.getApiUri(), uri)) {
+                    // 精确匹配方法，或模糊匹配全部方法
+                    if (mathod.equals(api.getApiMathod()) || "REQUEST".equals(api.getApiMathod())) {
+                        USER_APIS.put(key, true);
+                        return;
+                    }
                 }
             }
         }
