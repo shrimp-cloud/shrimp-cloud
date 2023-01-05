@@ -74,11 +74,11 @@ public class DictHelper {
 
     /**
      * 获取字典列表
-     * @param dict
+     * @param dictType
      * @return
      */
-    public static List<DictItem> get(String dict){
-        if (StringUtils.isBlank(dict)){
+    public static List<DictItem> get(String dictType){
+        if (StringUtils.isBlank(dictType)){
             return null;
         }
         if (DICTS == null){
@@ -86,7 +86,7 @@ public class DictHelper {
         }
 
         for (Dict type : DICTS) {
-            if (dict.equals(type.getDictType())){
+            if (dictType.equals(type.getDictType())){
                 return type.getItems();
             }
         }
@@ -95,20 +95,21 @@ public class DictHelper {
 
     /**
      * 获取字典详情
-     * @param dict
+     * @param dictType
+     * @param dictValue
      * @return
      */
-    public static DictItem get(String dict, String dictKey){
-        if (StringUtils.isBlank(dictKey)){
+    public static DictItem get(String dictType, String dictValue){
+        if (StringUtils.isBlank(dictType) || StringUtils.isBlank(dictValue)){
             return null;
         }
-        List<DictItem> dicts = get(dict);
+        List<DictItem> dicts = get(dictType);
         if (CollectionUtils.isEmpty(dicts)) {
             return null;
         }
 
         for (DictItem item : dicts) {
-            if (dictKey.equals(item.getDictKey())){
+            if (dictValue.equals(item.getDictValue())){
                 return item;
             }
         }

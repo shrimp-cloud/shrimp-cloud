@@ -36,7 +36,7 @@ public interface Routes {
 
 
     // 从接口获取枚举
-    String ENUMS_DICT = "/enums/dict";
+    String DICT_ITEMS = "/dict/items";
 
 
 }

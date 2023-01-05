@@ -14,6 +14,9 @@ public class Dict {
      */
     private String description;
 
+    /**
+     * 字典内容项
+     */
     private List<DictItem> items;
 
 

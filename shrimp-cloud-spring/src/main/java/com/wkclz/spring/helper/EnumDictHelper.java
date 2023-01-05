@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
+@Deprecated
 public class EnumDictHelper {
 
     private static Map<String, List<EnumDict>> ENUM_DICT_MAP = new HashMap<>();

@@ -1,5 +1,6 @@
 package com.wkclz.spring.entity;
 
+@Deprecated
 public class EnumDict {
 
     private String type;
