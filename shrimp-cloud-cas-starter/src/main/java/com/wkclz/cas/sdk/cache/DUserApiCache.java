@@ -75,7 +75,11 @@ public class DUserApiCache {
 
         // 获取所有 roleRes
         List<RoleRes> roleReses = new ArrayList<>();
-        appinfos.forEach(t -> roleReses.addAll(t.getRoleReses()));
+        appinfos.forEach(t -> {
+            if (CollectionUtils.isNotEmpty(t.getRoleReses())) {
+                roleReses.addAll(t.getRoleReses());
+            }
+        });
         List<String> resCodes = roleReses.stream().filter(t -> userRoles.contains(t.getRoleCode())).map(RoleRes::getResCode).toList();
         if (CollectionUtils.isEmpty(resCodes)) {
             USER_APIS.put(key, false);
