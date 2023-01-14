@@ -88,7 +88,11 @@ public class DUserApiCache {
 
         // 获取所有 apiCodes
         List<ResApi> resApis = new ArrayList<>();
-        appinfos.forEach(t -> resApis.addAll(t.getResApis()));
+        appinfos.forEach(t -> {
+            if (CollectionUtils.isNotEmpty(t.getResApis())) {
+                resApis.addAll(t.getResApis());
+            }
+        });
         List<String> apiCodes = resApis.stream().filter(t -> resCodes.contains(t.getResCode())).map(ResApi::getApiCode).toList();
         if (CollectionUtils.isEmpty(apiCodes)) {
             USER_APIS.put(key, false);
