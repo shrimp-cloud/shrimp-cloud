@@ -2,6 +2,7 @@ package com.wkclz.spring.entity;
 
 public class RestInfo {
 
+    private String appCode;
     private String method;
     private String uri;
     private String name;
@@ -10,6 +11,14 @@ public class RestInfo {
     private Class<?> returnType;
     private List<Class<?>> parameterTypes;
     */
+
+    public String getAppCode() {
+        return appCode;
+    }
+
+    public void setAppCode(String appCode) {
+        this.appCode = appCode;
+    }
 
     public String getMethod() {
         return method;
