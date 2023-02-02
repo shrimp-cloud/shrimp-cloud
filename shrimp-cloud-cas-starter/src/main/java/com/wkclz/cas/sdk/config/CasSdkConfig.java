@@ -17,6 +17,8 @@ public class CasSdkConfig {
      */
     @Value(("${cas.sdk.app-code:default}"))
     private String appCode;
+    @Value(("${cas.sdk.user-default-roles:default}"))
+    private String userDefaultRoles;
     @Value(("${cas.sdk.token.secret:shrimp.chlinhchentclinxmeicyxiuhchua.shrimp.chlinhchentclinxmeicyxiuhchua.shrimp}"))
     private String tokenSecret;
 
@@ -26,6 +28,14 @@ public class CasSdkConfig {
 
     public void setAppCode(String appCode) {
         this.appCode = appCode;
+    }
+
+    public String getUserDefaultRoles() {
+        return userDefaultRoles;
+    }
+
+    public void setUserDefaultRoles(String userDefaultRoles) {
+        this.userDefaultRoles = userDefaultRoles;
     }
 
     public String getTokenSecret() {

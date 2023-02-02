@@ -2,14 +2,15 @@ package com.wkclz.cas.sdk.cache;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.wkclz.cas.sdk.config.CasSdkConfig;
 import com.wkclz.cas.sdk.facade.AppInfoFacade;
 import com.wkclz.cas.sdk.helper.AuthHelper;
 import com.wkclz.common.utils.SecretUtil;
-import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
@@ -27,6 +28,8 @@ public class CUserRoleCache {
 
     @Autowired
     private AuthHelper authHelper;
+    @Autowired
+    private CasSdkConfig casSdkConfig;
     @Autowired
     private AppInfoFacade appInfoFacade;
 
@@ -54,10 +57,14 @@ public class CUserRoleCache {
         // String appCode = authHelper.getAppCode();
         // 应用未分微服务，需要查询所有应用下的角色
         List<String> userRoles = appInfoFacade.getUserRoles(tenantCode, userCode);
-        if (CollectionUtils.isEmpty(userRoles)) {
-            USER_ROLES.put(key, new ArrayList<>());
-            return;
+
+        // 系统存在一些默认所有人都需要有在角色
+        String userDefaultRoles = casSdkConfig.getUserDefaultRoles();
+        if (StringUtils.isNotBlank(userDefaultRoles)) {
+            String[] rolesArr = userDefaultRoles.split(",");
+            userRoles.addAll(Arrays.asList(rolesArr));
         }
+        userRoles = userRoles.stream().distinct().toList();
         USER_ROLES.put(key, userRoles);
     }
 }
