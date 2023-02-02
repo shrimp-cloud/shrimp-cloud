@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
@@ -57,6 +58,9 @@ public class CUserRoleCache {
         // String appCode = authHelper.getAppCode();
         // 应用未分微服务，需要查询所有应用下的角色
         List<String> userRoles = appInfoFacade.getUserRoles(tenantCode, userCode);
+        if (userRoles == null) {
+            userRoles = new ArrayList<>();
+        }
 
         // 系统存在一些默认所有人都需要有在角色
         String userDefaultRoles = casSdkConfig.getUserDefaultRoles();
