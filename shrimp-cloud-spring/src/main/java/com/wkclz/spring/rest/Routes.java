@@ -27,12 +27,15 @@ public interface Routes {
     /**
      * 监控 monitor
      */
+    @Desc("0. 监控-探针")
+    String MONITOR_STATUS = "/public/status";
     @Desc("1. 监控-redis")
     String MONITOR_REDIS = "/monitor/redis";
     @Desc("2. 监控-服务器IP")
     String MONITOR_IPS = "/monitor/ips";
     @Desc("3. 监控-服务器属性")
     String MONITOR_PROPERTIES = "/monitor/properties";
+
 
 
     // 从接口获取枚举

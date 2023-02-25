@@ -54,8 +54,8 @@ public class Sys implements ApplicationRunner {
         // 初始化环境信息
         initEnv();
 
-        if (!systemConfig.isCloud() || !ServiceIdConstant.LZ_SYS.equalsIgnoreCase(systemConfig.getApplicationName())){
-            logger.info("not cloud but single application mode, do not sync cache by {}", ServiceIdConstant.LZ_SYS);
+        if (!systemConfig.isCloud() || !ServiceIdConstant.SHRIMP_SYS.equalsIgnoreCase(systemConfig.getApplicationName())){
+            logger.info("not cloud but single application mode, do not sync cache by {}", ServiceIdConstant.SHRIMP_SYS);
             return;
         }
 

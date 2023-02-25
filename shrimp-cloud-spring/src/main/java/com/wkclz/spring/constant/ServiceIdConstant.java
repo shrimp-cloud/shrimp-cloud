@@ -4,12 +4,12 @@ package com.wkclz.spring.constant;
  * 服务 id
  */
 public interface ServiceIdConstant {
-    String LZ_DEMO = "lz-demo";
-    String LZ_SYS = "lz-sys";
-    String LZ_CAS = "lz-cas";
-    String LZ_GEN = "lz-gen";
-    String LZ_GOV = "lz-gov";
-    String LZ_PAY = "lz-pay";
-    String LZ_CMS = "lz-cms";
-    String LZ_PMS = "lz-pms";
+    String SHRIMP_DEMO = "shrimp-demo";
+    String SHRIMP_SYS = "shrimp-sys";
+    String SHRIMP_CAS = "shrimp-cas";
+    String SHRIMP_GEN = "shrimp-gen";
+    String SHRIMP_GOV = "shrimp-gov";
+    String SHRIMP_PAY = "shrimp-pay";
+    String SHRIMP_CMS = "shrimp-cms";
+    String SHRIMP_PMS = "shrimp-pms";
 }

@@ -12,6 +12,13 @@ import java.util.Properties;
 @RestController
 public class Monitor {
 
+
+    @GetMapping(Routes.MONITOR_STATUS)
+    public Result monitorStatus(){
+        return Result.ok();
+    }
+
+
     /**
      * 获取服务器IP
      * @return
