@@ -1,11 +1,13 @@
 package com.wkclz.spring.utils;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.wkclz.common.annotation.Desc;
 import com.wkclz.common.annotation.Router;
 import com.wkclz.common.utils.ClassUtil;
 import com.wkclz.common.utils.StringUtil;
 import com.wkclz.spring.entity.RestInfo;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -25,8 +27,33 @@ public class RestUtil {
     private static final Logger logger = LoggerFactory.getLogger(RestUtil.class);
 
     /**
-     * 读取 controller
-     * @return
+     * 获取所有接口字符串
+     */
+    public static String getMappingStr(String appCode, String packagePath, String filter) {
+        List<RestInfo> mappings = getMapping(appCode, packagePath, filter);
+        String json = JSONObject.toJSONString(mappings);
+        return json;
+    }
+    /**
+     * 获取所有接口对象
+     */
+    public static List<RestInfo> getMapping(String appCode, String packagePath, String filter) {
+        List<RestInfo> mappings = null;
+        if (StringUtils.isBlank(packagePath)) {
+            mappings = getMapping();
+        } else {
+            mappings = getMapping(packagePath);
+        }
+        if (StringUtils.isNotBlank(filter)) {
+            mappings = mappings.stream().filter(t -> t.getUri().contains(filter)).collect(Collectors.toList());
+        }
+        mappings.forEach(t -> t.setAppCode(appCode));
+        return mappings;
+    }
+
+
+    /**
+     * // 默认读取全部
      */
     public static List<RestInfo> getMapping() {
         // 获取二级域下的所有 Class
