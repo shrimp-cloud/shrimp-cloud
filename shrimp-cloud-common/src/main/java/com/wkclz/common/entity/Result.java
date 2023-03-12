@@ -1,5 +1,6 @@
 package com.wkclz.common.entity;
 
+import cn.hutool.core.util.StrUtil;
 import com.wkclz.common.emuns.ResultStatus;
 import com.wkclz.common.exception.BizException;
 
@@ -57,14 +58,14 @@ public class Result<T> {
         this.msg = msg;
     }
 
-    public Result setError(String... error) {
-        this.msg = concatStr(error);
+    public Result setError(CharSequence template, Object... params) {
+        this.msg = StrUtil.format(template, params);;
         this.code = -1;
         return this;
     }
 
-    public Result setRemind(String... remind) {
-        this.msg = concatStr(remind);
+    public Result setRemind(CharSequence template, Object... params) {
+        this.msg = StrUtil.format(template, params);;
         this.code = 0;
         return this;
     }
@@ -108,9 +109,9 @@ public class Result<T> {
     }
 
 
-    public static Result error(String... error) {
+    public static Result error(CharSequence template, Object... params) {
         Result result = new Result();
-        result.msg = concatStr(error);
+        result.msg = StrUtil.format(template, params);
         result.code = -1;
         return result;
     }
@@ -128,9 +129,9 @@ public class Result<T> {
         return result;
     }
 
-    public static Result remind(String... remind) {
+    public static Result remind(CharSequence template, Object... params) {
         Result result = new Result();
-        result.msg = concatStr(remind);
+        result.msg = StrUtil.format(template, params);
         result.code = 0;
         return result;
     }
@@ -171,26 +172,6 @@ public class Result<T> {
         this.code = status.getCode();
         this.msg = status.getMsg();
         return this;
-    }
-
-    /**
-     * 错误信息连接处理
-     *
-     * @param msgs
-     * @return
-     */
-    private static String concatStr(String[] msgs) {
-        if (msgs == null || msgs.length == 0) {
-            return null;
-        }
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < msgs.length; i++) {
-            sb.append(msgs[i]);
-            if (i != (msgs.length-1)) {
-                sb.append(";");
-            }
-        }
-        return sb.toString();
     }
 
 }
