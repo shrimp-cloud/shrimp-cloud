@@ -9,10 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
 public class DictRest {
 
-    @GetMapping(Routes.DICT_ITEMS)
+    // 字典由 sys/mdm管理，此处只留下作为历史
     public Result dictItems(String type) {
         if (StringUtils.isBlank(type)) {
             return Result.error("type must not be null");
