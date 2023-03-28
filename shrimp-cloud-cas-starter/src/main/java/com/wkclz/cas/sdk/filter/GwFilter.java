@@ -44,6 +44,7 @@ public class GwFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         MDC.clear();
+        String method = request.getMethod();
         String uri = request.getRequestURI();
 
         // druid 自身带密码，跳过验证
@@ -58,7 +59,7 @@ public class GwFilter extends OncePerRequestFilter {
         // TODO 请求日志
         boolean match = ANT_PATH_MATCHER.match("/public/**", uri);
         if (match) {
-            logger.info("request: {}, write list, UA: {}", uri, ua);
+            logger.info("request: {}:{}, write list, UA: {}", method, uri, ua);
             chain.doFilter(request, response);
             return;
         }
@@ -67,7 +68,7 @@ public class GwFilter extends OncePerRequestFilter {
         if (token == null) {
             Result msg = Result.error(ResultStatus.TOKEN_UNLL);
             ResponseHelper.responseError(response, msg);
-            logger.info("request: {}, no token: {}, UA: {}", uri, msg, ua);
+            logger.info("request: {}:{}, no token: {}, UA: {}", method, uri, msg, ua);
             return;
         }
 
@@ -84,7 +85,7 @@ public class GwFilter extends OncePerRequestFilter {
         String userCode;
         try {
             userCode = authHelper.getUserCode();
-            logger.info("request: {}, userCode: {}, UA: {}", uri, userCode, ua);
+            logger.info("request: {}:{}, userCode: {}, UA: {}", method, uri, userCode, ua);
         } catch (Exception e) {
             String msg = e.getMessage();
             Result error = Result.error(msg);
@@ -92,7 +93,7 @@ public class GwFilter extends OncePerRequestFilter {
                 BizException be = (BizException)e;
                 error.setCode(be.getCode());
             }
-            logger.info("request: {}, err token: {}, UA: {}", uri, msg, ua);
+            logger.info("request: {}:{}, err token: {}, UA: {}", method, uri, msg, ua);
             ResponseHelper.responseError(response, error);
             return;
         }
@@ -105,10 +106,9 @@ public class GwFilter extends OncePerRequestFilter {
             return;
         }
         if ("TOKEN_API".equals(authType) || "TOKEN_API_BUTTON".equals(authType) ) {
-            String method = request.getMethod();
             boolean b = dUserApiCache.get(method, uri);
             if (!b) {
-                Result msg = Result.error("没有接口权限: " + uri);
+                Result msg = Result.error("没有接口权限: " + method + ":" + uri);
                 msg.setCode(HttpStatus.FORBIDDEN.value());
                 ResponseHelper.responseError(response, msg);
                 return;
@@ -119,11 +119,10 @@ public class GwFilter extends OncePerRequestFilter {
         */
 
         // 全部都启用接口级鉴权 begin
-        String method = request.getMethod();
         boolean b = dUserApiCache.get(method, uri);
         if (!b) {
-            logger.info("request: {}, no permission: user: {} UA: {}", uri, userCode, ua);
-            Result msg = Result.error("没有接口权限: " + uri);
+            logger.info("request: {}:{}, no permission: user: {} UA: {}", method, uri, userCode, ua);
+            Result msg = Result.error("没有接口权限: " + method + ":" + uri);
             msg.setCode(HttpStatus.FORBIDDEN.value());
             ResponseHelper.responseError(response, msg);
             return;
