@@ -209,6 +209,13 @@ public class RestUtil {
         for (Class<?> routerClazz : routersClassList) {
             Field[] fields = routerClazz.getDeclaredFields();
             try {
+                Router routerAnno = routerClazz.getAnnotation(Router.class);
+                if (routerAnno != null) {
+                    String value = routerAnno.value();
+                    if (StringUtils.isNotBlank(value)) {
+                        rests.forEach(t-> t.setModule(value));
+                    }
+                }
                 for (Field field : fields) {
                     String val = "";
                     Object o = field.get(val);
