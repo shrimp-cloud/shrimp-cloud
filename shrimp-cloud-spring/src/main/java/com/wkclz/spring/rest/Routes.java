@@ -37,9 +37,4 @@ public interface Routes {
     String MONITOR_PROPERTIES = "/monitor/properties";
 
 
-
-    // 从接口获取枚举
-    String DICT_ITEMS = "/dict/items";
-
-
 }
