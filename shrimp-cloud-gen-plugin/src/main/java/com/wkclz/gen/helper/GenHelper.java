@@ -104,14 +104,21 @@ public class GenHelper {
                 }
 
                 boolean deleteFlag = taskInfo.getNeedDelete() != null && taskInfo.getNeedDelete() == 1;
-                String relativePath = ""
+                String projectBasePath = taskInfo.getProjectBasePath();
+                // 父路径会逃逸。暂时替换成 parent/, 后续再重新找回路径
+                projectBasePath = projectBasePath.replace("../", "parent/");
+                String srcRelativePath = ""
+                    + "/" + projectBasePath
+                    + "/" + taskInfo.getPackagePath().replaceAll("\\.", "/");
+
+                String tagRelativePath = ""
                     + "/" + taskInfo.getProjectBasePath()
                     + "/" + taskInfo.getPackagePath().replaceAll("\\.", "/");
 
-                String genPath = genSrc + relativePath;
+                String genPath = genSrc + srcRelativePath;
                 File genPathDirectory = new File(genPath);
 
-                String tagPath = tagSrc + relativePath;
+                String tagPath = tagSrc + tagRelativePath;
                 File tagPathDirectory = new File(tagPath);
                 if (!tagPathDirectory.exists()){
                     tagPathDirectory.mkdirs();
