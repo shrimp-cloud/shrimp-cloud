@@ -41,26 +41,26 @@ public class DUserApiCache {
         return USER_APIS.asMap();
     }
 
-    public synchronized boolean get(String mathod, String uri) {
+    public synchronized boolean get(String method, String uri) {
         String appCode = authHelper.getAppCode();
         String userCode = authHelper.getUserCode();
         String tenantCode = authHelper.getTenantCodeWithDefault();
-        String key = tenantCode + ":" + appCode + ":" + userCode + ":" + mathod + ":" + uri;
+        String key = tenantCode + ":" + appCode + ":" + userCode + ":" + method + ":" + uri;
         Boolean access = USER_APIS.getIfPresent(key);
         if (access != null) {
             return access;
         }
-        refresh(tenantCode, appCode, userCode, mathod, uri);
+        refresh(tenantCode, appCode, userCode, method, uri);
         access = USER_APIS.getIfPresent(key);
         return access != null && access;
     }
 
-    public void refresh(String tenantCode, String appCode, String userCode, String mathod, String uri) {
-        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(appCode) || StringUtils.isBlank(userCode) || StringUtils.isBlank(uri) || StringUtils.isBlank(mathod)) {
+    public void refresh(String tenantCode, String appCode, String userCode, String method, String uri) {
+        if (StringUtils.isBlank(tenantCode) || StringUtils.isBlank(appCode) || StringUtils.isBlank(userCode) || StringUtils.isBlank(uri) || StringUtils.isBlank(method)) {
             throw BizException.error("应用信息不全，无法鉴权！");
         }
 
-        String key = tenantCode + ":" + appCode + ":" + userCode + ":" + mathod + ":" + uri;
+        String key = tenantCode + ":" + appCode + ":" + userCode + ":" + method + ":" + uri;
 
         List<String> userRoles = cUserRoleCache.get();
         if (CollectionUtils.isEmpty(userRoles)) {
@@ -111,7 +111,7 @@ public class DUserApiCache {
             for (Api api : apis) {
                 if (ANT_PATH_MATCHER.match(api.getApiUri(), uri)) {
                     // 精确匹配方法，或模糊匹配全部方法
-                    if (mathod.equals(api.getApiMathod()) || "REQUEST".equals(api.getApiMathod())) {
+                    if (method.equals(api.getApiMethod()) || "REQUEST".equals(api.getApiMethod())) {
                         USER_APIS.put(key, true);
                         return;
                     }

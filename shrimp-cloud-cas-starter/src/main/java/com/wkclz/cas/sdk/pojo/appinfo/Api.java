@@ -3,7 +3,7 @@ package com.wkclz.cas.sdk.pojo.appinfo;
 public class Api {
 
     private String apiCode;
-    private String apiMathod;
+    private String apiMethod;
     private String apiUri;
     private String apiName;
 
@@ -15,12 +15,12 @@ public class Api {
         this.apiCode = apiCode;
     }
 
-    public String getApiMathod() {
-        return apiMathod;
+    public String getApiMethod() {
+        return apiMethod;
     }
 
-    public void setApiMathod(String apiMathod) {
-        this.apiMathod = apiMathod;
+    public void setApiMethod(String apiMethod) {
+        this.apiMethod = apiMethod;
     }
 
     public String getApiUri() {
