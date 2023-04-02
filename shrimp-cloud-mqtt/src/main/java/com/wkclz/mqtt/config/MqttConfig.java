@@ -7,7 +7,6 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -22,7 +21,7 @@ import java.util.Set;
 
 @Component
 @ConfigurationProperties(prefix = "shrimp.cloud.mqtt")
-@ConditionalOnProperty(prefix = "shrimp.cloud.mqtt", value = {"client-id-prefix"})
+// @ConditionalOnProperty(prefix = "shrimp.cloud.mqtt", value = {"client-id-prefix"})
 public class MqttConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(MqttConfig.class);
