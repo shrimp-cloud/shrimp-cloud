@@ -1,10 +1,10 @@
-package com.wkclz.gen.helper;
+package com.wkclz.plugin.gen.helper;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.wkclz.gen.bean.GenResult;
-import com.wkclz.gen.bean.GenTaskInfo;
-import com.wkclz.gen.utils.CompressUtil;
+import com.wkclz.plugin.gen.bean.GenResult;
+import com.wkclz.plugin.gen.bean.GenTaskInfo;
+import com.wkclz.plugin.gen.utils.CompressUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.logging.Log;
 

@@ -25,7 +25,7 @@
         <module>shrimp-cloud-rocketmq</module>
         -->
         <!-- 工具 -->
-        <module>shrimp-cloud-gen-plugin</module>
+        <module>shrimp-cloud-plugin-gen</module>
         <module>shrimp-cloud-swagger-starter</module>
     </modules>
 

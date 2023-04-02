@@ -1,4 +1,4 @@
-package com.wkclz.gen.utils;
+package com.wkclz.plugin.gen.utils;
 
 
 import java.io.File;

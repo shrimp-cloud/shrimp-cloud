@@ -1,4 +1,4 @@
-package com.wkclz.gen.bean;
+package com.wkclz.plugin.gen.bean;
 
 public class GenTaskInfo {
 

@@ -12,12 +12,12 @@
     </parent>
 
     <groupId>com.wkclz.gen</groupId>
-    <artifactId>shrimp-cloud-gen-plugin</artifactId>
+    <artifactId>shrimp-cloud-plugin-gen</artifactId>
     <version>4.0.0-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
-    <name>shrimp-cloud-gen-plugin</name>
-    <description>shrimp-cloud-gen-plugin</description>
+    <name>shrimp-cloud-plugin-gen</name>
+    <description>shrimp-cloud-plugin-gen</description>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

@@ -1,6 +1,6 @@
-package com.wkclz.gen;
+package com.wkclz.plugin.gen;
 
-import com.wkclz.gen.helper.GenHelper;
+import com.wkclz.plugin.gen.helper.GenHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.logging.Log;
