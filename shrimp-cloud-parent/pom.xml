@@ -158,7 +158,7 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>com.wkclz.gen</groupId>
+                    <groupId>com.wkclz.plugin.gen</groupId>
                     <artifactId>shrimp-cloud-plugin-gen</artifactId>
                     <version>${shrimp-cloud-plugin-gen.version}</version>
                 </plugin>
