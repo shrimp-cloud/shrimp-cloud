@@ -67,9 +67,24 @@
 
             <!-- wkclz -->
             <dependency>
+                <groupId>com.wkclz.cas</groupId>
+                <artifactId>shrimp-cloud-cas-starter</artifactId>
+                <version>${shrimp-cas-starter.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.wkclz.common</groupId>
                 <artifactId>shrimp-cloud-common</artifactId>
                 <version>${shrimp-common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wkclz.mqtt</groupId>
+                <artifactId>shrimp-cloud-mqtt</artifactId>
+                <version>${shrimp-mqtt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wkclz.mybatis</groupId>
+                <artifactId>shrimp-cloud-mybatis</artifactId>
+                <version>${shrimp-mybatis.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.wkclz.redis</groupId>
@@ -80,16 +95,6 @@
                 <groupId>com.wkclz.spring</groupId>
                 <artifactId>shrimp-cloud-spring</artifactId>
                 <version>${shrimp-spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.wkclz.cas</groupId>
-                <artifactId>shrimp-cloud-cas-starter</artifactId>
-                <version>${shrimp-cas-starter.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.wkclz.mybatis</groupId>
-                <artifactId>shrimp-cloud-mybatis</artifactId>
-                <version>${shrimp-mybatis.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.wkclz.swagger</groupId>
