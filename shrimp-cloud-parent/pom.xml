@@ -32,7 +32,7 @@
         <shrimp-mybatis.version>4.0.0-SNAPSHOT</shrimp-mybatis.version>
         <shrimp-mqtt.version>4.0.0-SNAPSHOT</shrimp-mqtt.version>
         <shrimp-cloud-swagger-starter.version>4.0.0-SNAPSHOT</shrimp-cloud-swagger-starter.version>
-        <shrimp-cloud-gen-plugin.version>4.0.0-SNAPSHOT</shrimp-cloud-gen-plugin.version>
+        <shrimp-cloud-plugin-gen.version>4.0.0-SNAPSHOT</shrimp-cloud-plugin-gen.version>
 
         <!--
         <spring-boot-admin.version>2.6.7</spring-boot-admin.version>
@@ -154,8 +154,8 @@
             <plugins>
                 <plugin>
                     <groupId>com.wkclz.gen</groupId>
-                    <artifactId>shrimp-cloud-gen-plugin</artifactId>
-                    <version>${shrimp-cloud-gen-plugin.version}</version>
+                    <artifactId>shrimp-cloud-plugin-gen</artifactId>
+                    <version>${shrimp-cloud-plugin-gen.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
