@@ -59,9 +59,12 @@ public class MqttConfig {
             MqttConnectOptions connOpts = new MqttConnectOptions();
             connOpts.setUserName(getUsername());
             connOpts.setPassword(getPassword().toCharArray());
-            // 保留会话
-            connOpts.setCleanSession(true);
+            // 保留会话: 需要保留
+            connOpts.setCleanSession(false);
             // 建立连接
+            connOpts.setConnectionTimeout(0);
+            connOpts.setAutomaticReconnect(true);
+
             logger.info("Connecting to broker: " + getEndPoint());
             mqttClient.connect(connOpts);
             logger.info("Connected");
