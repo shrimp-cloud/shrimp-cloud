@@ -3,8 +3,10 @@ package com.wkclz.spring.utils;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.NullCacheStorage;
 import freemarker.cache.StringTemplateLoader;
-import freemarker.core.ParseException;
-import freemarker.template.*;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,23 +69,12 @@ public class FreeMarkerTemplateUtil {
     }
 
 
-    public static String parseString(String content, Map<String, Object> params) {
-        try {
-            Configuration stringConfig = new Configuration(Configuration.VERSION_2_3_23);
-            StringTemplateLoader stringLoader = new StringTemplateLoader();
-            stringLoader.putTemplate("_template_", content);
-            stringConfig.setTemplateLoader(stringLoader);
-            Template tpl = stringConfig.getTemplate("_template_", "utf-8");
-            return org.springframework.ui.freemarker.FreeMarkerTemplateUtils.processTemplateIntoString(tpl, params);
-        } catch (TemplateNotFoundException e) {
-            logger.error(e.getMessage(), e);
-        } catch (ParseException e) {
-            logger.error(e.getMessage(), e);
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-        } catch (TemplateException e) {
-            logger.error(e.getMessage(), e);
-        }
-        return null;
+    public static String parseString(String content, Map<String, Object> params) throws IOException, TemplateException {
+        Configuration stringConfig = new Configuration(Configuration.VERSION_2_3_23);
+        StringTemplateLoader stringLoader = new StringTemplateLoader();
+        stringLoader.putTemplate("_template_", content);
+        stringConfig.setTemplateLoader(stringLoader);
+        Template tpl = stringConfig.getTemplate("_template_", "utf-8");
+        return org.springframework.ui.freemarker.FreeMarkerTemplateUtils.processTemplateIntoString(tpl, params);
     }
 }
