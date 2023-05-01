@@ -21,9 +21,9 @@ import java.util.Map;
 import java.util.Properties;
 
 @Intercepts({@Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class})})
-public class MybatisUpdateInterceptor implements Interceptor {
+public class UpdateInterceptor implements Interceptor {
 
-    private static final Logger logger = LoggerFactory.getLogger(MybatisUpdateInterceptor.class);
+    private static final Logger logger = LoggerFactory.getLogger(UpdateInterceptor.class);
     @Autowired
     private AuthHelper authHelper;
 
