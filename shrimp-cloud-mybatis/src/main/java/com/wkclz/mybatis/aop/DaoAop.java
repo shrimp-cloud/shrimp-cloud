@@ -6,6 +6,7 @@ import com.wkclz.common.exception.BizException;
 import com.wkclz.common.utils.BeanUtil;
 import com.wkclz.common.utils.StringUtil;
 import com.wkclz.mybatis.base.BaseMapper;
+import com.wkclz.mybatis.dynamicdb.DynamicDataSourceHolder;
 import com.wkclz.mybatis.util.JdbcUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -77,8 +78,12 @@ public class DaoAop {
         }
 
         // 请求具体方法
-        Object obj = point.proceed();
-        return obj;
+        try {
+            Object obj = point.proceed();
+            return obj;
+        } finally {
+            DynamicDataSourceHolder.clear();
+        }
     }
 
     private static void check(Object arg){
