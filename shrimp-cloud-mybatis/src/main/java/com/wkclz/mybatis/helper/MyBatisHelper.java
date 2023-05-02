@@ -113,8 +113,8 @@ public class MyBatisHelper {
      */
     private synchronized static String reloadSql(String sql) {
         String md5 = SecretUtil.md5(sql);
-        String namespace = "namespace" + md5;
-        String selectId = "select" + md5;
+        String namespace = "namespace_" + md5;
+        String selectId = "select_" + md5;
         String statement = namespace + "." + selectId;
 
         if (STATEMENTS.contains(statement)) {
@@ -125,16 +125,23 @@ public class MyBatisHelper {
         SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
         Configuration configuration = sqlSession.getConfiguration();
 
+        String xmlStr = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+            <mapper namespace="{{namespace}}">
+                <select id="{{selectId}}" parameterType="java.util.Map" resultType="java.util.Map">
+                    {{sql}}
+                </select>
+            </mapper>
+            """;
 
-        String xmlStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\n"
-            + "<mapper namespace=\"" + namespace + "\">\n"
-            + "<select id=\"" + selectId + "\" parameterType=\"java.util.Map\" resultType=\"java.util.Map\">\n"
-            + sql
-            + "\n</select>\n</mapper>";
+        xmlStr = xmlStr.replace("{{namespace}}", namespace);
+        xmlStr = xmlStr.replace("{{selectId}}", selectId);
+        xmlStr = xmlStr.replace("{{sql}}", sql);
 
         Object o = System.getProperties().get("user.dir");
         String userDir = o.toString();
-        String savePath = userDir + "/temp/mapper/";
+        String savePath = userDir + "/tmp/mapper/";
         String filePath = savePath + namespace + ".xml";
 
         FileWriter writer;
