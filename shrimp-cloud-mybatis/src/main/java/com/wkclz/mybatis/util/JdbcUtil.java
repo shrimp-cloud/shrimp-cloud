@@ -8,7 +8,7 @@ import com.alibaba.druid.stat.TableStat;
 import com.alibaba.druid.util.JdbcConstants;
 import com.wkclz.common.exception.BizException;
 import com.wkclz.common.utils.MapUtil;
-import com.wkclz.mybatis.bean.DataSource;
+import com.wkclz.mybatis.bean.DataSourceInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,26 +29,26 @@ public class JdbcUtil {
 
     /**
      * SQL 执行查询，指定返回类型
-     * @param dataSource
+     * @param dataSourceInfo
      * @param sql
      * @param clazz
      * @param <T>
      * @return
      */
-    public static <T> List<T> jdbcExecutor(DataSource dataSource, String sql, Class<T> clazz){
-        List<Map> maps = jdbcExecutor(dataSource, sql);
+    public static <T> List<T> jdbcExecutor(DataSourceInfo dataSourceInfo, String sql, Class<T> clazz){
+        List<Map> maps = jdbcExecutor(dataSourceInfo, sql);
         List<T> list = MapUtil.map2ObjList(maps, clazz);
         return list;
     }
 
     /**
      * SQL 执行
-     * @param dataSource
+     * @param dataSourceInfo
      * @param sql
      * @return
      */
-    public static List<Map> jdbcExecutor(DataSource dataSource, String sql){
-        DruidPooledConnection conn = getConn(dataSource);
+    public static List<Map> jdbcExecutor(DataSourceInfo dataSourceInfo, String sql){
+        DruidPooledConnection conn = getConn(dataSourceInfo);
 
         // SQL 解析，检测
         String dbType = JdbcConstants.MYSQL.name();
@@ -92,20 +92,20 @@ public class JdbcUtil {
         return maps;
     }
 
-    private static DruidPooledConnection getConn(DataSource dataSource){
-        if (StringUtils.isBlank(dataSource.getUrl())){
+    private static DruidPooledConnection getConn(DataSourceInfo dataSourceInfo){
+        if (StringUtils.isBlank(dataSourceInfo.getUrl())){
             throw BizException.error("get conn, url can not be null");
         }
-        if (StringUtils.isBlank(dataSource.getDriverClassName())){
+        if (StringUtils.isBlank(dataSourceInfo.getDriverClassName())){
             throw BizException.error("get conn, driverClass can not be null");
         }
-        if (StringUtils.isBlank(dataSource.getUsername())){
+        if (StringUtils.isBlank(dataSourceInfo.getUsername())){
             throw BizException.error("get username, url can not be null");
         }
-        if (StringUtils.isBlank(dataSource.getPassword())){
+        if (StringUtils.isBlank(dataSourceInfo.getPassword())){
             throw BizException.error("get password, url can not be null");
         }
-        DruidPooledConnection conn = DataSource.getConnect(dataSource);
+        DruidPooledConnection conn = DataSourceInfo.getConnect(dataSourceInfo);
         return conn;
 
     }

@@ -11,8 +11,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DataSource {
-    private static final Logger logger = LoggerFactory.getLogger(DataSource.class);
+public class DataSourceInfo {
+    private static final Logger logger = LoggerFactory.getLogger(DataSourceInfo.class);
 
 
     private static Map<String, DruidPooledConnection> dataConns = null;
@@ -33,12 +33,12 @@ public class DataSource {
      * @return 返回数据库连接对象
      * @throws Exception
      */
-    public static synchronized DruidPooledConnection getConnect(DataSource dataSource) {
+    public static synchronized DruidPooledConnection getConnect(DataSourceInfo dataSourceInfo) {
 
         if (dataConns == null) {
             dataConns = new HashMap<>();
         }
-        String url = dataSource.getUrl();
+        String url = dataSourceInfo.getUrl();
         String hex = SecretUtil.md5(url);
         DruidPooledConnection conn = dataConns.get(hex);
         try {
@@ -47,7 +47,7 @@ public class DataSource {
                 return conn;
             }
 
-            DruidDataSource druidDataSource = getDruidDataSource(dataSource);
+            DruidDataSource druidDataSource = getDruidDataSource(dataSourceInfo);
             conn = druidDataSource.getConnection();
             dataConns.put(hex, conn);
             return conn;
@@ -57,15 +57,24 @@ public class DataSource {
         }
     }
 
-    private static DruidDataSource getDruidDataSource(DataSource dataSource) {
+    public static DruidDataSource getDruidDataSource(String url, String username, String password) {
+        DataSourceInfo info = new DataSourceInfo();
+        info.setUrl(url);
+        info.setUsername(username);
+        info.setPassword(password);
+        return getDruidDataSource(info);
+    }
+
+
+    public static DruidDataSource getDruidDataSource(DataSourceInfo dataSourceInfo) {
 
         DruidDataSource db = new DruidDataSource();
 
         //设置连接参数
-        db.setUrl(dataSource.getUrl());
-        db.setDriverClassName(dataSource.getDriverClassName());
-        db.setUsername(dataSource.getUsername());
-        db.setPassword(dataSource.getPassword());
+        db.setUrl(dataSourceInfo.getUrl());
+        db.setDriverClassName(dataSourceInfo.getDriverClassName());
+        db.setUsername(dataSourceInfo.getUsername());
+        db.setPassword(dataSourceInfo.getPassword());
         //配置初始化大小、最小、最大
         db.setInitialSize(1);
         db.setMinIdle(1);
@@ -93,7 +102,7 @@ public class DataSource {
     }
 
     public static void setDataConns(Map<String, DruidPooledConnection> dataConns) {
-        DataSource.dataConns = dataConns;
+        DataSourceInfo.dataConns = dataConns;
     }
 
     public String getUrl() {
