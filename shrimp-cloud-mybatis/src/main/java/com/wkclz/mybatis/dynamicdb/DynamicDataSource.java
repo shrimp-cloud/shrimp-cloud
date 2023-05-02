@@ -1,5 +1,6 @@
 package com.wkclz.mybatis.dynamicdb;
 
+import cn.hutool.core.thread.ThreadUtil;
 import com.wkclz.common.exception.BizException;
 import com.wkclz.mybatis.config.ShrimpMyBatisConfig;
 import com.wkclz.spring.config.SpringContextHolder;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * 重写 determineCurrentLookupKey() 方法来实现数据源切换功能
@@ -41,14 +43,25 @@ public class DynamicDataSource extends AbstractShrimpRoutingDataSource {
             if (latest != null) {
                 return key;
             }
-            // 若想用多数据源，必需注入此工厂
-            DynamicDataSourceFactory dynamicDataSourceFactory = SpringContextHolder.getBean(DynamicDataSourceFactory.class);
-            if (dynamicDataSourceFactory == null) {
-                throw BizException.error("please init dynamicDataSourceFactory before use dynamic dataSource");
+
+            // 使用异步线程。否则使用默认数据源管理三方数据的场景下，会进入死循环
+            CountDownLatch countDownLatch = ThreadUtil.newCountDownLatch(1);
+            ThreadUtil.newExecutor().execute(() -> {
+                // 若想用多数据源，必需注入此工厂
+                DynamicDataSourceFactory dynamicDataSourceFactory = SpringContextHolder.getBean(DynamicDataSourceFactory.class);
+                if (dynamicDataSourceFactory == null) {
+                    throw BizException.error("please init dynamicDataSourceFactory before use dynamic dataSource");
+                }
+                DataSource dataSource = dynamicDataSourceFactory.createDataSource(key);
+                addDataSource(key, dataSource);
+                hasCreateDataSource.put(key, now);
+                countDownLatch.countDown();
+            });
+            try {
+                countDownLatch.await();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-            DataSource dataSource = dynamicDataSourceFactory.createDataSource(key);
-            addDataSource(key, dataSource);
-            hasCreateDataSource.put(key, now);
             return key;
         }
     }

@@ -28,7 +28,7 @@ public class DynamicDataSourceAutoConfig {
     // 必需定义为 Primary， 以使得 com.alibaba.druid.spring.boot.autoconfigur.DruidDataSourceAutoConfigure.dataSource() 失效
     @Bean
     @Primary
-    public DynamicDataSource dynamicDataSource(DynamicDataSourceFactory dynamicDataSourceFactory) throws Exception {
+    public DynamicDataSource dynamicDataSource() throws Exception {
         logger.info("dynamicData Source, load default dataSource...");
         DynamicDataSource dynamicDataSource = new DynamicDataSource();
 
