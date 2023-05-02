@@ -184,13 +184,13 @@ public class MyBatisHelper {
      * @param nameSpace xml中命名空间
      */
     private static void clearMap(Configuration configuration, String nameSpace) {
-        logger.info("清理Mybatis的namespace={}在mappedStatements、caches、resultMaps、parameterMaps、keyGenerators、sqlFragments中的缓存", nameSpace);
+        logger.debug("清理Mybatis的namespace={}在mappedStatements、caches、resultMaps、parameterMaps、keyGenerators、sqlFragments中的缓存", nameSpace);
         Arrays.asList("mappedStatements", "caches", "resultMaps", "parameterMaps", "keyGenerators", "sqlFragments").forEach(fieldName -> {
             Object value = getFieldValue(configuration, fieldName);
             if (value instanceof Map) {
                 Map<?, ?> map = (Map) value;
                 List<Object> list = map.keySet().stream().filter(o -> o.toString().startsWith(nameSpace + ".")).collect(Collectors.toList());
-                logger.info("需要清理的元素: {}", list);
+                logger.debug("需要清理的元素: {}", list);
                 list.forEach(k -> map.remove((Object) k));
             }
         });
