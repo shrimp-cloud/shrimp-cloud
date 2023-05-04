@@ -20,28 +20,32 @@ public class MybatisConfiguration {
     private static Map<String, SqlCommandType> SQL_COMMAND_TYPE_MAPT = null;
 
     // @Bean 参数处理不友好，更换方法
-    public MybatisParameterInterceptor parameterInterceptor() {
-        return new MybatisParameterInterceptor();
+    public ParameterInterceptor parameterInterceptor() {
+        return new ParameterInterceptor();
     }
 
     // @Bean 没法拦截参数
-    public MybatisParameterizeInterceptor parameterizeInterceptor() {
-        return new MybatisParameterizeInterceptor();
+    public ParameterizeInterceptor parameterizeInterceptor() {
+        return new ParameterizeInterceptor();
     }
 
     // @Bean 没法拦截参数
-    public MybatisPrepareInterceptor prepareInterceptor() {
-        return new MybatisPrepareInterceptor();
+    public PrepareInterceptor prepareInterceptor() {
+        return new PrepareInterceptor();
     }
 
     // @Bean
-    public MybatisQueryInterceptor queryInterceptor() {
-        return new MybatisQueryInterceptor();
+    public QueryInterceptor queryInterceptor() {
+        return new QueryInterceptor();
     }
 
     @Bean
-    public MybatisUpdateInterceptor updateInterceptor() {
-        return new MybatisUpdateInterceptor();
+    public SqlInjInterceptor sqlInjInterceptor() {
+        return new SqlInjInterceptor();
+    }
+    @Bean
+    public UpdateInterceptor updateInterceptor() {
+        return new UpdateInterceptor();
     }
 
 

@@ -210,11 +210,9 @@ public class RestUtil {
             Field[] fields = routerClazz.getDeclaredFields();
             try {
                 Router routerAnno = routerClazz.getAnnotation(Router.class);
+                String module = null;
                 if (routerAnno != null) {
-                    String value = routerAnno.value();
-                    if (StringUtils.isNotBlank(value)) {
-                        rests.forEach(t-> t.setModule(value));
-                    }
+                    module = routerAnno.value();
                 }
                 for (Field field : fields) {
                     String val = "";
@@ -231,6 +229,7 @@ public class RestUtil {
                         if (desc != null) {
                             restInfo.setDesc(desc.value());
                         }
+                        restInfo.setModule(module);
                     }
                 }
             } catch (IllegalAccessException e) {

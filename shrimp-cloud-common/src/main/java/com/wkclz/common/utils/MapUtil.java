@@ -22,8 +22,8 @@ public class MapUtil {
      * @return
      * @throws Exception
      */
-    public static <T> Map<String, T> obj2Map(T... objs) {
-        Map<String, T> map = new HashMap<>();
+    public static <T> Map<String, Object> obj2Map(T... objs) {
+        Map<String, Object> map = new HashMap<>();
         for (T obj : objs) {
             Map m = new BeanMap(obj);
             map.putAll(m);
@@ -63,10 +63,10 @@ public class MapUtil {
      * @return
      * @throws Exception
      */
-    public static <T> List<Map<String, T>> obj2MapList(T... objs) {
-        List<Map<String, T>> list = new ArrayList();
+    public static <T> List<Map<String, Object>> obj2MapList(T... objs) {
+        List<Map<String, Object>> list = new ArrayList();
         for (T obj : objs) {
-            Map<String, T> map = obj2Map(obj);
+            Map<String, Object> map = obj2Map(obj);
             list.add(map);
         }
         return list;

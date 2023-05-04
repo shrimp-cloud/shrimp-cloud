@@ -13,6 +13,6 @@ public class DruidValidPing2Select implements ApplicationListener<ApplicationEnv
 
     @Override
     public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
-        System.setProperty("druid.mysql.usePingMethod", "false");
+        // System.setProperty("druid.mysql.usePingMethod", "false");
     }
 }

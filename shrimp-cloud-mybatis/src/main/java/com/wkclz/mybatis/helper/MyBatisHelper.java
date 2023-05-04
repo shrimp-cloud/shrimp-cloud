@@ -6,7 +6,6 @@ import com.github.pagehelper.PageHelper;
 import com.wkclz.common.entity.BaseEntity;
 import com.wkclz.common.utils.SecretUtil;
 import com.wkclz.mybatis.base.PageData;
-import com.wkclz.mybatis.base.PageHandle;
 import com.wkclz.spring.config.SpringContextHolder;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.builder.xml.XMLMapperEntityResolver;
@@ -29,12 +28,13 @@ public class MyBatisHelper {
 
     /**
      * 自定义 sql 查询-List
+     *
      * @param sql
      * @param param
      * @param <T>
      * @return
      */
-    public static <T extends BaseEntity> List<T> selectList(String sql, T param){
+    public static <T extends BaseEntity> List<T> selectList(String sql, T param) {
         SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
         String statement = reloadSql(sql);
         return sqlSession.selectList(statement, param);
@@ -42,48 +42,59 @@ public class MyBatisHelper {
 
     /**
      * 自定义 sql查询-page
+     *
      * @param sql
      * @param param
      * @param <T>
      * @return
      */
-    public static <T extends BaseEntity> PageData<T> selectPage(String sql, T param){
+    public static <T extends BaseEntity> PageData<T> selectPage(String sql, T param) {
         SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
         String statement = reloadSql(sql);
-        PageHandle<T> pageHandle = new PageHandle<>(param);
+
+        param.init();
+        PageHelper.startPage(param.getCurrent().intValue(), param.getSize().intValue());
+
         List<T> list = sqlSession.selectList(statement, param);
-        PageData page = pageHandle.page(list);
-        return page;
+
+        Page listPage = (Page) list;
+        long total = listPage.getTotal();
+        PageData<T> pageData = new PageData<>(param);
+        pageData.setTotal(total);
+        pageData.setRows(list);
+        return pageData;
     }
 
     /**
      * 自定义 sql查询-List
+     *
      * @param sql
      * @param param
      * @return
      */
-    public static List<Map> selectList(String sql, Map param){
+    public static List<Map> selectList(String sql, Map param) {
         SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
         String statement = reloadSql(sql);
         List<Map> list = sqlSession.selectList(statement, param);
-        list = (List<Map>)list.stream().map(MapUtil::toCamelCaseMap).collect(Collectors.toList());
+        list = (List<Map>) list.stream().map(MapUtil::toCamelCaseMap).collect(Collectors.toList());
         return list;
     }
 
     /**
      * 自定义 sql查询-page
+     *
      * @param sql
      * @param param
      * @return
      */
-    public static PageData<Map> selectPage(String sql, Map param){
+    public static PageData<Map> selectPage(String sql, Map param) {
         SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
         String statement = reloadSql(sql);
 
         Object currentObj = param.get("current");
         Object sizeObj = param.get("size");
-        Long current = (currentObj == null)?0L:Long.parseLong(currentObj.toString());
-        Long size = (sizeObj == null)?10L:Long.parseLong(sizeObj.toString());
+        Long current = (currentObj == null) ? 0L : Long.parseLong(currentObj.toString());
+        Long size = (sizeObj == null) ? 10L : Long.parseLong(sizeObj.toString());
 
         PageHelper.startPage(current.intValue(), size.intValue());
         List<Map> list = sqlSession.selectList(statement, param);
@@ -92,7 +103,7 @@ public class MyBatisHelper {
         long total = listPage.getTotal();
         PageData<Map> pageData = new PageData<>(current, size);
         pageData.setTotal(total);
-        list = (List<Map>)list.stream().map(MapUtil::toCamelCaseMap).collect(Collectors.toList());
+        list = (List<Map>) list.stream().map(MapUtil::toCamelCaseMap).collect(Collectors.toList());
         pageData.setRows(list);
         return pageData;
     }
@@ -102,11 +113,11 @@ public class MyBatisHelper {
      */
     private synchronized static String reloadSql(String sql) {
         String md5 = SecretUtil.md5(sql);
-        String namespace = "namespace" + md5;
-        String selectId = "select" + md5;
+        String namespace = "namespace_" + md5;
+        String selectId = "select_" + md5;
         String statement = namespace + "." + selectId;
 
-        if (STATEMENTS.contains(statement)){
+        if (STATEMENTS.contains(statement)) {
             return statement;
         }
         STATEMENTS.add(statement);
@@ -114,16 +125,23 @@ public class MyBatisHelper {
         SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
         Configuration configuration = sqlSession.getConfiguration();
 
+        String xmlStr = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+            <mapper namespace="{{namespace}}">
+                <select id="{{selectId}}" parameterType="java.util.Map" resultType="java.util.Map">
+                    {{sql}}
+                </select>
+            </mapper>
+            """;
 
-        String xmlStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\n"
-            + "<mapper namespace=\""+ namespace +"\">\n"
-            + "<select id=\""+selectId+"\" parameterType=\"java.util.Map\" resultType=\"java.util.Map\">\n"
-            + sql
-            + "\n</select>\n</mapper>";
+        xmlStr = xmlStr.replace("{{namespace}}", namespace);
+        xmlStr = xmlStr.replace("{{selectId}}", selectId);
+        xmlStr = xmlStr.replace("{{sql}}", sql);
 
         Object o = System.getProperties().get("user.dir");
         String userDir = o.toString();
-        String savePath = userDir + "/temp/mapper/" ;
+        String savePath = userDir + "/tmp/mapper/";
         String filePath = savePath + namespace + ".xml";
 
         FileWriter writer;
@@ -131,12 +149,12 @@ public class MyBatisHelper {
 
             //文件保存位置
             File saveDir = new File(savePath);
-            if(!saveDir.exists()){
+            if (!saveDir.exists()) {
                 saveDir.mkdirs();
             }
 
             File file = new File(filePath);
-            if (!file.exists()){
+            if (!file.exists()) {
                 file.createNewFile();
             }
 
@@ -161,61 +179,62 @@ public class MyBatisHelper {
     }
 
     /**
-     *  删除xml元素的节点缓存
-     *  @param nameSpace xml中命名空间
+     * 删除xml元素的节点缓存
+     *
+     * @param nameSpace xml中命名空间
      */
     private static void clearMap(Configuration configuration, String nameSpace) {
-        logger.info("清理Mybatis的namespace={}在mappedStatements、caches、resultMaps、parameterMaps、keyGenerators、sqlFragments中的缓存", nameSpace);
+        logger.debug("清理Mybatis的namespace={}在mappedStatements、caches、resultMaps、parameterMaps、keyGenerators、sqlFragments中的缓存", nameSpace);
         Arrays.asList("mappedStatements", "caches", "resultMaps", "parameterMaps", "keyGenerators", "sqlFragments").forEach(fieldName -> {
             Object value = getFieldValue(configuration, fieldName);
             if (value instanceof Map) {
-                Map<?, ?> map = (Map)value;
+                Map<?, ?> map = (Map) value;
                 List<Object> list = map.keySet().stream().filter(o -> o.toString().startsWith(nameSpace + ".")).collect(Collectors.toList());
-                logger.info("需要清理的元素: {}", list);
-                list.forEach(k -> map.remove((Object)k));
+                logger.debug("需要清理的元素: {}", list);
+                list.forEach(k -> map.remove((Object) k));
             }
         });
     }
 
     /**
-     *  清除文件记录缓存
+     * 清除文件记录缓存
      */
     private static void clearSet(Configuration configuration, String resource) {
         logger.debug("清理mybatis的资源{}在容器中的缓存", resource);
         Object value = getFieldValue(configuration, "loadedResources");
         if (value instanceof Set) {
-            Set<?> set = (Set)value;
+            Set<?> set = (Set) value;
             set.remove(resource);
             set.remove("namespace:" + resource);
         }
     }
 
     /**
-     *  获取对象指定属性
+     * 获取对象指定属性
      */
-    private static Object getFieldValue(Object obj, String fieldName){
+    private static Object getFieldValue(Object obj, String fieldName) {
         logger.debug("从{}中加载{}属性", obj, fieldName);
-        try{
+        try {
             Field field = obj.getClass().getDeclaredField(fieldName);
             if (!field.canAccess(obj)) {
                 field.setAccessible(true);
             }
             return field.get(obj);
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.debug("ERROR: 加载对象中[{}]", fieldName, e);
             throw new RuntimeException("ERROR: 加载对象失败[" + fieldName + "]", e);
         }
     }
 
     /**
-     *  获取xml的namespace
+     * 获取xml的namespace
      */
-    private static String getNamespace(Resource resource){
+    private static String getNamespace(Resource resource) {
         logger.debug("从{}获取namespace", resource.toString());
-        try{
+        try {
             XPathParser parser = new XPathParser(resource.getInputStream(), true, null, new XMLMapperEntityResolver());
             return parser.evalNode("/mapper").getStringAttribute("namespace");
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.debug("ERROR: 解析xml中namespace失败", e);
             throw new RuntimeException("ERROR: 解析xml中namespace失败", e);
         }

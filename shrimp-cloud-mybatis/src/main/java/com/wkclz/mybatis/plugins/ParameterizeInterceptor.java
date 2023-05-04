@@ -6,18 +6,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
-import java.sql.Connection;
+import java.sql.Statement;
 import java.util.Properties;
 
-@Intercepts({@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class, Integer.class})})
-public class MybatisPrepareInterceptor implements Interceptor {
+@Intercepts({@Signature(type = StatementHandler.class, method = "parameterize", args = Statement.class)})
+public class ParameterizeInterceptor implements Interceptor {
 
-    private static final Logger logger = LoggerFactory.getLogger(MybatisPrepareInterceptor.class);
+    private static final Logger logger = LoggerFactory.getLogger(ParameterizeInterceptor.class);
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
 
-        logger.info("mybatis.prepare.interceptor");
+        logger.info("mybatis.parameterize.interceptor");
 
         Object[] args = invocation.getArgs();
         Object target = invocation.getTarget();
