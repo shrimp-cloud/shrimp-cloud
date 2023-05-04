@@ -78,12 +78,12 @@ public class UserAuth {
     /**
      * 最后登录失败时间
      */
-    private Date lastFiledTime;
+    private Date lastFailTime;
 
     /**
      * 最后登录失败IP
      */
-    private String lastFiledIp;
+    private String lastFailIp;
 
 
     public String getUsername() {
@@ -190,20 +190,20 @@ public class UserAuth {
         this.lastLoginIp = lastLoginIp;
     }
 
-    public Date getLastFiledTime() {
-        return lastFiledTime;
+    public Date getLastFailTime() {
+        return lastFailTime;
     }
 
-    public void setLastFiledTime(Date lastFiledTime) {
-        this.lastFiledTime = lastFiledTime;
+    public void setLastFailTime(Date lastFailTime) {
+        this.lastFailTime = lastFailTime;
     }
 
-    public String getLastFiledIp() {
-        return lastFiledIp;
+    public String getLastFailIp() {
+        return lastFailIp;
     }
 
-    public void setLastFiledIp(String lastFiledIp) {
-        this.lastFiledIp = lastFiledIp;
+    public void setLastFailIp(String lastFailIp) {
+        this.lastFailIp = lastFailIp;
     }
 }
 
