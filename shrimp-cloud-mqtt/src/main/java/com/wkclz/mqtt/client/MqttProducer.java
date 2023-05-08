@@ -46,7 +46,7 @@ public class MqttProducer {
         Integer finalDelay = delay;
         ThreadUtil.newExecutor().execute(() -> {
             for (String msg : msgs) {
-                log.info("mqtt sent msg, tipic:{}, message: {}", topic, msg);
+                log.info("mqtt sent msg, topic:{}, message: {}", topic, msg);
                 byte[] bytes = msg.getBytes(StandardCharsets.UTF_8);
                 sendMsg(topic, bytes, finalQos);
                 try {
@@ -70,7 +70,7 @@ public class MqttProducer {
             return;
         }
         String json = JSONObject.toJSONString(msg);
-        log.info("mqtt sent msg, tipic:{}, message: {}", topic, json);
+        log.info("mqtt sent msg, topic:{}, message: {}", topic, json);
         byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
         sendMsg(topic, bytes, qos);
     }
