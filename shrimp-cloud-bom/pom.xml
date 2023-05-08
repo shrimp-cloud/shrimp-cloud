@@ -18,7 +18,7 @@
 
         <!-- Spring 依赖(非spring-cloud-dependencies定义的依赖)  -->
         <feign-okhttp.version>11.9.1</feign-okhttp.version>
-        <druid-spring-boot-starter.version>1.2.15</druid-spring-boot-starter.version>
+        <druid-spring-boot-starter.version>1.2.17</druid-spring-boot-starter.version>
         <mybatis-spring-boot-starter.version>2.2.2</mybatis-spring-boot-starter.version>
         <pagehelper-spring-boot-starter.version>1.4.6</pagehelper-spring-boot-starter.version>
 
@@ -26,8 +26,8 @@
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <spring-beans.version>5.3.24</spring-beans.version>
-        <fastjson2.version>2.0.21</fastjson2.version>
-        <hutool.version>5.8.10</hutool.version>
+        <fastjson2.version>2.0.31</fastjson2.version>
+        <hutool.version>5.8.18</hutool.version>
         <guava.version>31.1-jre</guava.version>
         <jsoup.version>1.15.3</jsoup.version>
         <zxing.version>3.5.1</zxing.version>
@@ -37,7 +37,7 @@
         <dysmsapi20170525.version>2.0.16</dysmsapi20170525.version>
         <swagger.version>3.0.0</swagger.version>
         <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
-        <weixin-java.version>4.4.0</weixin-java.version>
+        <weixin-java.version>4.5.0</weixin-java.version>
 
         <jjwt.version>0.9.1</jjwt.version>
         <kaptcha.version>2.3.2</kaptcha.version>
