@@ -59,7 +59,7 @@ public class MqttConfig {
             MqttConnectOptions connOpts = new MqttConnectOptions();
             connOpts.setUserName(getUsername());
             connOpts.setPassword(getPassword().toCharArray());
-            // 保留会话: 需要保留
+            // 保留会话: 不需要保留
             connOpts.setCleanSession(true);
             // 建立连接
             connOpts.setConnectionTimeout(0);
