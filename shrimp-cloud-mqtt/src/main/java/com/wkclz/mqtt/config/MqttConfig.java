@@ -33,6 +33,8 @@ public class MqttConfig {
     // 公共
     private String endPoint;
     private String clientIdPrefix;
+    private Integer keepAliveInterval;
+    private Integer keepAliveTask;
 
     // 阿里云
     private String instanceId;
@@ -51,6 +53,9 @@ public class MqttConfig {
         if (StringUtils.isBlank(clientIdPrefix)) {
             clientIdPrefix = "server";
         }
+        if (keepAliveInterval == null || keepAliveInterval < 0) {
+            keepAliveInterval = 60;
+        }
         String clientId = clientIdPrefix + "@" + getServerIp();
         MemoryPersistence persistence = new MemoryPersistence();
         try {
@@ -64,6 +69,7 @@ public class MqttConfig {
             // 建立连接
             connOpts.setConnectionTimeout(0);
             connOpts.setAutomaticReconnect(true);
+            connOpts.setKeepAliveInterval(keepAliveInterval);
 
             logger.info("Connecting to broker: " + getEndPoint());
             mqttClient.connect(connOpts);
@@ -112,6 +118,22 @@ public class MqttConfig {
 
     public void setClientIdPrefix(String clientIdPrefix) {
         this.clientIdPrefix = clientIdPrefix;
+    }
+
+    public Integer getKeepAliveInterval() {
+        return keepAliveInterval;
+    }
+
+    public void setKeepAliveInterval(Integer keepAliveInterval) {
+        this.keepAliveInterval = keepAliveInterval;
+    }
+
+    public Integer getKeepAliveTask() {
+        return keepAliveTask;
+    }
+
+    public void setKeepAliveTask(Integer keepAliveTask) {
+        this.keepAliveTask = keepAliveTask;
     }
 
     public String getInstanceId() {

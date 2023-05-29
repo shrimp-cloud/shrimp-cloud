@@ -14,7 +14,8 @@ public class MqttConsumerDemo {
 
     @MqttTopicMapping("breath")
     public void breath(MqttHexMsg msg) {
-        logger.debug("breath message: {}", JSONObject.toJSONString(msg));
+        String data = new String(msg.getPayload());
+        logger.info("breath message: {}", data);
     }
 
 }
