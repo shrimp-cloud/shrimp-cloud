@@ -1,9 +1,8 @@
 package com.wkclz.mqtt.config;
 
+import com.wkclz.spring.config.SpringContextHolder;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,12 +41,12 @@ public class MqttConfig {
     private String secretKey;
 
     @Bean
-    public MqttClient mqttClient() {
+    public MqttAsyncClient mqttClient() {
         if (StringUtils.isBlank(endPoint)) {
             logger.warn("mqtt: endpoint is empty!");
             return null;
         }
-        MqttClient mqttClient = null;
+        MqttAsyncClient mqttClient = null;
 
         String clientIdPrefix = getClientIdPrefix();
         if (StringUtils.isBlank(clientIdPrefix)) {
@@ -59,7 +58,7 @@ public class MqttConfig {
         String clientId = clientIdPrefix + "@" + getServerIp();
         MemoryPersistence persistence = new MemoryPersistence();
         try {
-            mqttClient = new MqttClient(getEndPoint(), clientId, persistence);
+            mqttClient = new MqttAsyncClient(getEndPoint(), clientId, persistence);
             // MQTT 连接选项
             MqttConnectOptions connOpts = new MqttConnectOptions();
             connOpts.setUserName(getUsername());
@@ -70,9 +69,11 @@ public class MqttConfig {
             connOpts.setConnectionTimeout(0);
             connOpts.setAutomaticReconnect(true);
             connOpts.setKeepAliveInterval(keepAliveInterval);
+            mqttClient.setCallback(new MqttReconnectCallback());
 
             logger.info("Connecting to broker: " + getEndPoint());
             mqttClient.connect(connOpts);
+
             logger.info("Connected");
         } catch (MqttException me) {
             logger.error("reason " + me.getReasonCode());
@@ -85,7 +86,25 @@ public class MqttConfig {
         return mqttClient;
     }
 
+    class MqttReconnectCallback implements MqttCallbackExtended {
 
+        @Override
+        public void connectComplete(boolean reconnect, String serverURI) {
+            logger.info("mqtt connect complete");
+            MqttAsyncClient mqttAsyncClient = SpringContextHolder.getBean(MqttAsyncClient.class);
+            MqttSubcribe.subscribeTopics(mqttAsyncClient);
+        }
+
+        @Override
+        public void connectionLost(Throwable cause) {
+        }
+        @Override
+        public void messageArrived(String topic, MqttMessage message) throws Exception {
+        }
+        @Override
+        public void deliveryComplete(IMqttDeliveryToken token) {
+        }
+    }
 
 
     public String getUsername() {
