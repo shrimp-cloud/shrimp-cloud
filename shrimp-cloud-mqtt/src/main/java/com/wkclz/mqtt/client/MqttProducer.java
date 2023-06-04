@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -26,13 +27,24 @@ public class MqttProducer {
     @Autowired
     private MqttAsyncClient mqttAsyncClient;
 
-    public void send(String topic, List<String> msgs, Integer delay) {
-        send(topic, msgs, delay, Qos.QOS_1);
+
+    public void sendDelay(String topic, String msg, Integer delay) {
+        sendDelay(topic, Arrays.asList(msg), delay, Qos.QOS_1);
     }
-    public void send(String topic, List<String> msgs, Qos qos) {
-        send(topic, msgs, 500, qos);
+    public void sendDelay(String topic, String msg, Qos qos) {
+        sendDelay(topic, Arrays.asList(msg), 500, qos);
     }
-    public void send(String topic, List<String> msgs, Integer delay, Qos qos) {
+    public void sendDelay(String topic, String msg, Integer delay, Qos qos) {
+        sendDelay(topic, Arrays.asList(msg), delay, qos);
+    }
+
+    public void sendDelay(String topic, List<String> msgs, Integer delay) {
+        sendDelay(topic, msgs, delay, Qos.QOS_1);
+    }
+    public void sendDelay(String topic, List<String> msgs, Qos qos) {
+        sendDelay(topic, msgs, 500, qos);
+    }
+    public void sendDelay(String topic, List<String> msgs, Integer delay, Qos qos) {
         if (topic == null || CollectionUtils.isEmpty(msgs)) {
             return;
         }
