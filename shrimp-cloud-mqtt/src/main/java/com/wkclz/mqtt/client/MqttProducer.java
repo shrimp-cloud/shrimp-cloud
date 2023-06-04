@@ -4,7 +4,7 @@ import cn.hutool.core.thread.ThreadUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.wkclz.mqtt.enums.Qos;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import java.util.List;
 public class MqttProducer {
 
     @Autowired
-    private MqttClient mqttClient;
+    private MqttAsyncClient mqttAsyncClient;
 
     public void send(String topic, List<String> msgs, Integer delay) {
         send(topic, msgs, delay, Qos.QOS_1);
@@ -93,7 +93,7 @@ public class MqttProducer {
         MqttMessage message = new MqttMessage(msg);
         message.setQos(qos.getValue());
         try {
-            mqttClient.publish(topic, message);
+            mqttAsyncClient.publish(topic, message);
         } catch (MqttException e) {
             e.printStackTrace();
         }
