@@ -58,14 +58,14 @@ public class MqttProducer {
         Integer finalDelay = delay;
         ThreadUtil.newExecutor().execute(() -> {
             for (String msg : msgs) {
-                log.info("mqtt sent msg, topic:{}, message: {}", topic, msg);
-                byte[] bytes = msg.getBytes(StandardCharsets.UTF_8);
-                sendMsg(topic, bytes, finalQos);
                 try {
                     Thread.sleep(finalDelay);
                 } catch (InterruptedException e) {
                     //
                 }
+                log.info("mqtt sent msg, topic:{}, message: {}", topic, msg);
+                byte[] bytes = msg.getBytes(StandardCharsets.UTF_8);
+                sendMsg(topic, bytes, finalQos);
             }
         });
     }
