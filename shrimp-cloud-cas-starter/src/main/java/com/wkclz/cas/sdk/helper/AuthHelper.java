@@ -39,9 +39,6 @@ public class AuthHelper {
     public String getUsername() {
         return getClaimValue(SdkConstant.USER_INFO_USER_NAME);
     }
-    public String getNickName() {
-        return getClaimValue(SdkConstant.USER_INFO_NICK_NAME);
-    }
     public String getTenantCode() {
         String tenantCode = getTenantCodeFromRequest();
         if (tenantCode == null) {
@@ -62,9 +59,6 @@ public class AuthHelper {
             throw BizException.error(ResultStatus.TENANT_NULL);
         }
         return tenantCode;
-    }
-    public String getAvatar() {
-        return getClaimValue(SdkConstant.USER_INFO_USER_AVATAR);
     }
     public String getOpenId() {
         return getClaimValue(SdkConstant.USER_INFO_OPEN_ID);
@@ -87,8 +81,6 @@ public class AuthHelper {
         UserInfo userInfo = new UserInfo();
         userInfo.setUserCode(getClaimValue(claims, SdkConstant.USER_INFO_USER_CODE));
         userInfo.setUsername(getClaimValue(claims, SdkConstant.USER_INFO_USER_NAME));
-        userInfo.setNickName(getClaimValue(claims, SdkConstant.USER_INFO_NICK_NAME));
-        userInfo.setAvatar(getClaimValue(claims, SdkConstant.USER_INFO_USER_AVATAR));
         return userInfo;
     }
 
