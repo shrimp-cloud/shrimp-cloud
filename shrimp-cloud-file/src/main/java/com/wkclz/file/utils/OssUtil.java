@@ -1,6 +1,7 @@
 package com.wkclz.file.utils;
 
 import cn.hutool.core.date.DateUtil;
+import com.wkclz.file.domain.ContentTypeEnum;
 import com.wkclz.spring.config.Sys;
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,17 +13,23 @@ import java.util.Date;
  */
 public class OssUtil {
 
-    public static String getFullName(String businessType, String name) {
-        return getPath(businessType) + "/" + getName(name);
+    /**
+     * 获取文件的媒体类型
+     */
+    public static String getContentType(String originalFilename) {
+        if (originalFilename == null) {
+            return ContentTypeEnum.DEFAULT.getContentType();
+        }
+        int i = originalFilename.lastIndexOf(".");
+        String subName = i > 0 ? originalFilename.substring(i) : null;
+        return ContentTypeEnum.getContentTypeBySubName(subName);
     }
 
     /**
      * 生成文件的全路径
-     *
-     * @param businessType
-     * @return
      */
-    public static String getPath(String businessType) {
+    public static String getFullName(String businessType, String name) {
+
         if (StringUtils.isBlank(businessType)) {
             businessType = "default";
         }
@@ -31,13 +38,7 @@ public class OssUtil {
         businessType = businessType.toLowerCase();
         String day = DateUtil.format(new Date(), "yyyyMMdd");
         String path = appGroup + "/" + env + "/" + businessType + "/" + day;
-        return path;
-    }
 
-    /**
-     * 生产上传文件名
-     */
-    public static String getName(String name) {
         String datetime = DateUtil.format(new Date(), "yyyyMMddHHmmssSSS");
         if (name == null) {
             return datetime;
@@ -47,7 +48,9 @@ public class OssUtil {
         name = name.replace("+", "_");
         name = name.replace(";", "_");
         name = name.replace("&", "_");
-        return datetime + "_" + name;
+        name = datetime + "_" + name;
+
+        return path + "/" + name;
     }
 
 
