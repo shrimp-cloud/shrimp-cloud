@@ -6,21 +6,21 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-public class FileConfig {
+public class FileS3Config {
 
     /**
      * S3
      */
 
     @Value("${shrimp.cloud.file.s3.endpoint:}")
-    private String s3Endpoint;
+    private String endpoint;
     @Value("${shrimp.cloud.file.s3.access-key-id:}")
-    private String s3AccessKeyId;
-    @Value("${shrimp.cloud.file.s3.secret-key:}")
-    private String s3SecretKey;
+    private String accessKeyId;
+    @Value("${shrimp.cloud.file.s3.secret-key-secret:}")
+    private String secretKeySecret;
     @Value("${shrimp.cloud.file.s3.bucket:}")
-    private String s3Bucket;
+    private String bucket;
     @Value("${shrimp.cloud.file.s3.region:}")
-    private String s3Region;
+    private String region;
 
 }

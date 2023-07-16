@@ -33,7 +33,8 @@
         <zxing.version>3.5.1</zxing.version>
         <jasypt-spring-boot.version>3.0.5</jasypt-spring-boot.version>
         <wkclz-excel.version>1.0.11.RELEASE</wkclz-excel.version>
-        <aliyun-sdk-oss.version>3.16.0</aliyun-sdk-oss.version>
+        <aliyun-sdk-oss.version>3.17.0</aliyun-sdk-oss.version>
+        <aws-java-sdk-s3.version>1.12.505</aws-java-sdk-s3.version>
         <dysmsapi20170525.version>2.0.16</dysmsapi20170525.version>
         <swagger.version>3.0.0</swagger.version>
         <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
@@ -128,6 +129,11 @@
                 <groupId>com.aliyun.oss</groupId>
                 <artifactId>aliyun-sdk-oss</artifactId>
                 <version>${aliyun-sdk-oss.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-java-sdk-s3</artifactId>
+                <version>${aws-java-sdk-s3.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.aliyun</groupId>

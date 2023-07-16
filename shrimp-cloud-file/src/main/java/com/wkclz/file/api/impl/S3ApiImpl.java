@@ -10,7 +10,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.wkclz.file.api.FileApi;
 import com.wkclz.file.api.S3Api;
-import com.wkclz.file.config.FileConfig;
+import com.wkclz.file.config.FileS3Config;
 import com.wkclz.file.utils.OssUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,22 +19,24 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service("S3Api")
 public class S3ApiImpl implements FileApi, S3Api {
 
     @Autowired
-    private FileConfig config;
+    private FileS3Config config;
 
     @Override
     public String upload(MultipartFile file, String businessType) {
 
-        String endpoint = config.getS3Endpoint();
-        String accessKeyId = config.getS3AccessKeyId();
-        String secretKey = config.getS3SecretKey();
-        String region = config.getS3Region();
-        String bucket = config.getS3Bucket();
+        String endpoint = config.getEndpoint();
+        String accessKeyId = config.getAccessKeyId();
+        String secretKeySecret = config.getSecretKeySecret();
+        String region = config.getRegion();
+        String bucket = config.getBucket();
 
         String filename = file.getOriginalFilename();
         String key = OssUtil.getFullName(businessType, filename);
@@ -43,7 +45,7 @@ public class S3ApiImpl implements FileApi, S3Api {
         // 通过凭证对象 awsCredentials 跟 区域 region 生成s3的服务端(ap-east-1亚太地区香港的区域)
         AmazonS3 s3 = AmazonS3ClientBuilder.standard()
             .withEndpointConfiguration(getEndpointConfiguration(endpoint, region))
-            .withCredentials(getCredentialsProvider(accessKeyId, secretKey))
+            .withCredentials(getCredentialsProvider(accessKeyId, secretKeySecret))
             .build();
 
         // 设置文件元数据
@@ -65,6 +67,21 @@ public class S3ApiImpl implements FileApi, S3Api {
         return url.toString();
     }
 
+
+    /**
+     * S3 单文件删除
+     */
+    public Integer delete(String objectName) {
+        List<String> objectNames = new ArrayList<>();
+        objectNames.add(objectName);
+        return delete(objectNames);
+    }
+    /**
+     * TODO OSS 多文件删除
+     */
+    public Integer delete(List<String> objectNames) {
+        return objectNames.size();
+    }
 
     private static AWSStaticCredentialsProvider getCredentialsProvider(String accessKeyId, String secretKey) {
         BasicAWSCredentials credentials = new BasicAWSCredentials(accessKeyId, secretKey);

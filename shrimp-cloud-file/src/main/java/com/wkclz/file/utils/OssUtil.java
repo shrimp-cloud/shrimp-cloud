@@ -1,11 +1,17 @@
 package com.wkclz.file.utils;
 
 import cn.hutool.core.date.DateUtil;
+import com.wkclz.common.utils.RegularUtil;
+import com.wkclz.file.api.impl.AliOssApiImpl;
 import com.wkclz.file.domain.ContentTypeEnum;
 import com.wkclz.spring.config.Sys;
 import org.apache.commons.lang3.StringUtils;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Description:
@@ -52,6 +58,50 @@ public class OssUtil {
 
         return path + "/" + name;
     }
+
+
+    /**
+     * 移除域名信息，以及多余的 /, 双 Byte 字符，完成转换动作
+     */
+    public static List<String> removeProAndEnCode(List<String> strs) {
+        return strs.stream().map(OssUtil::removeProAndEnCode).collect(Collectors.toList());
+    }
+    /**
+     * 移除域名信息，以及多余的 /, 双 Byte 字符，完成转换动作
+     */
+    public static String removeProAndEnCode(String str) {
+        if (str == null) {
+            return null;
+        }
+
+        // 去掉域名等信息
+        if (str.indexOf("://") > 0) {
+            str = str.substring(str.indexOf("://") + 3);
+            str = str.substring(str.indexOf("/") + 1);
+        }
+
+        // 考虑还有两 / 个的情况
+        if (str.startsWith("/")) {
+            str = str.substring(1);
+        }
+        if (str.startsWith("/")) {
+            str = str.substring(1);
+        }
+
+        if (RegularUtil.haveDoubleByte(str)) {
+            StringBuilder sb = new StringBuilder();
+            for (char c : str.toCharArray()) {
+                if (RegularUtil.isDoubleByte(c)) {
+                    sb.append(URLEncoder.encode(String.valueOf(c), StandardCharsets.UTF_8));
+                } else {
+                    sb.append(c);
+                }
+            }
+            str = sb.toString();
+        }
+        return str;
+    }
+
 
 
 }

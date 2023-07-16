@@ -12,7 +12,7 @@
 </dependency>
 ```
 
-### 添加配置
+### 添加S3配置
 
 ```text
 shrimp:
@@ -21,24 +21,43 @@ shrimp:
       s3:
         endpoint: s3-endpoint
         access-key-id: access-key-id
-        secret-key: secret-key
+        secret-key-secret: secret-key-secret
         bucket: bucket
         region: region
 ```
+
+
+### 添加AliOSS配置
+
+```text
+shrimp:
+  cloud:
+    file:
+      alioss:
+        inner-endpoint: s3-endpoint
+        outer-endpoint: s3-endpoint
+        access-key-id: access-key-id
+        secret-key-secret: secret-key-secret
+        bucket: bucket
+```
+
 
 ### 上传文件
 ```java
 @RestController
 public class TestRest {
+    
     @Autowired
-    private S3Api s3Api;
+    private FileApi fileApi;
 
-    @PostMapping("/public/s3/upload")
-    public Result s3Upload(@RequestParam("file") MultipartFile file, String busnessType){
-        String dd = s3Api.upload(file, busnessType);
+    @PostMapping("/public/file/upload")
+    public Result fileUpload(@RequestParam("file") MultipartFile file, String busnessType){
+        String dd = fileApi.upload(file, busnessType);
         return Result.data(dd);
     }
 }
 
 
 ```
+
+
