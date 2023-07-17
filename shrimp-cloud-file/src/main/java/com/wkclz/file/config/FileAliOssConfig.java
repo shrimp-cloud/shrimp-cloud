@@ -13,16 +13,16 @@ public class FileAliOssConfig {
      */
 
 
-    @Value("${shrimp.cloud.file.alioss.inner-endpoint:}")
-    private String innerEndpoint;
-    @Value("${shrimp.cloud.file.alioss.outer-endpoint:}")
-    private String outerEndpoint;
+    @Value("${shrimp.cloud.file.alioss.bucket:}")
+    private String bucket;
+    @Value("${shrimp.cloud.file.alioss.endpoint:}")
+    private String endpoint;
+    @Value("${shrimp.cloud.file.alioss.bucket-domain:}")
+    private String bucketDomain;
     @Value("${shrimp.cloud.file.alioss.access-key-id:}")
     private String accessKeyId;
     @Value("${shrimp.cloud.file.alioss.secret-key-secret:}")
     private String secretKeySecret;
-    @Value("${shrimp.cloud.file.alioss.bucket:}")
-    private String bucket;
 
 
 }

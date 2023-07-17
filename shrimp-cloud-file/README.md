@@ -19,11 +19,11 @@ shrimp:
   cloud:
     file:
       s3:
+        region: region
+        bucket: bucket
         endpoint: s3-endpoint
         access-key-id: access-key-id
         secret-key-secret: secret-key-secret
-        bucket: bucket
-        region: region
 ```
 
 
@@ -34,11 +34,11 @@ shrimp:
   cloud:
     file:
       alioss:
-        inner-endpoint: s3-endpoint
-        outer-endpoint: s3-endpoint
+        bucket: bucket
+        endpoint: oss-endpoint
+        bucket-domain: oss-domain
         access-key-id: access-key-id
         secret-key-secret: secret-key-secret
-        bucket: bucket
 ```
 
 

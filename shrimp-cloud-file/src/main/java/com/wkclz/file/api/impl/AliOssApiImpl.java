@@ -33,8 +33,8 @@ public class AliOssApiImpl implements FileApi, AliOssApi {
     @Override
     public String upload(MultipartFile file, String businessType) {
 
-        String innerEndpoint = config.getInnerEndpoint();
-        String outerEndpoint = config.getOuterEndpoint();
+        String endpoint = config.getEndpoint();
+        String bucketDomain = config.getBucketDomain();
         String accessKeyId = config.getAccessKeyId();
         String accessKeySecret = config.getSecretKeySecret();
         String bucket = config.getBucket();
@@ -43,7 +43,7 @@ public class AliOssApiImpl implements FileApi, AliOssApi {
         String objectName = OssUtil.getFullName(businessType, file.getOriginalFilename());
 
         // 创建OSSClient实例。
-        OSS ossClient = new OSSClientBuilder().build(innerEndpoint, credentialProvider);
+        OSS ossClient = new OSSClientBuilder().build(endpoint, credentialProvider);
 
         try {
             InputStream inputStream = file.getInputStream();
@@ -62,13 +62,13 @@ public class AliOssApiImpl implements FileApi, AliOssApi {
         }
 
         // 此处返回外网地址
-        if (StringUtils.isBlank(outerEndpoint)) {
-            outerEndpoint = innerEndpoint;
+        if (StringUtils.isBlank(bucketDomain)) {
+            bucketDomain = endpoint;
         }
-        if (outerEndpoint.endsWith("/")) {
-            outerEndpoint = outerEndpoint.substring(0, outerEndpoint.length() - 1);
+        if (!bucketDomain.endsWith("/")) {
+            bucketDomain = bucketDomain + "/";
         }
-        return outerEndpoint + objectName;
+        return bucketDomain + objectName;
     }
 
 
@@ -86,7 +86,7 @@ public class AliOssApiImpl implements FileApi, AliOssApi {
      */
     public Integer delete(List<String> objectNames) {
 
-        String innerEndpoint = config.getInnerEndpoint();
+        String endpoint = config.getEndpoint();
         String accessKeyId = config.getAccessKeyId();
         String accessKeySecret = config.getSecretKeySecret();
         String bucket = config.getBucket();
@@ -94,7 +94,7 @@ public class AliOssApiImpl implements FileApi, AliOssApi {
         DefaultCredentialProvider credentialProvider = getCredentialProvider(accessKeyId, accessKeySecret);
 
         // 创建OSSClient实例。
-        OSS ossClient = new OSSClientBuilder().build(innerEndpoint, credentialProvider);
+        OSS ossClient = new OSSClientBuilder().build(endpoint, credentialProvider);
         try {
             // 删除文件。
             DeleteObjectsRequest request = new DeleteObjectsRequest(bucket);
