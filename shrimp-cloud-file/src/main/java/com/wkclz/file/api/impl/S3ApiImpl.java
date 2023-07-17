@@ -11,6 +11,7 @@ import com.wkclz.file.api.S3Api;
 import com.wkclz.file.config.FileS3Config;
 import com.wkclz.file.utils.OssUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,11 +32,12 @@ public class S3ApiImpl implements FileApi, S3Api {
     @Override
     public String upload(MultipartFile file, String businessType) {
 
-        String endpoint = config.getEndpoint();
-        String accessKeyId = config.getAccessKeyId();
-        String secretKeySecret = config.getSecretKeySecret();
         String region = config.getRegion();
         String bucket = config.getBucket();
+        String endpoint = config.getEndpoint();
+        String bucketDomain = config.getBucketDomain();
+        String accessKeyId = config.getAccessKeyId();
+        String secretKeySecret = config.getSecretKeySecret();
 
         String filename = file.getOriginalFilename();
         String key = OssUtil.getFullName(businessType, filename);
@@ -62,6 +64,15 @@ public class S3ApiImpl implements FileApi, S3Api {
         } finally {
             s3.shutdown();
         }
+
+        // 自定义了 bucket 域名场景
+        if (StringUtils.isNotBlank(bucketDomain)) {
+            if (!bucketDomain.endsWith("/")) {
+                bucketDomain = bucketDomain + "/";
+            }
+            return bucketDomain + key;
+        }
+
         URL url = s3.getUrl(bucket, key);
         return url.toString();
     }

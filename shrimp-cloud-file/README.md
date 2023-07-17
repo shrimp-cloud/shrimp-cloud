@@ -19,9 +19,10 @@ shrimp:
   cloud:
     file:
       s3:
-        region: region
+        region: region # 可不配置，若不配置将是默认的 region
         bucket: bucket
         endpoint: s3-endpoint
+        bucket-domain: s3-domain # 可不配置，若不配置，将是默认的 domain
         access-key-id: access-key-id
         secret-key-secret: secret-key-secret
 ```

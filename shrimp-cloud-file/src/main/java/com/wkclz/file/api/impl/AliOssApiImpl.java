@@ -33,11 +33,11 @@ public class AliOssApiImpl implements FileApi, AliOssApi {
     @Override
     public String upload(MultipartFile file, String businessType) {
 
+        String bucket = config.getBucket();
         String endpoint = config.getEndpoint();
         String bucketDomain = config.getBucketDomain();
         String accessKeyId = config.getAccessKeyId();
         String accessKeySecret = config.getSecretKeySecret();
-        String bucket = config.getBucket();
 
         DefaultCredentialProvider credentialProvider = getCredentialProvider(accessKeyId, accessKeySecret);
         String objectName = OssUtil.getFullName(businessType, file.getOriginalFilename());
