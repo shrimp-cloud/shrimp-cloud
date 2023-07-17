@@ -5,9 +5,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.*;
 import com.wkclz.file.api.FileApi;
 import com.wkclz.file.api.S3Api;
 import com.wkclz.file.config.FileS3Config;
@@ -21,6 +19,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service("S3Api")
@@ -77,10 +76,29 @@ public class S3ApiImpl implements FileApi, S3Api {
         return delete(objectNames);
     }
     /**
-     * TODO OSS 多文件删除
+     * 多文件删除
      */
     public Integer delete(List<String> objectNames) {
-        return objectNames.size();
+
+        String endpoint = config.getEndpoint();
+        String accessKeyId = config.getAccessKeyId();
+        String secretKeySecret = config.getSecretKeySecret();
+        String region = config.getRegion();
+        String bucket = config.getBucket();
+
+        // 通过 accessKeyId、secretKey 生成认证的aws凭证对象
+        // 通过凭证对象 awsCredentials 跟 区域 region 生成s3的服务端(ap-east-1亚太地区香港的区域)
+        AmazonS3 s3 = AmazonS3ClientBuilder.standard()
+            .withEndpointConfiguration(getEndpointConfiguration(endpoint, region))
+            .withCredentials(getCredentialsProvider(accessKeyId, secretKeySecret))
+            .build();
+
+        List<DeleteObjectsRequest.KeyVersion> keyVersions = objectNames.stream().map(DeleteObjectsRequest.KeyVersion::new).collect(Collectors.toList());
+        DeleteObjectsRequest request = new DeleteObjectsRequest(bucket);
+        request.setKeys(keyVersions);
+        DeleteObjectsResult deleteObjectsResult = s3.deleteObjects(request);
+        List<DeleteObjectsResult.DeletedObject> deletedObjects = deleteObjectsResult.getDeletedObjects();
+        return deletedObjects.size();
     }
 
     private static AWSStaticCredentialsProvider getCredentialsProvider(String accessKeyId, String secretKey) {
