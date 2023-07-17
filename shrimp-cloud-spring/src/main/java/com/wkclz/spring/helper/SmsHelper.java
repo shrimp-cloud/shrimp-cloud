@@ -8,7 +8,6 @@ import com.aliyun.dysmsapi20170525.models.SendSmsResponse;
 import com.aliyun.dysmsapi20170525.models.SendSmsResponseBody;
 import com.aliyun.teaopenapi.models.Config;
 import com.aliyun.teautil.models.RuntimeOptions;
-import com.aliyuncs.exceptions.ClientException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,8 +57,6 @@ public class SmsHelper {
             Client client = createClient(smsAccessKeyId, smsAccessKeySecret);
 
 
-
-
             //组装请求对象
             SendSmsRequest request = new SendSmsRequest();
             request.setSignName(signName);
@@ -83,8 +80,6 @@ public class SmsHelper {
                 logger.error("短信发送失败：{}", bodyStr);
                 return "短信发送失败：" + bodyStr;
             }
-        } catch (ClientException e) {
-            logger.error(e.getMessage(), e);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
