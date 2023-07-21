@@ -1,5 +1,6 @@
 package com.wkclz.file.api.impl;
 
+import com.amazonaws.HttpMethod;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -110,6 +112,36 @@ public class S3ApiImpl implements FileApi, S3Api {
         DeleteObjectsResult deleteObjectsResult = s3.deleteObjects(request);
         List<DeleteObjectsResult.DeletedObject> deletedObjects = deleteObjectsResult.getDeletedObjects();
         return deletedObjects.size();
+    }
+
+    /**
+     * 生成预签名对象 URL
+     */
+    public String getSignatureUrl(String key) {
+        String endpoint = config.getEndpoint();
+        String accessKeyId = config.getAccessKeyId();
+        String secretKeySecret = config.getSecretKeySecret();
+        String region = config.getRegion();
+        String bucket = config.getBucket();
+
+        AmazonS3 s3 = AmazonS3ClientBuilder.standard()
+            .withEndpointConfiguration(getEndpointConfiguration(endpoint, region))
+            .withCredentials(getCredentialsProvider(accessKeyId, secretKeySecret))
+            .build();
+
+        Date expiration = new Date();
+        long expTimeMillis = expiration.getTime();
+        long timeOut = 7 * 24 * 60 * 60 * 1000L;
+        expTimeMillis += timeOut;
+        expiration.setTime(expTimeMillis);
+
+        GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucket, key)
+            .withMethod(HttpMethod.GET)
+            .withExpiration(expiration);
+        URL fileUrl = s3.generatePresignedUrl(request);
+        String url = fileUrl.toString();
+        System.out.println("Pre-Signed URL: " + url);
+        return url;
     }
 
     private static AWSStaticCredentialsProvider getCredentialsProvider(String accessKeyId, String secretKey) {
