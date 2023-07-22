@@ -114,7 +114,6 @@ public class RestAop {
         */
 
         try {
-            MDC.remove(GW_FILTER_LOG_KEY);
             obj = point.proceed();
         } catch (Throwable throwable) {
             tb = throwable;
@@ -145,13 +144,13 @@ public class RestAop {
                 logger.error(e.getMessage(), e);
             }
             if (logger.isDebugEnabled()) {
-                logger.debug("{}ms|{}|{}|{}|{}|{}|{}", costTime, method, uri, gwLog, ua, args, value);
+                logger.debug("{}ms|{}|{}|{}|{}|{}|{}", costTime, gwLog, method, uri, ua, args, value);
             } else {
-                logger.info("{}ms|{}|{}|{}|{}|{}|{}", costTime, method, uri, gwLog, ua, args, value);
+                logger.info("{}ms|{}|{}|{}|{}|{}|{}", costTime, gwLog, method, uri, ua, args, value);
             }
         } else {
             if (!NO_LOGS.contains(uri)) {
-                logger.info("{}ms|{}|{}|{}||{}|{}", costTime, method, uri, gwLog, ua, args);
+                logger.info("{}ms|{}|{}|{}|{}|{}", costTime, gwLog, method, uri, ua, args);
             }
         }
 

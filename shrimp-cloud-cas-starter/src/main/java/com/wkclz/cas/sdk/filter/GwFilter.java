@@ -49,13 +49,15 @@ public class GwFilter extends OncePerRequestFilter {
 
         MDC.remove(SdkConstant.HEADER_APP_CODE);
         MDC.remove(SdkConstant.HEADER_TENANT_CODE);
+        MDC.remove("user");
         String method = request.getMethod();
         String uri = request.getRequestURI();
+        String ua = request.getHeader("User-Agent");
 
         // druid 自身带密码，跳过验证
         boolean druid = ANT_PATH_MATCHER.match("/druid/**", uri);
         if (druid) {
-            MDC.put(GW_FILTER_LOG_KEY, "druid write list");
+            MDC.put(GW_FILTER_LOG_KEY, "druid");
             chain.doFilter(request, response);
             return;
         }
@@ -63,7 +65,7 @@ public class GwFilter extends OncePerRequestFilter {
         // TODO 请求日志
         boolean match = ANT_PATH_MATCHER.match("/public/**", uri);
         if (match) {
-            MDC.put(GW_FILTER_LOG_KEY, "default write list");
+            MDC.put(GW_FILTER_LOG_KEY, "public");
             chain.doFilter(request, response);
             return;
         }
@@ -71,7 +73,7 @@ public class GwFilter extends OncePerRequestFilter {
         String token = authHelper.getToken();
         if (token == null) {
             Result msg = Result.error(ResultStatus.TOKEN_UNLL);
-            MDC.put(GW_FILTER_LOG_KEY, "no token");
+            logger.info("{}|{}|{}|no token", method, uri, ua);
             ResponseHelper.responseError(response, msg);
             return;
         }
@@ -81,7 +83,7 @@ public class GwFilter extends OncePerRequestFilter {
         token = ops.get();
         if (token == null) {
             Result msg = Result.error(ResultStatus.LOGIN_TIMEOUT);
-            MDC.put(GW_FILTER_LOG_KEY, "expire token");
+            logger.info("{}|{}|{}|expire token", method, uri, ua);
             ResponseHelper.responseError(response, msg);
             return;
         }
@@ -117,7 +119,7 @@ public class GwFilter extends OncePerRequestFilter {
             boolean b = dUserApiCache.get(method, uri);
             if (!b) {
                 Result msg = Result.error("没有接口权限: " + method + ":" + uri);
-                MDC.put(GW_FILTER_LOG_KEY, StrUtil.format("{} no permission", userCode));
+                logger.info("{}|{}|{}|{}|no permission", userCode, method, uri, ua);
                 msg.setCode(HttpStatus.FORBIDDEN.value());
                 ResponseHelper.responseError(response, msg);
                 return;
@@ -130,11 +132,12 @@ public class GwFilter extends OncePerRequestFilter {
                 BizException be = (BizException)e;
                 error.setCode(be.getCode());
             }
-            MDC.put(GW_FILTER_LOG_KEY, "err token");
+            logger.info("{}|{}|{}|err token", method, uri, ua);
             ResponseHelper.responseError(response, error);
             return;
         }
-        MDC.put(GW_FILTER_LOG_KEY, StrUtil.format("{} access", userCode));
+
+        MDC.put(GW_FILTER_LOG_KEY, userCode);
         chain.doFilter(request, response);
 
         /*
