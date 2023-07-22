@@ -1,9 +1,11 @@
 package com.wkclz.cas.sdk.filter;
 
+import cn.hutool.core.util.StrUtil;
 import com.wkclz.cas.sdk.cache.BAppInfoCache;
 import com.wkclz.cas.sdk.cache.DUserApiCache;
 import com.wkclz.cas.sdk.helper.AuthHelper;
 import com.wkclz.cas.sdk.helper.ResponseHelper;
+import com.wkclz.cas.sdk.pojo.SdkConstant;
 import com.wkclz.common.emuns.ResultStatus;
 import com.wkclz.common.entity.Result;
 import com.wkclz.common.exception.BizException;
@@ -29,7 +31,8 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class GwFilter extends OncePerRequestFilter {
 
-    private static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
+    private final static String GW_FILTER_LOG_KEY = "GW_FILTER_LOG";
+    private final static AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
     private static Logger logger = LoggerFactory.getLogger(GwFilter.class);
 
     @Autowired
@@ -43,23 +46,24 @@ public class GwFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        MDC.clear();
+
+        MDC.remove(SdkConstant.HEADER_APP_CODE);
+        MDC.remove(SdkConstant.HEADER_TENANT_CODE);
         String method = request.getMethod();
         String uri = request.getRequestURI();
 
         // druid 自身带密码，跳过验证
         boolean druid = ANT_PATH_MATCHER.match("/druid/**", uri);
         if (druid) {
+            MDC.put(GW_FILTER_LOG_KEY, "druid write list");
             chain.doFilter(request, response);
             return;
         }
 
-        String ua = request.getHeader("User-Agent");
-
         // TODO 请求日志
         boolean match = ANT_PATH_MATCHER.match("/public/**", uri);
         if (match) {
-            logger.info("request: {}:{}, write list, UA: {}", method, uri, ua);
+            MDC.put(GW_FILTER_LOG_KEY, "default write list");
             chain.doFilter(request, response);
             return;
         }
@@ -67,8 +71,8 @@ public class GwFilter extends OncePerRequestFilter {
         String token = authHelper.getToken();
         if (token == null) {
             Result msg = Result.error(ResultStatus.TOKEN_UNLL);
+            MDC.put(GW_FILTER_LOG_KEY, "no token");
             ResponseHelper.responseError(response, msg);
-            logger.info("request: {}:{}, no token: {}, UA: {}", method, uri, msg, ua);
             return;
         }
 
@@ -77,6 +81,7 @@ public class GwFilter extends OncePerRequestFilter {
         token = ops.get();
         if (token == null) {
             Result msg = Result.error(ResultStatus.LOGIN_TIMEOUT);
+            MDC.put(GW_FILTER_LOG_KEY, "expire token");
             ResponseHelper.responseError(response, msg);
             return;
         }
@@ -85,7 +90,6 @@ public class GwFilter extends OncePerRequestFilter {
         String userCode;
         try {
             userCode = authHelper.getUserCode();
-            logger.info("request: {}:{}, userCode: {}, UA: {}", method, uri, userCode, ua);
 
             /* 因为所有应用都走同一个入口，无法获取模块应用编码。无法使用区分授权方式
             AppInfo appInfo = appInfoCache.get(authHelper.getAppCode());
@@ -112,8 +116,8 @@ public class GwFilter extends OncePerRequestFilter {
             // 全部都启用接口级鉴权 begin
             boolean b = dUserApiCache.get(method, uri);
             if (!b) {
-                logger.info("request: {}:{}, no permission: user: {} UA: {}", method, uri, userCode, ua);
                 Result msg = Result.error("没有接口权限: " + method + ":" + uri);
+                MDC.put(GW_FILTER_LOG_KEY, StrUtil.format("{} no permission", userCode));
                 msg.setCode(HttpStatus.FORBIDDEN.value());
                 ResponseHelper.responseError(response, msg);
                 return;
@@ -126,10 +130,11 @@ public class GwFilter extends OncePerRequestFilter {
                 BizException be = (BizException)e;
                 error.setCode(be.getCode());
             }
-            logger.info("request: {}:{}, err token: {}, UA: {}", method, uri, msg, ua);
+            MDC.put(GW_FILTER_LOG_KEY, "err token");
             ResponseHelper.responseError(response, error);
             return;
         }
+        MDC.put(GW_FILTER_LOG_KEY, StrUtil.format("{} access", userCode));
         chain.doFilter(request, response);
 
         /*

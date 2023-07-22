@@ -14,6 +14,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -22,9 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * RestAop
@@ -33,6 +32,9 @@ import java.util.List;
 @Aspect
 @Component
 public class RestAop {
+
+    private final static String GW_FILTER_LOG_KEY = "GW_FILTER_LOG";
+    private static List<String> NO_LOGS = Arrays.asList("/public/status");
 
     /**
      * : @Around环绕通知
@@ -83,6 +85,7 @@ public class RestAop {
 
         String method = req.getMethod();
         String uri = req.getRequestURI();
+        String ua = req.getHeader("User-Agent");
         Date requestTime = new Date();
         Date responseTime;
         Long costTime;
@@ -111,6 +114,7 @@ public class RestAop {
         */
 
         try {
+            MDC.remove(GW_FILTER_LOG_KEY);
             obj = point.proceed();
         } catch (Throwable throwable) {
             tb = throwable;
@@ -130,6 +134,8 @@ public class RestAop {
         String debug = req.getParameter("debug");
         boolean isDebug = logger.isDebugEnabled() || ("1".equals(debug));
 
+        String gwLog = MDC.get(GW_FILTER_LOG_KEY);
+
         String args = getArgs(point);
         if (isDebug) {
             String value = null;
@@ -139,12 +145,14 @@ public class RestAop {
                 logger.error(e.getMessage(), e);
             }
             if (logger.isDebugEnabled()) {
-                logger.debug("{}|{}ms|{}|{}|{}", method, costTime, uri, args, value);
+                logger.debug("{}ms|{}|{}|{}|{}|{}|{}", costTime, method, uri, gwLog, ua, args, value);
             } else {
-                logger.info("{}|{}ms|{}|{}|{}", method, costTime, uri, args, value);
+                logger.info("{}ms|{}|{}|{}|{}|{}|{}", costTime, method, uri, gwLog, ua, args, value);
             }
         } else {
-            logger.info("{}|{}ms|{}|{}", method, costTime, uri, args);
+            if (!NO_LOGS.contains(uri)) {
+                logger.info("{}ms|{}|{}|{}||{}|{}", costTime, method, uri, gwLog, ua, args);
+            }
         }
 
         if (tb != null) {

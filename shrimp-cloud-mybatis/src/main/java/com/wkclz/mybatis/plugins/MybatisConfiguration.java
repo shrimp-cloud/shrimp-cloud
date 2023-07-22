@@ -87,6 +87,11 @@ public class MybatisConfiguration {
         if (lastIndex < 0){
             return type;
         }
+
+        // 需要检查乐观锁, 使用前要去除，保证线程安全
+        MDC.remove(MybatisConfiguration.CHECK_VERSION);
+        MDC.remove(MybatisConfiguration.CHECK_ID);
+
         mappedStatementId = mappedStatementId.substring(lastIndex +1);
         SqlCommandType sqlCommandType = SQL_COMMAND_TYPE_MAPT.get(mappedStatementId);
         // SQL_COMMAND_TYPE_MAPT 额缓存，才是自己生成的，也才应该走检查流程

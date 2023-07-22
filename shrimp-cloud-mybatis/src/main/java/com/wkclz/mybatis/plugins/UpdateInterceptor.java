@@ -44,11 +44,9 @@ public class UpdateInterceptor implements Interceptor {
         String id = mappedStatement.getId();
         SqlCommandType commandType = MybatisConfiguration.getCommandType(id, sqlCommandType);
 
-        // 需要检查乐观锁, 使用完后要去除，保证线程安全
+        // 需要检查乐观锁, 使用前要去除，保证线程安全
         boolean chechVersion = MDC.get(MybatisConfiguration.CHECK_VERSION) != null;
         boolean checkId = MDC.get(MybatisConfiguration.CHECK_ID) != null;
-        MDC.remove(MybatisConfiguration.CHECK_VERSION);
-        MDC.remove(MybatisConfiguration.CHECK_ID);
 
         // 参数为对象
         if (parameter instanceof BaseEntity) {
