@@ -9,6 +9,10 @@ import com.wkclz.common.annotation.Desc;
 @Desc("结果状态")
 public enum ResultStatus {
 
+    /**
+     *
+     */
+
     TOKEN_UNLL(10001, "token 为空！"),
     TOKEN_ERROR(10002, "token 不正确或已失效！"),
     TOKEN_ILLEGAL_TRANSFER(10003, "非法传输 token！"),

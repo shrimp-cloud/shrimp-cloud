@@ -5,18 +5,18 @@ package com.wkclz.mybatis.dynamicdb;
  */
 public class DynamicDataSourceHolder {
 
-    private static final ThreadLocal<String> dataSourceHolder = new ThreadLocal<>();
+    private static final ThreadLocal<String> DATA_SOURCE_HOLDER = new ThreadLocal<>();
 
     public static void set(String key) {
-        dataSourceHolder.set(key);
+        DATA_SOURCE_HOLDER.set(key);
     }
 
     public static String get() {
-        return dataSourceHolder.get();
+        return DATA_SOURCE_HOLDER.get();
     }
 
     public static void clear() {
-        dataSourceHolder.remove();
+        DATA_SOURCE_HOLDER.remove();
     }
 
 }
