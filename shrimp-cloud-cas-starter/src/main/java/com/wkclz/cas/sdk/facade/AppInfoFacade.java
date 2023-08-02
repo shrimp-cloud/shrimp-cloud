@@ -11,7 +11,7 @@ public interface AppInfoFacade {
     List<Api> apis(String appCode);
     List<RoleRes> roleReses(String appCode);
     List<ResApi> resApis(String appCode);
-    List<AccessToken> accessToken(String appCode);
+    List<AccessToken> accessTokens(String appCode);
 
     List<App> getApps();
     List<String> getUserRoles(String tenantCode, String userCode);

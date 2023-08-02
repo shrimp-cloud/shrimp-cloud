@@ -33,7 +33,7 @@ public class AppInfoImpl implements AppInfoFacade {
         return null;
     }
     @Override
-    public List<AccessToken> accessToken(String appCode) {
+    public List<AccessToken> accessTokens(String appCode) {
         return null;
     }
 

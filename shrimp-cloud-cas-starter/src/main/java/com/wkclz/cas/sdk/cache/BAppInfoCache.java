@@ -86,7 +86,7 @@ public class BAppInfoCache {
             appInfo.setResApis(appInfoFacade.resApis(appCode));
         }
         if (types.contains(SdkConstant.ACCESS_TOKEN)) {
-            appInfo.setAccessTokens(appInfoFacade.accessToken(appCode));
+            appInfo.setAccessTokens(appInfoFacade.accessTokens(appCode));
         }
     }
 
