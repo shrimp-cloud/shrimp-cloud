@@ -1,6 +1,7 @@
 package com.wkclz.cas.sdk.pojo.appinfo;
 
 import java.util.List;
+import java.util.Map;
 
 public class AppInfo {
 
@@ -12,7 +13,7 @@ public class AppInfo {
     private List<RoleRes> roleReses;
     private List<ResApi> resApis;
 
-    private List<AccessToken> accessTokens;
+    private Map<String, AccessToken> accessTokens;
 
     public App getApp() {
         return app;
@@ -62,11 +63,11 @@ public class AppInfo {
         this.resApis = resApis;
     }
 
-    public List<AccessToken> getAccessTokens() {
+    public Map<String, AccessToken> getAccessTokens() {
         return accessTokens;
     }
 
-    public void setAccessTokens(List<AccessToken> accessTokens) {
+    public void setAccessTokens(Map<String, AccessToken> accessTokens) {
         this.accessTokens = accessTokens;
     }
 }

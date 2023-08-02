@@ -2,6 +2,7 @@ package com.wkclz.cas.sdk.cache;
 
 import com.wkclz.cas.sdk.facade.AppInfoFacade;
 import com.wkclz.cas.sdk.pojo.SdkConstant;
+import com.wkclz.cas.sdk.pojo.appinfo.AccessToken;
 import com.wkclz.cas.sdk.pojo.appinfo.App;
 import com.wkclz.cas.sdk.pojo.appinfo.AppInfo;
 import org.apache.commons.collections4.CollectionUtils;
@@ -9,10 +10,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class BAppInfoCache {
@@ -86,7 +89,13 @@ public class BAppInfoCache {
             appInfo.setResApis(appInfoFacade.resApis(appCode));
         }
         if (types.contains(SdkConstant.ACCESS_TOKEN)) {
-            appInfo.setAccessTokens(appInfoFacade.accessTokens(appCode));
+            List<AccessToken> accessTokens = appInfoFacade.accessTokens(appCode);
+            if (CollectionUtils.isEmpty(accessTokens)) {
+                appInfo.setAccessTokens(new HashMap<>());
+            } else {
+                Map<String, AccessToken> maps = accessTokens.stream().collect(Collectors.toMap(AccessToken::getAppId, Function.identity()));
+                appInfo.setAccessTokens(maps);
+            }
         }
     }
 

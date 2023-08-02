@@ -22,6 +22,16 @@ public class CasSdkConfig {
     @Value(("${cas.sdk.token.secret:shrimp.chlinhchentclinxmeicyxiuhchua.shrimp.chlinhchentclinxmeicyxiuhchua.shrimp}"))
     private String tokenSecret;
 
+
+    /**
+     * 用于请求服务端的配置
+     */
+    @Value(("${cas.sdk.app-id:default}"))
+    private String appId;
+    @Value(("${cas.sdk.app-secret:default}"))
+    private String appSecret;
+
+
     public String getAppCode() {
         return appCode;
     }
@@ -44,6 +54,22 @@ public class CasSdkConfig {
 
     public void setTokenSecret(String tokenSecret) {
         this.tokenSecret = tokenSecret;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public String getAppSecret() {
+        return appSecret;
+    }
+
+    public void setAppSecret(String appSecret) {
+        this.appSecret = appSecret;
     }
 
     @Bean

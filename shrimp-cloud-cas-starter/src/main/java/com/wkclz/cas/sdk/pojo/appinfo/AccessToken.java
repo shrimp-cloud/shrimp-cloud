@@ -7,6 +7,7 @@ public class AccessToken {
     private String appCode;
     private String appId;
     private String appSecret;
+    private String appPublicKey;
     private Date startTime;
     private Date stopTime;
 
@@ -32,6 +33,14 @@ public class AccessToken {
 
     public void setAppSecret(String appSecret) {
         this.appSecret = appSecret;
+    }
+
+    public String getAppPublicKey() {
+        return appPublicKey;
+    }
+
+    public void setAppPublicKey(String appPublicKey) {
+        this.appPublicKey = appPublicKey;
     }
 
     public Date getStartTime() {
