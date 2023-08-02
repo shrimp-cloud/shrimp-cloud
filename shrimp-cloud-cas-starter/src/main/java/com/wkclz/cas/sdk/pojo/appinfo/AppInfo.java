@@ -12,6 +12,8 @@ public class AppInfo {
     private List<RoleRes> roleReses;
     private List<ResApi> resApis;
 
+    private List<AccessToken> accessTokens;
+
     public App getApp() {
         return app;
     }
@@ -58,5 +60,13 @@ public class AppInfo {
 
     public void setResApis(List<ResApi> resApis) {
         this.resApis = resApis;
+    }
+
+    public List<AccessToken> getAccessTokens() {
+        return accessTokens;
+    }
+
+    public void setAccessTokens(List<AccessToken> accessTokens) {
+        this.accessTokens = accessTokens;
     }
 }

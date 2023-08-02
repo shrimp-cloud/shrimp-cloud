@@ -1,6 +1,7 @@
 package com.wkclz.cas.sdk.cache;
 
 import com.wkclz.cas.sdk.facade.AppInfoFacade;
+import com.wkclz.cas.sdk.pojo.SdkConstant;
 import com.wkclz.cas.sdk.pojo.appinfo.CacheRecord;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -32,8 +33,8 @@ public class ZCacheClear {
     @Scheduled(fixedDelay = 5000)
     public void clearCache() {
 
-        List<CacheRecord> cacheRecord = appInfoFacade.getCacheRecord();
-        if (CollectionUtils.isEmpty(cacheRecord)) {
+        List<CacheRecord> cacheRecords = appInfoFacade.getCacheRecords();
+        if (CollectionUtils.isEmpty(cacheRecords)) {
             return;
         }
 
@@ -42,7 +43,7 @@ public class ZCacheClear {
         }
 
         List<CacheRecord> newRecord = new ArrayList<>();
-        for (CacheRecord record : cacheRecord) {
+        for (CacheRecord record : cacheRecords) {
             String key = record.getAppCode() + ":" + record.getCacheType();
 
             // 已经存在的旧指令，不刷新
@@ -78,14 +79,13 @@ public class ZCacheClear {
 
         for (Map.Entry<String, List<String>> entry : record.entrySet()) {
             String appCode = entry.getKey();
-            String types = StringUtils.join(entry.getValue(), ",");
+            List<String> types = entry.getValue();
 
             // AppInfo 的更新，无需关心类型
             appInfoCache.refresh(appCode, types);
 
-            String[] typeArr = types.split(",");
-            for (String type : typeArr) {
-                if ("APP".equals(type)) {
+            for (String type : types) {
+                if (SdkConstant.APP.equals(type)) {
                     /* TODO APP_DOMAIN
                     List<App> apps = appInfoFacade.getApps();
                     if (CollectionUtils.isNotEmpty(apps)) {
@@ -93,7 +93,7 @@ public class ZCacheClear {
                     }
                     */
                 }
-                if ("USER_ROLE".equals(type)) {
+                if (SdkConstant.USER_ROLE.equals(type)) {
                     // 用户需要重新登录，不管
                     continue;
                 }

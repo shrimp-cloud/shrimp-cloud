@@ -32,6 +32,10 @@ public class AppInfoImpl implements AppInfoFacade {
     public List<ResApi> resApis(String appCode) {
         return null;
     }
+    @Override
+    public List<AccessToken> accessToken(String appCode) {
+        return null;
+    }
 
     @Override
     public List<App> getApps() {
@@ -47,7 +51,7 @@ public class AppInfoImpl implements AppInfoFacade {
     }
 
     @Override
-    public List<CacheRecord> getCacheRecord() {
+    public List<CacheRecord> getCacheRecords() {
         return null;
     }
 

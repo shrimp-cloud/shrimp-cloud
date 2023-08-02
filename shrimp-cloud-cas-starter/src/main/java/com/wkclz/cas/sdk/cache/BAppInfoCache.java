@@ -1,8 +1,10 @@
 package com.wkclz.cas.sdk.cache;
 
 import com.wkclz.cas.sdk.facade.AppInfoFacade;
+import com.wkclz.cas.sdk.pojo.SdkConstant;
 import com.wkclz.cas.sdk.pojo.appinfo.App;
 import com.wkclz.cas.sdk.pojo.appinfo.AppInfo;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -41,17 +43,17 @@ public class BAppInfoCache {
     public void refresh(List<String> appCodes) {
         if (appCodes != null) {
             for (String appCode : appCodes) {
-                refresh(appCode, "APP,ROLE,RES,API,ROLE_RES,RES_API");
+                refresh(appCode, SdkConstant.TOTAL_CACKE);
             }
         }
     }
 
     public void refresh(String appCode) {
-        refresh(appCode, "APP,ROLE,RES,API,ROLE_RES,RES_API");
+        refresh(appCode, SdkConstant.TOTAL_CACKE);
     }
 
-    public void refresh(String appCode, String type) {
-        if (StringUtils.isBlank(appCode) || StringUtils.isBlank(type)) {
+    public void refresh(String appCode, List<String> types) {
+        if (StringUtils.isBlank(appCode) || CollectionUtils.isEmpty(types)) {
             return;
         }
         AppInfo appInfo = APP_RESOURCE_CACHE_MAP.get(appCode);
@@ -60,8 +62,7 @@ public class BAppInfoCache {
         }
         APP_RESOURCE_CACHE_MAP.put(appCode, appInfo);
 
-        List<String> types = Arrays.asList(type.split(","));
-        if (types.contains("APP")) {
+        if (types.contains(SdkConstant.APP)) {
             App app = appInfoFacade.app(appCode);
             if (app == null) {
                 return;
@@ -69,20 +70,23 @@ public class BAppInfoCache {
             appInfo.setApp(app);
         }
 
-        if (types.contains("ROLE")) {
+        if (types.contains(SdkConstant.ROLE)) {
             appInfo.setRoles(appInfoFacade.roles(appCode));
         }
-        if (types.contains("RES")) {
+        if (types.contains(SdkConstant.RES)) {
             appInfo.setReses(appInfoFacade.reses(appCode));
         }
-        if (types.contains("API")) {
+        if (types.contains(SdkConstant.API)) {
             appInfo.setApis(appInfoFacade.apis(appCode));
         }
-        if (types.contains("ROLE_RES")) {
+        if (types.contains(SdkConstant.ROLE_RES)) {
             appInfo.setRoleReses(appInfoFacade.roleReses(appCode));
         }
-        if (types.contains("RES_API")) {
+        if (types.contains(SdkConstant.RES_API)) {
             appInfo.setResApis(appInfoFacade.resApis(appCode));
+        }
+        if (types.contains(SdkConstant.ACCESS_TOKEN)) {
+            appInfo.setAccessTokens(appInfoFacade.accessToken(appCode));
         }
     }
 
