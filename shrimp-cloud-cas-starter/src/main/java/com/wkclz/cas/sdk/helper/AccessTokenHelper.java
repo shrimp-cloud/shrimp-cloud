@@ -69,7 +69,7 @@ public class AccessTokenHelper {
      * 解析并校验签名
      */
     public boolean deSign(String appId, String sign) {
-        if (StringUtils.isBlank(sign)) {
+        if (StringUtils.isBlank(appId) || StringUtils.isBlank(sign)) {
             return false;
         }
 
@@ -143,7 +143,6 @@ public class AccessTokenHelper {
     private static String encrypt(String privateKeyStr, String plainText) {
         try {
             byte[] keyBytes = SecretUtil.base64Decode(privateKeyStr);
-            // byte[] keyBytes = Base64.base64ToByteArray(privateKeyStr);
             PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
             KeyFactory factory = KeyFactory.getInstance("RSA", "SunRsaSign");
             PrivateKey privateKey = factory.generatePrivate(spec);
@@ -161,7 +160,6 @@ public class AccessTokenHelper {
 
             byte[] encryptedBytes = cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
             String encryptedString = SecretUtil.base64Encode(encryptedBytes);
-            // String encryptedString = Base64.byteArrayToBase64(encryptedBytes);
             return encryptedString;
         } catch (Exception e) {
             throw new RuntimeException("加密计算出现异常", e);
@@ -180,7 +178,7 @@ public class AccessTokenHelper {
                 RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
                 RSAPrivateKeySpec spec = new RSAPrivateKeySpec(rsaPublicKey.getModulus(), rsaPublicKey.getPublicExponent());
                 Key fakePrivateKey = KeyFactory.getInstance("RSA").generatePrivate(spec);
-                cipher = Cipher.getInstance("RSA"); //It is a stateful object. so we need to get new one.
+                cipher = Cipher.getInstance("RSA");
                 cipher.init(Cipher.DECRYPT_MODE, fakePrivateKey);
             }
 
@@ -189,7 +187,6 @@ public class AccessTokenHelper {
             }
 
             byte[] cipherBytes = SecretUtil.base64Decode(cipherText);
-            //byte[] cipherBytes = Base64.base64ToByteArray(cipherText);
             byte[] plainBytes = cipher.doFinal(cipherBytes);
 
             return new String(plainBytes);
@@ -201,10 +198,7 @@ public class AccessTokenHelper {
     private static PublicKey getPublicKey(String publicKeyStr) {
         try {
             byte[] publicKeyBytes = SecretUtil.base64Decode(publicKeyStr);
-            // byte[] publicKeyBytes = Base64.base64ToByteArray(publicKeyStr);
-            X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(
-                publicKeyBytes);
-
+            X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(publicKeyBytes);
             KeyFactory keyFactory = KeyFactory.getInstance("RSA", "SunRsaSign");
             return keyFactory.generatePublic(x509KeySpec);
         } catch (Exception e) {
