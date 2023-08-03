@@ -3,6 +3,7 @@ package com.wkclz.cas.sdk.filter;
 import cn.hutool.core.util.StrUtil;
 import com.wkclz.cas.sdk.cache.BAppInfoCache;
 import com.wkclz.cas.sdk.cache.DUserApiCache;
+import com.wkclz.cas.sdk.helper.AccessTokenHelper;
 import com.wkclz.cas.sdk.helper.AuthHelper;
 import com.wkclz.cas.sdk.helper.ResponseHelper;
 import com.wkclz.cas.sdk.pojo.SdkConstant;
@@ -10,6 +11,7 @@ import com.wkclz.common.emuns.ResultStatus;
 import com.wkclz.common.entity.Result;
 import com.wkclz.common.exception.BizException;
 import com.wkclz.common.utils.SecretUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -42,6 +44,8 @@ public class GwFilter extends OncePerRequestFilter {
     @Autowired
     private DUserApiCache dUserApiCache;
     @Autowired
+    private AccessTokenHelper accessTokenHelper;
+    @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
     @Override
@@ -70,10 +74,26 @@ public class GwFilter extends OncePerRequestFilter {
             return;
         }
 
+        // sign 签名验证
+        String appId = request.getHeader("app-id");
+        String sign = request.getHeader("sign");
+        if (StringUtils.isNotBlank(appId) && StringUtils.isNotBlank(sign)) {
+            boolean b = accessTokenHelper.deSign(appId, sign);
+            if (b) {
+                MDC.put(GW_FILTER_LOG_KEY, appId);
+                chain.doFilter(request, response);
+                return;
+            }
+            String msg = StrUtil.format("{}|{}|{}|{}|sign faild", appId, method, uri, ua);
+            logger.error(msg);
+            ResponseHelper.responseError(response, Result.error(msg));
+            return;
+        }
+
         String token = authHelper.getToken();
         if (token == null) {
             Result msg = Result.error(ResultStatus.TOKEN_UNLL);
-            logger.info("{}|{}|{}|no token", method, uri, ua);
+            logger.error("{}|{}|{}|no token", method, uri, ua);
             ResponseHelper.responseError(response, msg);
             return;
         }
@@ -83,7 +103,7 @@ public class GwFilter extends OncePerRequestFilter {
         token = ops.get();
         if (token == null) {
             Result msg = Result.error(ResultStatus.LOGIN_TIMEOUT);
-            logger.info("{}|{}|{}|expire token", method, uri, ua);
+            logger.error("{}|{}|{}|expire token", method, uri, ua);
             ResponseHelper.responseError(response, msg);
             return;
         }
@@ -119,7 +139,7 @@ public class GwFilter extends OncePerRequestFilter {
             boolean b = dUserApiCache.get(method, uri);
             if (!b) {
                 Result msg = Result.error("没有接口权限: " + method + ":" + uri);
-                logger.info("{}|{}|{}|{}|no permission", userCode, method, uri, ua);
+                logger.error("{}|{}|{}|{}|no permission", userCode, method, uri, ua);
                 msg.setCode(HttpStatus.FORBIDDEN.value());
                 ResponseHelper.responseError(response, msg);
                 return;
@@ -132,7 +152,7 @@ public class GwFilter extends OncePerRequestFilter {
                 BizException be = (BizException)e;
                 error.setCode(be.getCode());
             }
-            logger.info("{}|{}|{}|err token", method, uri, ua);
+            logger.error("{}|{}|{}|err token", method, uri, ua);
             ResponseHelper.responseError(response, error);
             return;
         }

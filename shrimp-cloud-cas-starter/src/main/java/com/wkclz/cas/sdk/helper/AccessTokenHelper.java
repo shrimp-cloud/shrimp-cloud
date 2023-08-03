@@ -36,6 +36,9 @@ public class AccessTokenHelper {
     @Autowired
     private RedisLockHelper redisLockHelper;
 
+    /**
+     * 获取签名
+     */
     public String getSign() {
         String appId = casSdkConfig.getAppId();
         String appSecret = casSdkConfig.getAppSecret();
@@ -62,6 +65,9 @@ public class AccessTokenHelper {
     }
 
 
+    /**
+     * 解析并校验签名
+     */
     public boolean deSign(String appId, String sign) {
         if (StringUtils.isBlank(sign)) {
             return false;
