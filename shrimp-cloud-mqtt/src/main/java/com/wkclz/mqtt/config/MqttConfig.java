@@ -89,7 +89,7 @@ public class MqttConfig {
     class MqttReconnectCallback implements MqttCallbackExtended {
 
         @Override
-        public void connectComplete(boolean reconnect, String serverURI) {
+        public void connectComplete(boolean reconnect, String serverUri) {
             logger.info("mqtt connect complete");
             MqttAsyncClient mqttAsyncClient = SpringContextHolder.getBean(MqttAsyncClient.class);
             MqttSubcribe.subscribeTopics(mqttAsyncClient);

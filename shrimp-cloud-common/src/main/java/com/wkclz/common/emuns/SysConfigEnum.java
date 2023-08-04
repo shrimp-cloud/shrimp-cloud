@@ -10,6 +10,10 @@ import com.wkclz.common.annotation.Desc;
 @Desc("系统配置默认值")
 public enum SysConfigEnum {
 
+    /**
+     *
+     */
+
     LOGIN_TIMES("login_times", "0", "系统登录次数"),
     SYSTEM_KEY("system_key", "system_key", "系统key"),
     PROTOCOL("protocol", "http", "【系统】协议"),
