@@ -51,18 +51,19 @@ public class MyBatisHelper {
     public static <T extends BaseEntity> PageData<T> selectPage(String sql, T param) {
         SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
         String statement = reloadSql(sql);
-
         param.init();
-        PageHelper.startPage(param.getCurrent().intValue(), param.getSize().intValue());
-
-        List<T> list = sqlSession.selectList(statement, param);
-
-        Page listPage = (Page) list;
-        long total = listPage.getTotal();
-        PageData<T> pageData = new PageData<>(param);
-        pageData.setTotal(total);
-        pageData.setRows(list);
-        return pageData;
+        try {
+            PageHelper.startPage(param.getCurrent().intValue(), param.getSize().intValue());
+            List<T> list = sqlSession.selectList(statement, param);
+            Page listPage = (Page) list;
+            long total = listPage.getTotal();
+            PageData<T> pageData = new PageData<>(param);
+            pageData.setTotal(total);
+            pageData.setRows(list);
+            return pageData;
+        } finally {
+            PageHelper.clearPage();
+        }
     }
 
     /**
@@ -95,17 +96,20 @@ public class MyBatisHelper {
         Object sizeObj = param.get("size");
         Long current = (currentObj == null) ? 0L : Long.parseLong(currentObj.toString());
         Long size = (sizeObj == null) ? 10L : Long.parseLong(sizeObj.toString());
+        try {
+            PageHelper.startPage(current.intValue(), size.intValue());
+            List<Map> list = sqlSession.selectList(statement, param);
 
-        PageHelper.startPage(current.intValue(), size.intValue());
-        List<Map> list = sqlSession.selectList(statement, param);
-
-        Page listPage = (Page) list;
-        long total = listPage.getTotal();
-        PageData<Map> pageData = new PageData<>(current, size);
-        pageData.setTotal(total);
-        list = (List<Map>) list.stream().map(MapUtil::toCamelCaseMap).collect(Collectors.toList());
-        pageData.setRows(list);
-        return pageData;
+            Page listPage = (Page) list;
+            long total = listPage.getTotal();
+            PageData<Map> pageData = new PageData<>(current, size);
+            pageData.setTotal(total);
+            list = (List<Map>) list.stream().map(MapUtil::toCamelCaseMap).collect(Collectors.toList());
+            pageData.setRows(list);
+            return pageData;
+        } finally {
+            PageHelper.clearPage();
+        }
     }
 
     /**
