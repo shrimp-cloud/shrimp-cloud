@@ -2,6 +2,7 @@ package com.wkclz.mqtt.config;
 
 import com.wkclz.spring.config.SpringContextHolder;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
@@ -10,10 +11,19 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManagerFactory;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.security.KeyStore;
+import java.security.Security;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,6 +38,7 @@ public class MqttConfig {
     // 自定义
     private String username;
     private String password;
+    private String caPath;
 
     // 公共
     private String endPoint;
@@ -69,6 +80,14 @@ public class MqttConfig {
             connOpts.setConnectionTimeout(0);
             connOpts.setAutomaticReconnect(true);
             connOpts.setKeepAliveInterval(keepAliveInterval);
+
+            // CA 证书
+            if (endPoint.startsWith("ssl") && StringUtils.isNotBlank(caPath)) {
+                String caCrtFile = MqttConfig.class.getResource(caPath).getPath();
+                connOpts.setSocketFactory(SSLUtils.getSingleSocketFactory(caCrtFile));
+            }
+
+
             mqttClient.setCallback(new MqttReconnectCallback());
 
             logger.info("Connecting to broker: " + getEndPoint());
@@ -121,6 +140,14 @@ public class MqttConfig {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getCaPath() {
+        return caPath;
+    }
+
+    public void setCaPath(String caPath) {
+        this.caPath = caPath;
     }
 
     public String getEndPoint() {
@@ -211,5 +238,34 @@ public class MqttConfig {
         return ipList.toArray()[0].toString();
     }
 
+
+    public class SSLUtils {
+        // 单向认证
+        public static SSLSocketFactory getSingleSocketFactory(final String caCrtFile) {
+            try {
+                Security.addProvider(new BouncyCastleProvider());
+                X509Certificate caCert = null;
+
+                FileInputStream caCrtFileInputStream = new FileInputStream(caCrtFile);
+
+                BufferedInputStream bis = new BufferedInputStream(caCrtFileInputStream);
+                CertificateFactory cf = CertificateFactory.getInstance("X.509");
+
+                while (bis.available() > 0) {
+                    caCert = (X509Certificate) cf.generateCertificate(bis);
+                }
+                KeyStore caKs = KeyStore.getInstance(KeyStore.getDefaultType());
+                caKs.load(null, null);
+                caKs.setCertificateEntry("cert-certificate", caCert);
+                TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+                tmf.init(caKs);
+                SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+                sslContext.init(null, tmf.getTrustManagers(), null);
+                return sslContext.getSocketFactory();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
 }
