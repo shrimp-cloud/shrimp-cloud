@@ -9,13 +9,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 import java.io.BufferedInputStream;
-import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -83,10 +85,11 @@ public class MqttConfig {
 
             // CA 证书
             if (endPoint.startsWith("ssl") && StringUtils.isNotBlank(caPath)) {
-                String caCrtFile = MqttConfig.class.getResource(caPath).getPath();
-                connOpts.setSocketFactory(SSLUtils.getSingleSocketFactory(caCrtFile));
+                ClassPathResource resource = new ClassPathResource(caPath);
+                InputStream is = resource.getInputStream();
+                SSLSocketFactory factory = getSingleSocketFactory(is);
+                connOpts.setSocketFactory(factory);
             }
-
 
             mqttClient.setCallback(new MqttReconnectCallback());
 
@@ -101,6 +104,8 @@ public class MqttConfig {
             logger.error("cause " + me.getCause());
             logger.error("excep " + me);
             throw new RuntimeException(me.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return mqttClient;
     }
@@ -239,32 +244,27 @@ public class MqttConfig {
     }
 
 
-    public class SSLUtils {
-        // 单向认证
-        public static SSLSocketFactory getSingleSocketFactory(final String caCrtFile) {
-            try {
-                Security.addProvider(new BouncyCastleProvider());
-                X509Certificate caCert = null;
+    // 单向认证
+    private static SSLSocketFactory getSingleSocketFactory(InputStream is) {
+        try {
+            Security.addProvider(new BouncyCastleProvider());
+            X509Certificate caCert = null;
+            BufferedInputStream bis = new BufferedInputStream(is);
+            CertificateFactory cf = CertificateFactory.getInstance("X.509");
 
-                FileInputStream caCrtFileInputStream = new FileInputStream(caCrtFile);
-
-                BufferedInputStream bis = new BufferedInputStream(caCrtFileInputStream);
-                CertificateFactory cf = CertificateFactory.getInstance("X.509");
-
-                while (bis.available() > 0) {
-                    caCert = (X509Certificate) cf.generateCertificate(bis);
-                }
-                KeyStore caKs = KeyStore.getInstance(KeyStore.getDefaultType());
-                caKs.load(null, null);
-                caKs.setCertificateEntry("cert-certificate", caCert);
-                TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-                tmf.init(caKs);
-                SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
-                sslContext.init(null, tmf.getTrustManagers(), null);
-                return sslContext.getSocketFactory();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+            while (bis.available() > 0) {
+                caCert = (X509Certificate) cf.generateCertificate(bis);
             }
+            KeyStore caKs = KeyStore.getInstance(KeyStore.getDefaultType());
+            caKs.load(null, null);
+            caKs.setCertificateEntry("cert-certificate", caCert);
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            tmf.init(caKs);
+            SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+            sslContext.init(null, tmf.getTrustManagers(), null);
+            return sslContext.getSocketFactory();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
