@@ -26,6 +26,21 @@ public class MyBatisHelper {
     private final static Logger logger = LoggerFactory.getLogger(MyBatisHelper.class);
     private static final Set<String> STATEMENTS = new HashSet<>();
 
+    private final static String LT_TAG = "[__l_t__]";
+    private final static String GT_TAG = "[__g_t__]";
+    private final static List<String> XML_TAG = Arrays.asList(
+        "if",
+        "set",
+        "trim",
+        "when",
+        "bind",
+        "where",
+        "choose",
+        "foreach",
+        "otherwise"
+        );
+
+
     /**
      * 自定义 sql 查询-List
      *
@@ -128,6 +143,25 @@ public class MyBatisHelper {
 
         SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
         Configuration configuration = sqlSession.getConfiguration();
+
+        /**
+         * xml 和 sql 标签冲突处理
+         */
+        // 将所有属于 xml 的 < 和 > ，通过使用自定义字符串的方式保留下来
+        for (String tag : XML_TAG) {
+            // 只找左边 <, 将自动处理 右边 > 【考虑大小写，起始，结束标签 2x2=4个场景】
+            sql = findAndreplaceXmlTag(sql, "<" + tag);
+            sql = findAndreplaceXmlTag(sql, "</" + tag);
+            sql = findAndreplaceXmlTag(sql, "<" + tag.toUpperCase());
+            sql = findAndreplaceXmlTag(sql, "</" + tag.toUpperCase());
+        }
+        // 将所有属于 sql 的 < 和 >, 使用转译语法处理
+        sql = sql.replace("<", "&lt;");
+        sql = sql.replace(">", "&gt;");
+        // 将所有属于xml 的 < 和 > 还原
+        sql = sql.replace(LT_TAG, "<");
+        sql = sql.replace(GT_TAG, ">");
+
 
         String xmlStr = """
             <?xml version="1.0" encoding="UTF-8"?>
@@ -242,6 +276,28 @@ public class MyBatisHelper {
             logger.debug("ERROR: 解析xml中namespace失败", e);
             throw new RuntimeException("ERROR: 解析xml中namespace失败", e);
         }
+    }
+
+    /**
+     * 使用特殊符号替代 < 和 >
+     * 只需要传入带 < 的，将会自动查找和处理 >
+     */
+    private static String findAndreplaceXmlTag(String sql, String tag) {
+        for (;;) {
+            int ltIdx = sql.indexOf(tag);
+            if (ltIdx == -1) {
+                break;
+            }
+            // 替换 <
+            sql = sql.substring(0, ltIdx) + LT_TAG + sql.substring(ltIdx + 1);
+            // 替换 >
+            ltIdx = ltIdx + 8;
+            int gtIdx = sql.indexOf(">", ltIdx);
+            if (gtIdx > -1) {
+                sql = sql.substring(0, gtIdx) + GT_TAG + sql.substring(gtIdx + 1);
+            }
+        }
+        return sql;
     }
 
 }
