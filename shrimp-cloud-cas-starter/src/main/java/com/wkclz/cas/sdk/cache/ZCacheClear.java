@@ -4,7 +4,6 @@ import com.wkclz.cas.sdk.facade.AppInfoFacade;
 import com.wkclz.cas.sdk.pojo.SdkConstant;
 import com.wkclz.cas.sdk.pojo.appinfo.CacheRecord;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
