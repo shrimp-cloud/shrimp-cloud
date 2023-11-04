@@ -51,30 +51,66 @@ public class GwFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
 
-        MDC.remove(SdkConstant.HEADER_APP_CODE);
-        MDC.remove(SdkConstant.HEADER_TENANT_CODE);
-        MDC.remove("user");
+        removeMdc();
         String method = request.getMethod();
         String uri = request.getRequestURI();
         String ua = request.getHeader("User-Agent");
 
+        // 公共接口
+        boolean publicRequest = publicRequest(request, response, chain, uri);
+        if (publicRequest) {
+            return;
+        }
+
+        // sign 请求签名验证
+        boolean signRequest = signRequest(request, response, chain, method, uri, ua);
+        if (signRequest) {
+            return;
+        }
+
+        // token 请求
+        boolean tokenRequest = tokenRequest(request, response, chain, method, uri, ua);
+        if (tokenRequest) {
+            return;
+        }
+
+        Result msg = Result.error(ResultStatus.TOKEN_UNLL);
+        logger.error("{}|{}|{}|no token or sign", method, uri, ua);
+        ResponseHelper.responseError(response, msg);
+    }
+
+    // 进入应用时，清理  MDC
+    private static void removeMdc() {
+        MDC.remove(SdkConstant.HEADER_APP_CODE);
+        MDC.remove(SdkConstant.HEADER_TENANT_CODE);
+        MDC.remove("user");
+        MDC.remove(GW_FILTER_LOG_KEY);
+    }
+
+    // 公共接口
+    private static boolean publicRequest(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+                                         String uri) throws ServletException, IOException {
         // druid 自身带密码，跳过验证
         boolean druid = ANT_PATH_MATCHER.match("/druid/**", uri);
         if (druid) {
             MDC.put(GW_FILTER_LOG_KEY, "druid");
             chain.doFilter(request, response);
-            return;
+            return true;
         }
 
-        // TODO 请求日志
+        // public 默认白名单
         boolean match = ANT_PATH_MATCHER.match("/public/**", uri);
         if (match) {
             MDC.put(GW_FILTER_LOG_KEY, "public");
             chain.doFilter(request, response);
-            return;
+            return true;
         }
+        return false;
+    }
 
-        // sign 签名验证
+    // sign 签名验证
+    private boolean signRequest(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+                                       String method, String uri, String ua) throws ServletException, IOException {
         String appId = request.getHeader("app-id");
         String sign = request.getHeader("sign");
         if (StringUtils.isNotBlank(appId) && StringUtils.isNotBlank(sign)) {
@@ -82,20 +118,22 @@ public class GwFilter extends OncePerRequestFilter {
             if (b) {
                 MDC.put(GW_FILTER_LOG_KEY, appId);
                 chain.doFilter(request, response);
-                return;
+                return true;
             }
             String msg = StrUtil.format("{}|{}|{}|{}|sign faild", appId, method, uri, ua);
             logger.error(msg);
             ResponseHelper.responseError(response, Result.error(msg));
-            return;
+            return true;
         }
+        return false;
+    }
+
+    private boolean tokenRequest(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+                                String method, String uri, String ua) throws ServletException, IOException {
 
         String token = authHelper.getToken();
         if (token == null) {
-            Result msg = Result.error(ResultStatus.TOKEN_UNLL);
-            logger.error("{}|{}|{}|no token", method, uri, ua);
-            ResponseHelper.responseError(response, msg);
-            return;
+            return false;
         }
 
         String tokenKey = SecretUtil.md5(token);
@@ -105,7 +143,7 @@ public class GwFilter extends OncePerRequestFilter {
             Result msg = Result.error(ResultStatus.LOGIN_TIMEOUT);
             logger.error("{}|{}|{}|expire token", method, uri, ua);
             ResponseHelper.responseError(response, msg);
-            return;
+            return true;
         }
         ops.expire(30L, TimeUnit.MINUTES);
 
@@ -142,7 +180,7 @@ public class GwFilter extends OncePerRequestFilter {
                 logger.error("{}|{}|{}|{}|no permission", userCode, method, uri, ua);
                 msg.setCode(HttpStatus.FORBIDDEN.value());
                 ResponseHelper.responseError(response, msg);
-                return;
+                return true;
             }
             // 全部都启用接口级鉴权 end
         } catch (Exception e) {
@@ -154,18 +192,12 @@ public class GwFilter extends OncePerRequestFilter {
             }
             logger.error("{}|{}|{}|err token", method, uri, ua);
             ResponseHelper.responseError(response, error);
-            return;
+            return true;
         }
 
         MDC.put(GW_FILTER_LOG_KEY, userCode);
         chain.doFilter(request, response);
-
-        /*
-        Result msg = Result.error("应用 " + appCode + " 鉴权配置异常:" + uri);
-        msg.setCode(HttpStatus.FORBIDDEN.value());
-        ResponseHelper.responseError(response, msg);
-        */
+        return true;
     }
-
 }
 

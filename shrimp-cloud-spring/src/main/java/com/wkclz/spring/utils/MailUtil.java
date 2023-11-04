@@ -126,27 +126,19 @@ public class MailUtil {
     }
 
     public void sendEmail() {
-
         try {
-
-            if (null == this.getEmailHost() || "".equals(this.getEmailHost())
-                || null == this.getEmailFrom() || "".equals(this.getEmailFrom())
-                || null == this.getEmailPassword() || "".equals(this.getEmailPassword())) {
+            if (null == this.getEmailHost() || "".equals(this.getEmailHost()) || null == this.getEmailFrom()
+                || "".equals(this.getEmailFrom()) || null == this.getEmailPassword() || "".equals(this.getEmailPassword())) {
                 throw new RuntimeException("发件人信息不完全，请确认发件人信息！");
             }
-
 
             // 收件人邮箱
             String[] toEmailArray = toEmails.split(";");
             if (toEmailArray.length < 1) {
                 throw new RuntimeException("收件人不能为空！");
             }
-
-            System.out.println(this);
-
             MailSSLSocketFactory sf = new MailSSLSocketFactory();
             sf.setTrustAllHosts(true);
-
             Properties properties = System.getProperties();
             properties.setProperty("mail.smtp.host", emailHost);
             properties.put("mail.smtp.auth", "true");
@@ -160,11 +152,8 @@ public class MailUtil {
             });
 
             // 开发环境，开启调试
-            if (Sys.CURRENT_ENV == EnvType.DEV) {
-                session.setDebug(true);
-            }
+            session.setDebug(Sys.CURRENT_ENV == EnvType.DEV);
             MimeMessage mimeMessage = new MimeMessage(session);
-
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
             // 设置发件人用户名
             messageHelper.setFrom(emailFrom);
@@ -177,9 +166,7 @@ public class MailUtil {
 
             // 添加图片
             if (null != pictures) {
-                for (Iterator<Map.Entry<String, String>> it = pictures.entrySet()
-                    .iterator(); it.hasNext(); ) {
-                    Map.Entry<String, String> entry = it.next();
+                for (Map.Entry<String, String> entry : pictures.entrySet()) {
                     String cid = entry.getKey();
                     String filePath = entry.getValue();
                     if (null == cid || null == filePath) {
@@ -195,15 +182,12 @@ public class MailUtil {
             }
             // 添加附件
             if (null != attachments) {
-                for (Iterator<Map.Entry<String, String>> it = attachments
-                    .entrySet().iterator(); it.hasNext(); ) {
-                    Map.Entry<String, String> entry = it.next();
+                for (Map.Entry<String, String> entry : attachments.entrySet()) {
                     String cid = entry.getKey();
                     String filePath = entry.getValue();
                     if (null == cid || null == filePath) {
                         throw new RuntimeException("请确认每个附件的ID和地址是否齐全！");
                     }
-
                     File file = new File(filePath);
                     if (!file.exists()) {
                         throw new RuntimeException("附件" + filePath + "不存在！");
@@ -214,9 +198,7 @@ public class MailUtil {
             }
             // 发送邮件
             Transport.send(mimeMessage);
-        } catch (MessagingException e) {
-            logger.error(e.getMessage(), e);
-        } catch (GeneralSecurityException e) {
+        } catch (MessagingException | GeneralSecurityException e) {
             logger.error(e.getMessage(), e);
         }
     }

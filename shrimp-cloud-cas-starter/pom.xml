@@ -22,30 +22,11 @@
     </properties>
 
     <dependencies>
-
-        <dependency>
-            <groupId>com.wkclz.common</groupId>
-            <artifactId>shrimp-cloud-common</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.wkclz.spring</groupId>
             <artifactId>shrimp-cloud-spring</artifactId>
             <version>4.0.0-SNAPSHOT</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>

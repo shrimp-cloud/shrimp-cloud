@@ -37,14 +37,13 @@ public class Sys implements ApplicationRunner {
     public static Long STARTUP_DATE = System.currentTimeMillis();
     // system start up success confirm 系统启动确认
     public static boolean SYSTEM_START_UP_CONFIRM = false;
-    // system enum check confirm 系统枚举检查
-    public static boolean SYSTEM_ENUM_CHECT_CONFIRM = false;
 
 
     /*
     @Autowired
     private LzCache lzCache;
     */
+
     @Autowired
     private SystemConfig systemConfig;
 
