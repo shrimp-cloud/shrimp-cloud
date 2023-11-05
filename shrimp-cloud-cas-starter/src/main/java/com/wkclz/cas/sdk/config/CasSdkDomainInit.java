@@ -3,13 +3,13 @@ package com.wkclz.cas.sdk.config;
 import com.wkclz.cas.sdk.cache.BAppInfoCache;
 import com.wkclz.cas.sdk.facade.AppInfoFacade;
 import com.wkclz.cas.sdk.pojo.appinfo.App;
+import jakarta.annotation.PostConstruct;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 

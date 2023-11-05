@@ -2,10 +2,10 @@ package com.wkclz.cas.sdk.helper;
 
 import com.alibaba.fastjson2.JSON;
 import com.wkclz.common.entity.Result;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class ResponseHelper {

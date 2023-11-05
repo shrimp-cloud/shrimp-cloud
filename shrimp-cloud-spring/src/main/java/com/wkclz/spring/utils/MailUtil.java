@@ -4,17 +4,16 @@ package com.wkclz.spring.utils;
 import com.sun.mail.util.MailSSLSocketFactory;
 import com.wkclz.spring.config.Sys;
 import com.wkclz.spring.enums.EnvType;
+import jakarta.mail.*;
+import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
-import javax.mail.*;
-import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
