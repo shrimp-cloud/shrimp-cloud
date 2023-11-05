@@ -5,12 +5,12 @@ import com.wkclz.common.entity.Result;
 import com.wkclz.common.exception.BizException;
 import com.wkclz.spring.entity.RestInfo;
 import com.wkclz.spring.utils.RestUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 

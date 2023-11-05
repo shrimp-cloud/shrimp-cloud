@@ -7,12 +7,15 @@ import com.wkclz.common.emuns.ResultStatus;
 import com.wkclz.common.exception.BizException;
 import com.wkclz.spring.helper.RequestHelper;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.crypto.SecretKey;
 
 @Component
 public class AuthHelper {
@@ -156,7 +159,10 @@ public class AuthHelper {
     }
 
     private static Claims parseToken(String secret, String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes());
+        Jws<Claims> claimsJws = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
+        return claimsJws.getPayload();
+        // return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
     private Claims getClaims(String token) {

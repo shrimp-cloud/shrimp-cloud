@@ -3,8 +3,8 @@ package com.wkclz.auth.helper;
 import com.wkclz.spring.config.Sys;
 import com.wkclz.spring.enums.EnvType;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Description:
