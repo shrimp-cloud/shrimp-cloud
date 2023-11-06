@@ -29,10 +29,6 @@
             <artifactId>shrimp-cloud-spring</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.wkclz.cas</groupId>
-            <artifactId>shrimp-cloud-cas-starter</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>

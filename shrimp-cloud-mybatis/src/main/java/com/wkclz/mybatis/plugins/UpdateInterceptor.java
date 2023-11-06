@@ -1,7 +1,5 @@
 package com.wkclz.mybatis.plugins;
 
-import com.wkclz.cas.sdk.helper.AuthHelper;
-import com.wkclz.cas.sdk.pojo.UserInfo;
 import com.wkclz.common.emuns.ResultStatus;
 import com.wkclz.common.entity.BaseEntity;
 import com.wkclz.common.exception.BizException;
@@ -13,7 +11,6 @@ import org.apache.ibatis.plugin.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
 import java.util.Date;
@@ -24,17 +21,21 @@ import java.util.Properties;
 public class UpdateInterceptor implements Interceptor {
 
     private static final Logger logger = LoggerFactory.getLogger(UpdateInterceptor.class);
+    /*
     @Autowired
     private AuthHelper authHelper;
+    */
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
 
-        UserInfo userInfo = authHelper.getUserInfoIfLogin();
+        // UserInfo userInfo = authHelper.getUserInfoIfLogin();
         String userCode = "guest";
+        /* TODO 自动设置更新人信息
         if (userInfo != null) {
             userCode = userInfo.getUserCode();
         }
+        */
 
         // 参数处理
         Object[] args = invocation.getArgs();
