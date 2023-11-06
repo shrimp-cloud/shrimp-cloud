@@ -1,9 +1,9 @@
 package com.wkclz.file;
 
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@AutoConfiguration
 @ComponentScan(basePackages = {"com.wkclz.file"})
 public class FileAutoConfigure {
 }

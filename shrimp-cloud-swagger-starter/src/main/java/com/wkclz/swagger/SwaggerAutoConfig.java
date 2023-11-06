@@ -1,10 +1,10 @@
 package com.wkclz.swagger;
 
 
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@AutoConfiguration
 @ComponentScan(basePackages = {"com.wkclz.swagger"})
 public class SwaggerAutoConfig {
 }
