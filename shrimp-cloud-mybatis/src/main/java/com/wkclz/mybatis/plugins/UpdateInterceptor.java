@@ -4,6 +4,7 @@ import com.wkclz.common.emuns.ResultStatus;
 import com.wkclz.common.entity.BaseEntity;
 import com.wkclz.common.exception.BizException;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
@@ -21,21 +22,16 @@ import java.util.Properties;
 public class UpdateInterceptor implements Interceptor {
 
     private static final Logger logger = LoggerFactory.getLogger(UpdateInterceptor.class);
-    /*
-    @Autowired
-    private AuthHelper authHelper;
-    */
+    private final static String MDC_USER_CODE_KEY = "userCode";
+    private final static String DEFAULT_USER_CODE = "guest";
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
 
-        // UserInfo userInfo = authHelper.getUserInfoIfLogin();
-        String userCode = "guest";
-        /* TODO 自动设置更新人信息
-        if (userInfo != null) {
-            userCode = userInfo.getUserCode();
+        String userCode = MDC.get(MDC_USER_CODE_KEY);
+        if (StringUtils.isBlank(userCode)) {
+            userCode = DEFAULT_USER_CODE;
         }
-        */
 
         // 参数处理
         Object[] args = invocation.getArgs();
