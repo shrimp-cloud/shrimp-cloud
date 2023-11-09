@@ -42,6 +42,11 @@ public class Result<T> {
         this.data = data;
     }
 
+    public Result(Integer code, T data) {
+        this.code = code;
+        this.data = data;
+    }
+
     public Integer getCode() {
         return code;
     }

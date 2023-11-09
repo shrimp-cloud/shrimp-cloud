@@ -2,8 +2,12 @@ package com.wkclz.spring.rest;
 
 import com.wkclz.common.entity.Result;
 import com.wkclz.common.exception.BizException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -18,23 +22,27 @@ public class ErrorHandler {
     private static final Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
 
 
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public Result httpHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e,
+            HttpServletRequest request, HttpServletResponse response) {
+        HttpStatus status = HttpStatus.UNSUPPORTED_MEDIA_TYPE;
+        printErrorLog(request, response, status);
+        return new Result(status.value(), status.getReasonPhrase());
+    }
+
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public Result httpRequestMethodHandler(HttpRequestMethodNotSupportedException e){
-        logger.error(e.getMessage(), e);
-        Result result = new Result();
-        result.setError(e.getMessage());
-        result.setCode(405);
-        return result;
+    public Result httpRequestMethodHandler(HttpRequestMethodNotSupportedException e,
+           HttpServletRequest request, HttpServletResponse response) {
+        HttpStatus status = HttpStatus.METHOD_NOT_ALLOWED;
+        printErrorLog(request, response, status);
+        return new Result(status.value(), status.getReasonPhrase());
     }
 
 
     @ExceptionHandler(BizException.class)
     public Result bizExceptionHandler(BizException e){
         logger.error(e.getMessage(), e);
-        Result result = new Result();
-        result.setError(e.getMessage());
-        result.setCode(-1);
-        return result;
+        return new Result(-1, e.getMessage());
     }
 
 
@@ -84,6 +92,13 @@ public class ErrorHandler {
             return (BizException) cause;
         }
         return null;
+    }
+
+    private static void printErrorLog(HttpServletRequest request, HttpServletResponse response, HttpStatus status) {
+        String method = request.getMethod();
+        String uri = request.getRequestURI();
+        logger.error("error request: {} {}, {}", method, uri, status.getReasonPhrase());
+        response.setStatus(status.value());
     }
 
 }
