@@ -1,8 +1,5 @@
 package com.wkclz.mybatis.dynamicdb;
 
-import com.alibaba.druid.pool.DruidDataSourceFactory;
-import com.wkclz.common.utils.MapUtil;
-import com.wkclz.mybatis.config.DefaultDataSourceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 import javax.sql.DataSource;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -23,18 +19,20 @@ public class DynamicDataSourceAutoConfig {
     private static final Logger logger = LoggerFactory.getLogger(DynamicDataSourceAutoConfig.class);
 
     @Autowired
-    private DefaultDataSourceConfig defaultDataSourceConfig;
+    private DataSource dataSource;
 
-    // 必需定义为 Primary， 以使得 com.alibaba.druid.spring.boot.autoconfigur.DruidDataSourceAutoConfigure.dataSource() 失效
     @Bean
     @Primary
-    public DynamicDataSource dynamicDataSource() throws Exception {
+    public DynamicDataSource dynamicDataSource() {
         logger.info("dynamicData Source, load default dataSource...");
         DynamicDataSource dynamicDataSource = new DynamicDataSource();
 
-        // 默认数据源
+        /*
+        此处不能再创建数据源，可以直接使用 Druid 的数据源，作为 DynamicDataSource 的默认数据源。
+        即使没有 DynamicDataSourceFactory，也不会破坏项目的基本结构。
         Map<String, Object> map = MapUtil.obj2Map(defaultDataSourceConfig);
         DataSource dataSource = DruidDataSourceFactory.createDataSource(map);
+        */
         dynamicDataSource.setDefaultTargetDataSource(dataSource);
 
         // 动态数据源，只放一个 Map, 后续在使用时动态添加
