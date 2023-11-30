@@ -37,6 +37,10 @@ public class RocketMqApplicationListener implements ApplicationListener<ContextR
 
     @Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
+        // Spring是父容器，SpringMVC是其子容器，只需要在父容器触发时处理逻辑即可
+        if (event.getApplicationContext().getParent() != null) {
+            return;
+        }
 
         Map<String, RocketMqHandlerInfo> handlerInfos = RocketMqHandlerFactory.getRocketMqTags();
         if (CollectionUtils.isEmpty(handlerInfos)) {
