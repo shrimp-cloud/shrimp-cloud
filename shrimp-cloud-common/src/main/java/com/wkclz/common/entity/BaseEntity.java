@@ -22,7 +22,6 @@ public class BaseEntity {
     @Desc("租户编码")
     private String tenantCode;
 
-
     /**
      * 查询辅助
      */
@@ -60,14 +59,10 @@ public class BaseEntity {
     private Date createTime;
     @Desc("创建人code")
     private String createBy;
-    @Desc("创建人昵称")
-    private String createByName;
     @Desc("更新时间")
     private Date updateTime;
     @Desc("更新人code")
     private String updateBy;
-    @Desc("更新人昵称")
-    private String updateByName;
     @Desc("备注")
     private String remark;
     @Desc("数据版本")
@@ -77,9 +72,6 @@ public class BaseEntity {
 
     private Integer debug;
 
-
-    @Deprecated
-    private String comments;
 
     public void init() {
         if (this.current == null || this.current < 1) {
@@ -220,14 +212,6 @@ public class BaseEntity {
         this.createBy = createBy;
     }
 
-    public String getCreateByName() {
-        return createByName;
-    }
-
-    public void setCreateByName(String createByName) {
-        this.createByName = createByName;
-    }
-
     public Date getUpdateTime() {
         return updateTime;
     }
@@ -242,14 +226,6 @@ public class BaseEntity {
 
     public void setUpdateBy(String updateBy) {
         this.updateBy = updateBy;
-    }
-
-    public String getUpdateByName() {
-        return updateByName;
-    }
-
-    public void setUpdateByName(String updateByName) {
-        this.updateByName = updateByName;
     }
 
     public String getRemark() {
@@ -282,14 +258,6 @@ public class BaseEntity {
 
     public void setDebug(Integer debug) {
         this.debug = debug;
-    }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
-        this.comments = comments;
     }
 
     public static <T extends BaseEntity> T copy(T source, T target) {
