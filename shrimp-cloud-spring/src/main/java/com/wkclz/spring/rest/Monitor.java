@@ -1,6 +1,8 @@
 package com.wkclz.spring.rest;
 
 import com.wkclz.common.entity.Result;
+import com.wkclz.common.entity.SystemBaseInfo;
+import com.wkclz.common.utils.ServerStateUtil;
 import com.wkclz.spring.helper.IpHelper;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +39,24 @@ public class Monitor {
     public Result properties(){
         Properties properties = System.getProperties();
         return Result.data(properties);
+    }
+
+
+    @GetMapping(Routes.MONITOR_SERVER_STATE)
+    public Result monitorServerState() {
+        SystemBaseInfo baseInfo = new SystemBaseInfo();
+        baseInfo.setClassLoading(ServerStateUtil.getClassLoadingMXBean());
+        baseInfo.setCompilation(ServerStateUtil.getCompilationMXBean());
+        baseInfo.setOperatingSystem(ServerStateUtil.getOperatingSystemMXBean());
+        baseInfo.setPlatformMBeanServer(ServerStateUtil.getPlatformMBeanServer());
+        baseInfo.setRuntime(ServerStateUtil.getRuntimeMXBean());
+        baseInfo.setThread(ServerStateUtil.getThreadMXBean());
+        baseInfo.setMemory(ServerStateUtil.getMemoryMXBean());
+        baseInfo.setMemoryManagers(ServerStateUtil.getMemoryManagerMXBeans());
+        baseInfo.setGarbageCollectors(ServerStateUtil.getGarbageCollectorMXBeans());
+        baseInfo.setMemoryPools(ServerStateUtil.getMemoryPoolMXBeans());
+        baseInfo.setDisks(ServerStateUtil.getDisk());
+        return Result.data(baseInfo);
     }
 
 }

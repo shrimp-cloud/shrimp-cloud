@@ -35,6 +35,10 @@ public interface Routes {
     String MONITOR_IPS = "/monitor/ips";
     @Desc("3. 监控-服务器属性")
     String MONITOR_PROPERTIES = "/monitor/properties";
+    @Desc("4. 监控-服务器参数获取")
+    String MONITOR_SERVER_STATE = "/monitor/server/state";
+
+
 
 
 }
