@@ -22,15 +22,15 @@ import java.util.Properties;
 public class UpdateInterceptor implements Interceptor {
 
     private static final Logger logger = LoggerFactory.getLogger(UpdateInterceptor.class);
-    private final static String MDC_USER_CODE_KEY = "userCode";
-    private final static String DEFAULT_USER_CODE = "guest";
+    private final static String MDC_USER_NAME_KEY = "username";
+    private final static String DEFAULT_USER_NAME = "guest";
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
 
-        String userCode = MDC.get(MDC_USER_CODE_KEY);
-        if (StringUtils.isBlank(userCode)) {
-            userCode = DEFAULT_USER_CODE;
+        String username = MDC.get(MDC_USER_NAME_KEY);
+        if (StringUtils.isBlank(username)) {
+            username = DEFAULT_USER_NAME;
         }
 
         // 参数处理
@@ -47,7 +47,7 @@ public class UpdateInterceptor implements Interceptor {
 
         // 参数为对象
         if (parameter instanceof BaseEntity) {
-            checkEntity(parameter, commandType, userCode, chechVersion, checkId);
+            checkEntity(parameter, commandType, username, chechVersion, checkId);
         }
 
         // 参数为 List 【在 Map 里面】
@@ -58,7 +58,7 @@ public class UpdateInterceptor implements Interceptor {
                 if (parameterObj instanceof Collection){
                     Collection parameters = (Collection)parameterObj;
                     for (Object p:parameters) {
-                        boolean isBaseEntity = checkEntity(p, commandType, userCode, chechVersion, checkId);
+                        boolean isBaseEntity = checkEntity(p, commandType, username, chechVersion, checkId);
                         if (!isBaseEntity) {
                             break;
                         }
@@ -66,7 +66,7 @@ public class UpdateInterceptor implements Interceptor {
                 }
             }
         }
-        logger.debug("mybatis.update.interceptor: operate user: {}", userCode);
+        logger.debug("mybatis.update.interceptor: operate user: {}", username);
 
         Object proceedReslut = invocation.proceed();
         return proceedReslut;
@@ -81,13 +81,13 @@ public class UpdateInterceptor implements Interceptor {
     public void setProperties(Properties properties) {
     }
 
-    private static boolean checkEntity(Object paramter, SqlCommandType commandType, String userCode, boolean chechVersion, boolean checkId){
+    private static boolean checkEntity(Object paramter, SqlCommandType commandType, String username, boolean chechVersion, boolean checkId){
         if (!(paramter instanceof BaseEntity)) {
             return false;
         }
         BaseEntity clearPatameter = (BaseEntity) paramter;
         // insert, upadte, delete 修改人/时间
-        clearPatameter.setUpdateBy(userCode);
+        clearPatameter.setUpdateBy(username);
         clearPatameter.setStatus(1);
         if (clearPatameter.getUpdateTime() != null) {
             clearPatameter.setUpdateTime(new Date());
@@ -96,7 +96,7 @@ public class UpdateInterceptor implements Interceptor {
         if (commandType == SqlCommandType.INSERT) {
             clearPatameter.setId(null);
             clearPatameter.setVersion(null);
-            clearPatameter.setCreateBy(userCode);
+            clearPatameter.setCreateBy(username);
             if (clearPatameter.getSort() == null){
                 clearPatameter.setSort(0);
             }

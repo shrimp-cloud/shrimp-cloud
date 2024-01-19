@@ -17,8 +17,8 @@ public class BaseEntity {
     @Desc("主键ID")
     private Long id;
 
-    @Desc("用户编码")
-    private String userCode;
+    @Desc("用户名")
+    private String username;
     @Desc("租户编码")
     private String tenantCode;
 
@@ -92,12 +92,12 @@ public class BaseEntity {
         this.id = id;
     }
 
-    public String getUserCode() {
-        return userCode;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserCode(String userCode) {
-        this.userCode = userCode;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getTenantCode() {

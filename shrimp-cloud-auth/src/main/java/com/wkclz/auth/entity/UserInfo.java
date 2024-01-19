@@ -11,9 +11,9 @@ import java.util.Date;
 public class UserInfo {
 
     /**
-     * 用户编码
+     * 用户名
      */
-    private String userCode;
+    private String username;
 
     /**
      * 父ID
@@ -111,12 +111,12 @@ public class UserInfo {
     private String createIp;
 
 
-    public String getUserCode() {
-        return userCode;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserCode(String userCode) {
-        this.userCode = userCode;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Long getPid() {
