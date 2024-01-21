@@ -10,6 +10,7 @@ import com.wkclz.spring.config.SystemConfig;
 import com.wkclz.spring.enums.EnvType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -19,14 +20,12 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * RestAop
@@ -37,7 +36,9 @@ import java.util.List;
 public class RestAop {
 
     private final static String GW_FILTER_LOG_KEY = "GW_FILTER_LOG";
-    private static List<String> NO_LOGS = Arrays.asList("/public/status");
+    private final static AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
+    private final static List<String> NO_LOGS = Arrays.asList("/public/status", "/sign/**");
+    private final static Map<String, Boolean> LOGS_SET = new HashMap<>();
 
     /**
      * : @Around环绕通知
@@ -81,7 +82,7 @@ public class RestAop {
         return servletRequestHandle(point);
     }
 
-    private Object servletRequestHandle(ProceedingJoinPoint point) throws Throwable {
+    private static Object servletRequestHandle(ProceedingJoinPoint point) throws Throwable {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpServletRequest req = requestAttributes.getRequest();
         // HttpServletResponse rep = requestAttributes.getResponse();
@@ -152,7 +153,7 @@ public class RestAop {
                 logger.info("{}ms|{}|{}|{}|{}|{}|{}", costTime, gwLog, method, uri, ua, args, value);
             }
         } else {
-            if (!NO_LOGS.contains(uri)) {
+            if (isLog(uri)) {
                 logger.info("{}ms|{}|{}|{}|{}|{}", costTime, gwLog, method, uri, ua, args);
             }
         }
@@ -164,7 +165,7 @@ public class RestAop {
         return obj;
     }
 
-    private String getArgs(ProceedingJoinPoint point) {
+    private static String getArgs(ProceedingJoinPoint point) {
         String value = null;
         Object[] args = point.getArgs();
         if (args != null && args.length > 0) {
@@ -190,6 +191,35 @@ public class RestAop {
             }
         }
         return value;
+    }
+
+    private static boolean isLog(String uri) {
+        if (StringUtils.isBlank(uri)) {
+            return false;
+        }
+
+        Boolean a = LOGS_SET.get(uri);
+        if (a != null) {
+            return a;
+        }
+
+        synchronized (uri.intern()) {
+            a = LOGS_SET.get(uri);
+            if (a != null) {
+                return a;
+            }
+
+            for (String noLog : NO_LOGS) {
+                boolean match = ANT_PATH_MATCHER.match(noLog, uri);
+                if (match) {
+                    LOGS_SET.put(uri, false);
+                    return false;
+                }
+            }
+            LOGS_SET.put(uri, true);
+            return true;
+        }
+
     }
 
 }

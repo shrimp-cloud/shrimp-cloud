@@ -15,7 +15,7 @@ public class SystemConfig {
     private String defaultZone;
     @Value("${spring.application.name:APP}")
     private String applicationName;
-    @Value("${spring.application.group:CMS}")
+    @Value("${spring.application.group:shrimp}")
     private String applicationGroup;
     @Value("${spring.profiles.active:dev}")
     private String profiles;
