@@ -2,7 +2,6 @@ package com.wkclz.spring.config;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.thread.ThreadUtil;
-import com.wkclz.spring.constant.ServiceIdConstant;
 import com.wkclz.spring.enums.EnvType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,11 +51,6 @@ public class Sys implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         // 初始化环境信息
         initEnv();
-
-        if (!systemConfig.isCloud() || !ServiceIdConstant.SHRIMP_SYS.equalsIgnoreCase(systemConfig.getApplicationName())){
-            logger.info("not cloud but single application mode, do not sync cache by {}", ServiceIdConstant.SHRIMP_SYS);
-            return;
-        }
 
         // 使用到再说
         // initCache();
