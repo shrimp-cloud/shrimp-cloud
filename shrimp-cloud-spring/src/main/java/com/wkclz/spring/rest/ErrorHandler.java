@@ -27,7 +27,7 @@ public class ErrorHandler {
             HttpServletRequest request, HttpServletResponse response) {
         HttpStatus status = HttpStatus.UNSUPPORTED_MEDIA_TYPE;
         printErrorLog(request, response, status);
-        return new Result(status.value(), status.getReasonPhrase());
+        return Result.error(status.value(), status.getReasonPhrase());
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
@@ -35,14 +35,14 @@ public class ErrorHandler {
            HttpServletRequest request, HttpServletResponse response) {
         HttpStatus status = HttpStatus.METHOD_NOT_ALLOWED;
         printErrorLog(request, response, status);
-        return new Result(status.value(), status.getReasonPhrase());
+        return Result.error(status.value(), status.getReasonPhrase());
     }
 
 
     @ExceptionHandler(BizException.class)
     public Result bizExceptionHandler(BizException e){
         logger.error(e.getMessage(), e);
-        return new Result(-1, e.getMessage());
+        return Result.error(-1, e.getMessage());
     }
 
 

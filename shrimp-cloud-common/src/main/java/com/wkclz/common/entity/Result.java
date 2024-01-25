@@ -134,6 +134,13 @@ public class Result<T> {
         return result;
     }
 
+    public static Result error(Integer code, CharSequence template, Object... params) {
+        Result result = new Result();
+        result.code = code;
+        result.msg = StrUtil.format(template, params);
+        return result;
+    }
+
     public static Result remind(CharSequence template, Object... params) {
         Result result = new Result();
         result.msg = StrUtil.format(template, params);
