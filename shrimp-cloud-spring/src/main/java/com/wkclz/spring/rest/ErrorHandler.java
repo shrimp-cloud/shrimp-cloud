@@ -11,9 +11,11 @@ import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.sql.SQLSyntaxErrorException;
 
 //全局异常捕捉处理
 @RestControllerAdvice
@@ -32,8 +34,24 @@ public class ErrorHandler {
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public Result httpRequestMethodHandler(HttpRequestMethodNotSupportedException e,
-           HttpServletRequest request, HttpServletResponse response) {
+                                           HttpServletRequest request, HttpServletResponse response) {
         HttpStatus status = HttpStatus.METHOD_NOT_ALLOWED;
+        printErrorLog(request, response, status);
+        return Result.error(status.value(), status.getReasonPhrase());
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public Result httpNoResourceFoundException(NoResourceFoundException e,
+                                           HttpServletRequest request, HttpServletResponse response) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        printErrorLog(request, response, status);
+        return Result.error(status.value(), status.getReasonPhrase());
+    }
+
+    @ExceptionHandler(SQLSyntaxErrorException.class)
+    public Result httpSQLSyntaxErrorException(SQLSyntaxErrorException e,
+                                              HttpServletRequest request, HttpServletResponse response) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         printErrorLog(request, response, status);
         return Result.error(status.value(), status.getReasonPhrase());
     }
