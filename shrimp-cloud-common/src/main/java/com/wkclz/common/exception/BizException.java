@@ -7,7 +7,7 @@ import org.slf4j.MDC;
 public class BizException extends RuntimeException {
 
     private static final String DEFAULT_ERR_MSG = "System error, please turn to Administrator";
-    private static final String MDC_ERR_CODE = "errCode";
+    public static final String MDC_ERR_CODE = "errCode";
     public static final String MDC_ERR_MSG = "errMsg";
 
     private Integer code = -1;
