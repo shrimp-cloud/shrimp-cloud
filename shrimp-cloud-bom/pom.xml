@@ -46,6 +46,7 @@
         <swagger.version>3.0.0</swagger.version>
         <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
         <weixin-java.version>4.5.0</weixin-java.version>
+        <client-java.version>20.0.0</client-java.version>
 
         <jjwt.version>0.12.3</jjwt.version>
         <kaptcha.version>2.3.2</kaptcha.version>
@@ -211,6 +212,12 @@
                 <groupId>com.github.binarywang</groupId>
                 <artifactId>weixin-java-cp</artifactId>
                 <version>${weixin-java.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.kubernetes</groupId>
+                <artifactId>client-java</artifactId>
+                <version>${client-java.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

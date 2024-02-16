@@ -34,7 +34,6 @@
         <shrimp-cloud-swagger-starter.version>4.0.0-SNAPSHOT</shrimp-cloud-swagger-starter.version>
         <shrimp-cloud-plugin-gen.version>4.0.0-SNAPSHOT</shrimp-cloud-plugin-gen.version>
 
-        <client-java.version>19.0.0</client-java.version>
         <!--
         <spring-boot-admin.version>2.6.7</spring-boot-admin.version>
         -->
@@ -98,11 +97,6 @@
                 <version>${shrimp-cloud-swagger-starter.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>io.kubernetes</groupId>
-                <artifactId>client-java</artifactId>
-                <version>${client-java.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
