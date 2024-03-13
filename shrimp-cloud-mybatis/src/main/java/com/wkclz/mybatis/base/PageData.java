@@ -121,8 +121,9 @@ public class PageData<T> {
         }
 
         this.page = this.total / this.size;
-        if (this.page == 0) {
-            this.page = 1L;
+        long remainder = this.total % this.size;
+        if (remainder > 0) {
+            this.page = this.page + 1;
         }
         this.current = this.current > this.page ? this.page : this.current;
         this.offset = (this.current -1 ) * this.size;
