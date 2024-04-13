@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -51,6 +52,14 @@ public class ErrorHandler {
     @ExceptionHandler(SQLSyntaxErrorException.class)
     public Result httpSQLSyntaxErrorException(SQLSyntaxErrorException e,
                                               HttpServletRequest request, HttpServletResponse response) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        printErrorLog(request, response, status);
+        return Result.error(status.value(), status.getReasonPhrase());
+    }
+
+    @ExceptionHandler(BadSqlGrammarException.class)
+    public Result httpBadSqlGrammarException(BadSqlGrammarException e,
+                                             HttpServletRequest request, HttpServletResponse response) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         printErrorLog(request, response, status);
         return Result.error(status.value(), status.getReasonPhrase());
