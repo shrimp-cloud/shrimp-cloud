@@ -21,6 +21,7 @@
         <!-- 业务相关中间件 -->
         <module>shrimp-cloud-file</module>
         <module>shrimp-cloud-mqtt</module>
+        <module>shrimp-cloud-opencv</module>
         <!--
         <module>shrimp-cloud-rocketmq</module>
         -->

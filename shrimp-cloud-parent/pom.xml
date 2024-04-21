@@ -31,6 +31,7 @@
         <shrimp-cas-starter.version>4.0.0-SNAPSHOT</shrimp-cas-starter.version>
         <shrimp-mybatis.version>4.0.0-SNAPSHOT</shrimp-mybatis.version>
         <shrimp-mqtt.version>4.0.0-SNAPSHOT</shrimp-mqtt.version>
+        <shrimp-opencv.version>4.9.0-SNAPSHOT</shrimp-opencv.version>
         <shrimp-cloud-swagger-starter.version>4.0.0-SNAPSHOT</shrimp-cloud-swagger-starter.version>
         <shrimp-cloud-plugin-gen.version>4.0.0-SNAPSHOT</shrimp-cloud-plugin-gen.version>
 
@@ -75,6 +76,11 @@
                 <groupId>com.wkclz.mqtt</groupId>
                 <artifactId>shrimp-cloud-mqtt</artifactId>
                 <version>${shrimp-mqtt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wkclz.opencv</groupId>
+                <artifactId>shrimp-cloud-opencv</artifactId>
+                <version>${shrimp-opencv.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.wkclz.mybatis</groupId>
