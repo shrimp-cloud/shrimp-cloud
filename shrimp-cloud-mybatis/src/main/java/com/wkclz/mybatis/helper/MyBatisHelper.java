@@ -88,11 +88,11 @@ public class MyBatisHelper {
      * @param param
      * @return
      */
-    public static List<Map> selectList(String sql, Map param) {
+    public static List<LinkedHashMap> selectList(String sql, Map param) {
         SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
         String statement = reloadSql(sql);
-        List<Map> list = sqlSession.selectList(statement, param);
-        list = (List<Map>) list.stream().map(MapUtil::toCamelCaseMap).collect(Collectors.toList());
+        List<LinkedHashMap> list = sqlSession.selectList(statement, param);
+        list = list.stream().map(t -> (LinkedHashMap)MapUtil.toCamelCaseMap(t)).collect(Collectors.toList());
         return list;
     }
 
@@ -103,7 +103,7 @@ public class MyBatisHelper {
      * @param param
      * @return
      */
-    public static PageData<Map> selectPage(String sql, Map param) {
+    public static PageData<LinkedHashMap> selectPage(String sql, Map param) {
         SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
         String statement = reloadSql(sql);
 
@@ -113,13 +113,13 @@ public class MyBatisHelper {
         Long size = (sizeObj == null) ? 10L : Long.parseLong(sizeObj.toString());
         try {
             PageHelper.startPage(current.intValue(), size.intValue());
-            List<Map> list = sqlSession.selectList(statement, param);
+            List<LinkedHashMap> list = sqlSession.selectList(statement, param);
 
             Page listPage = (Page) list;
             long total = listPage.getTotal();
-            PageData<Map> pageData = new PageData<>(current, size);
+            PageData<LinkedHashMap> pageData = new PageData<>(current, size);
             pageData.setTotal(total);
-            list = (List<Map>) list.stream().map(MapUtil::toCamelCaseMap).collect(Collectors.toList());
+            list = list.stream().map(t -> (LinkedHashMap)MapUtil.toCamelCaseMap(t)).collect(Collectors.toList());
             pageData.setRows(list);
             return pageData;
         } finally {

@@ -17,10 +17,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class JdbcUtil {
 
@@ -36,7 +33,7 @@ public class JdbcUtil {
      * @return
      */
     public static <T> List<T> jdbcExecutor(DataSourceInfo dataSourceInfo, String sql, Class<T> clazz){
-        List<Map> maps = jdbcExecutor(dataSourceInfo, sql);
+        List<LinkedHashMap> maps = jdbcExecutor(dataSourceInfo, sql);
         List<T> list = MapUtil.map2ObjList(maps, clazz);
         return list;
     }
@@ -47,7 +44,7 @@ public class JdbcUtil {
      * @param sql
      * @return
      */
-    public static List<Map> jdbcExecutor(DataSourceInfo dataSourceInfo, String sql){
+    public static List<LinkedHashMap> jdbcExecutor(DataSourceInfo dataSourceInfo, String sql){
         DruidPooledConnection conn = getConn(dataSourceInfo);
 
         // SQL 解析，检测
@@ -80,12 +77,12 @@ public class JdbcUtil {
         }
 
         // sql 执行
-        List<Map> maps;
+        List<LinkedHashMap> maps;
         if (select){
             maps = jdbcQueryExecutor(conn, sql);
         } else {
             int update = jdbcUpdateExecutor(conn, sql);
-            Map<String, Integer> map = new HashMap<>();
+            LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
             map.put("rows", update);
             maps = Arrays.asList(map);
         }
@@ -117,12 +114,12 @@ public class JdbcUtil {
      * @param sql
      * @return
      */
-    public static List<Map> jdbcQueryExecutor(Connection conn, String sql) {
+    public static List<LinkedHashMap> jdbcQueryExecutor(Connection conn, String sql) {
         Statement statement = null;
         try {
             statement = conn.createStatement();
             ResultSet results = statement.executeQuery(sql);
-            List<Map> maps = ResultSetMapper.toMapList(results);
+            List<LinkedHashMap> maps = ResultSetMapper.toMapList(results);
             return maps;
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);

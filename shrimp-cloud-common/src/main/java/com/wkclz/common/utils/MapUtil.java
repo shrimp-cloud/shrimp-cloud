@@ -22,8 +22,8 @@ public class MapUtil {
      * @return
      * @throws Exception
      */
-    public static <T> Map<String, Object> obj2Map(T... objs) {
-        Map<String, Object> map = new HashMap<>();
+    public static <T> LinkedHashMap<String, Object> obj2Map(T... objs) {
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         for (T obj : objs) {
             Map m = new BeanMap(obj);
             map.putAll(m);
@@ -63,10 +63,10 @@ public class MapUtil {
      * @return
      * @throws Exception
      */
-    public static <T> List<Map<String, Object>> obj2MapList(T... objs) {
-        List<Map<String, Object>> list = new ArrayList();
+    public static <T> List<LinkedHashMap<String, Object>> obj2MapList(T... objs) {
+        List<LinkedHashMap<String, Object>> list = new ArrayList();
         for (T obj : objs) {
-            Map<String, Object> map = obj2Map(obj);
+            LinkedHashMap<String, Object> map = obj2Map(obj);
             list.add(map);
         }
         return list;
@@ -81,8 +81,8 @@ public class MapUtil {
      * @return
      * @throws Exception
      */
-    public static <T> List<T> map2ObjList(List<Map> maps, Class<T> clazz) {
-        if (maps == null || maps.size() == 0) {
+    public static <M extends HashMap, T> List<T> map2ObjList(List<M> maps, Class<T> clazz) {
+        if (maps == null || maps.isEmpty()) {
             return null;
         }
         List<T> list = new ArrayList<>();
