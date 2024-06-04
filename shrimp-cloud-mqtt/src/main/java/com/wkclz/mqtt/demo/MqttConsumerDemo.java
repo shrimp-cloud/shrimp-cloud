@@ -1,6 +1,5 @@
 package com.wkclz.mqtt.demo;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.wkclz.mqtt.annotation.MqttController;
 import com.wkclz.mqtt.annotation.MqttTopicMapping;
 import com.wkclz.mqtt.bean.MqttHexMsg;

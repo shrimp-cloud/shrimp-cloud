@@ -25,5 +25,5 @@
       "description": "服务器作为client接入时的clientId前缀。后缀会默认拼接上IP"
     }
   ],
-  "hits": []
+  "hints": []
 }

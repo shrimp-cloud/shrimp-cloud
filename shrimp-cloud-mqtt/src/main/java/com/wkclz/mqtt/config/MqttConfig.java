@@ -7,6 +7,7 @@ import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
@@ -31,30 +32,47 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
-@ConfigurationProperties(prefix = "shrimp.cloud.mqtt")
 // @ConditionalOnProperty(prefix = "shrimp.cloud.mqtt", value = {"client-id-prefix"})
 public class MqttConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(MqttConfig.class);
 
+    @Value("${shrimp.cloud.mqtt.enabled:true}")
+    private String enabled;
+
     // 自定义
+    @Value("${shrimp.cloud.mqtt.username:}")
     private String username;
+    @Value("${shrimp.cloud.mqtt.password:}")
     private String password;
+    @Value("${shrimp.cloud.mqtt.ca-path:}")
     private String caPath;
 
     // 公共
+    @Value("${shrimp.cloud.mqtt.end-point:}")
     private String endPoint;
+    @Value("${shrimp.cloud.mqtt.client-id-prefix:}")
     private String clientIdPrefix;
+    @Value("${shrimp.cloud.mqtt.keep-alive-interval:60}")
     private Integer keepAliveInterval;
+    @Value("${shrimp.cloud.mqtt.keep-alive-task:0}")
     private Integer keepAliveTask;
 
     // 阿里云
+    @Value("${shrimp.cloud.mqtt.instance-id:}")
     private String instanceId;
+    @Value("${shrimp.cloud.mqtt.access-key:}")
     private String accessKey;
+    @Value("${shrimp.cloud.mqtt.secret-key:}")
     private String secretKey;
 
     @Bean
     public MqttAsyncClient mqttClient() {
+        if (!"true".equals(enabled)) {
+            logger.warn("mqtt is disabled!");
+            return null;
+        }
+
         if (StringUtils.isBlank(endPoint)) {
             logger.warn("mqtt: endpoint is empty!");
             return null;
@@ -130,6 +148,13 @@ public class MqttConfig {
         }
     }
 
+    public String getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(String enabled) {
+        this.enabled = enabled;
+    }
 
     public String getUsername() {
         return username;

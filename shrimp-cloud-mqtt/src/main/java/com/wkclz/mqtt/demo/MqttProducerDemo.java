@@ -13,13 +13,17 @@ import java.util.Map;
 @Component
 public class MqttProducerDemo {
 
-    @Autowired
+    @Autowired(required = false)
     private MqttConfig mqttConfig;
-    @Autowired
+    @Autowired(required = false)
     private MqttProducer mqttProducer;
 
     @Scheduled(fixedDelay = 12_000)
     public void keepaliveBreath() {
+        if (mqttConfig == null || mqttProducer == null) {
+            return;
+        }
+
         Integer task = mqttConfig.getKeepAliveTask();
         if (task == null || task != 1) {
             return;

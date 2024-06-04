@@ -70,7 +70,7 @@ public class EnumUtil {
         if (type == null) {
             return dictEntities;
         }
-        if (DICT_TYPE_ENTITYS == null || DICT_TYPE_ENTITYS.size() == 0) {
+        if (DICT_TYPE_ENTITYS == null || DICT_TYPE_ENTITYS.isEmpty()) {
             DICT_TYPE_ENTITYS = getEnumTypeEntitys(backPackagePath);
         }
         try {

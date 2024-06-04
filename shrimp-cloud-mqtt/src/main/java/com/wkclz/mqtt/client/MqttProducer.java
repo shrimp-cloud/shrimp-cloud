@@ -2,7 +2,9 @@ package com.wkclz.mqtt.client;
 
 import cn.hutool.core.thread.ThreadUtil;
 import com.alibaba.fastjson2.JSONObject;
+import com.wkclz.common.exception.BizException;
 import com.wkclz.mqtt.enums.Qos;
+import com.wkclz.mqtt.exception.MqttBeansException;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -24,7 +26,7 @@ import java.util.List;
 // @ConditionalOnBean(MqttClient.class)
 public class MqttProducer {
 
-    @Autowired
+    @Autowired(required = false)
     private MqttAsyncClient mqttAsyncClient;
 
 
@@ -102,6 +104,9 @@ public class MqttProducer {
     }
 
     private void sendMsg(String topic, byte[] msg, Qos qos) {
+        if (mqttAsyncClient == null) {
+            throw new MqttBeansException("mqtt is disabled!");
+        }
         MqttMessage message = new MqttMessage(msg);
         message.setQos(qos.getValue());
         try {
