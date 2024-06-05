@@ -7,6 +7,7 @@ import com.wkclz.mqtt.handler.MqttHandlerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,6 +22,9 @@ public class MqttBeanPostProcessor implements BeanPostProcessor {
 
     private static final Logger logger = LoggerFactory.getLogger(MqttBeanPostProcessor.class);
 
+    @Autowired
+    private MqttConfig mqttConfig;
+
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         return bean;
@@ -30,6 +34,10 @@ public class MqttBeanPostProcessor implements BeanPostProcessor {
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         Class beanClazz = bean.getClass();
         if (beanClazz.isAnnotationPresent(MqttController.class)) {
+            if (!"true".equals(mqttConfig.getEnabled())) {
+                return bean;
+            }
+
             String parentTopic = ((MqttController) beanClazz.getAnnotation(MqttController.class)).value();
             MqttHandlerFactory.getParentTopicSet().add(parentTopic);
             for (Method method : beanClazz.getMethods()) {

@@ -21,7 +21,7 @@ public class MqttApplicationListener implements ApplicationListener<ContextRefre
     private MqttAsyncClient mqttAsyncClient;
 
     @Override
-	public void onApplicationEvent(ContextRefreshedEvent event) {
+    public void onApplicationEvent(ContextRefreshedEvent event) {
         if (mqttAsyncClient == null) {
             return;
         }
@@ -30,7 +30,7 @@ public class MqttApplicationListener implements ApplicationListener<ContextRefre
             return;
         }
         MqttSubcribe.subscribeTopics(mqttAsyncClient);
-		logger.info("MqConsumer Started");
-	}
+        logger.info("MqConsumer Listened.");
+    }
 
 }

@@ -1,6 +1,5 @@
 package com.wkclz.mqtt.config;
 
-import com.wkclz.spring.config.SpringContextHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.eclipse.paho.client.mqttv3.*;
@@ -8,7 +7,6 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
@@ -65,6 +63,8 @@ public class MqttConfig {
     @Value("${shrimp.cloud.mqtt.secret-key:}")
     private String secretKey;
 
+    private MqttAsyncClient mqttClient;
+
     @Bean
     public MqttAsyncClient mqttClient() {
         if (!"true".equals(enabled)) {
@@ -76,7 +76,6 @@ public class MqttConfig {
             logger.warn("mqtt: endpoint is empty!");
             return null;
         }
-        MqttAsyncClient mqttClient = null;
 
         String clientIdPrefix = getClientIdPrefix();
         if (StringUtils.isBlank(clientIdPrefix)) {
@@ -85,6 +84,7 @@ public class MqttConfig {
         if (keepAliveInterval == null || keepAliveInterval < 0) {
             keepAliveInterval = 60;
         }
+
         String clientId = clientIdPrefix + "@" + getServerIp();
         MemoryPersistence persistence = new MemoryPersistence();
         try {
@@ -131,16 +131,19 @@ public class MqttConfig {
 
         @Override
         public void connectComplete(boolean reconnect, String serverUri) {
-            logger.info("mqtt connect complete");
-            MqttAsyncClient mqttAsyncClient = SpringContextHolder.getBean(MqttAsyncClient.class);
-            MqttSubcribe.subscribeTopics(mqttAsyncClient);
+            if (reconnect) {
+                logger.warn("MqttReconnectCallback: reconnect connectComplete");
+                MqttSubcribe.subscribeTopics(mqttClient);
+            }
         }
 
         @Override
         public void connectionLost(Throwable cause) {
+            logger.error("MqttReconnectCallback: connectionLost");
+            logger.error(cause.getMessage(), cause);
         }
         @Override
-        public void messageArrived(String topic, MqttMessage message) throws Exception {
+        public void messageArrived(String topic, MqttMessage message) {
         }
         @Override
         public void deliveryComplete(IMqttDeliveryToken token) {
@@ -234,7 +237,6 @@ public class MqttConfig {
     public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
     }
-
 
     private static String getServerIp() {
         Set<String> ipList = new HashSet<>();
