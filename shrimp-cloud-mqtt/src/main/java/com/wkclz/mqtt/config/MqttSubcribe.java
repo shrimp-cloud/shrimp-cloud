@@ -18,22 +18,21 @@ import java.util.Set;
  * @date 2022-04-08
  */
 
-public class MqttSubcribe  {
+public class MqttSubcribe {
 
     private static final Logger logger = LoggerFactory.getLogger(MqttSubcribe.class);
 
-	public static void subscribeTopics(MqttAsyncClient mqttClient) {
-		Set<String> parentTopicSet = MqttHandlerFactory.getParentTopicSet();
-		if (parentTopicSet.size() == 0) {
-			logger.warn("当前应用并未有任何topic订阅");
-			return;
-		}
+    public static void subscribeTopics(MqttAsyncClient mqttClient) {
+        Set<String> parentTopicSet = MqttHandlerFactory.getParentTopicSet();
+        if (parentTopicSet.isEmpty()) {
+            logger.warn("当前应用并未有任何topic订阅");
+            return;
+        }
 
-		//订阅所有 parentTopic，再根据 分发
-		parentTopicSet.forEach(parentTopic -> {
-			logger.info("Add a new mq subscription,parent topic:{}", parentTopic);
+        //订阅所有 parentTopic，再根据 分发
+        parentTopicSet.forEach(parentTopic -> {
+            logger.info("Add a new mq subscription,parent topic:{}", parentTopic);
             try {
-                // mqttClient.subscribe(parentTopic + "/#", 1, MqttBeanPostProcessor::messageArrivedHandle);
                 String subscribeTopic = parentTopic + "/#";
                 mqttClient.subscribe(subscribeTopic, 1, new IMqttMessageListener() {
                     @Override
@@ -42,11 +41,11 @@ public class MqttSubcribe  {
                     }
                 });
             } catch (MqttException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         });
         logger.info("MqConsumer subscribe {} topic(s)", parentTopicSet.size());
-	}
+    }
 
     private static void messageArrivedHandle(String topic, MqttMessage context) {
         logger.debug("mqtt topic {} receive message: {}", topic, context);
@@ -65,17 +64,17 @@ public class MqttSubcribe  {
             return;
         }
 
-        //获得mqtt的一些数据
+        // 获得mqtt的一些数据
         int splitIndex = topic.indexOf("/");
         MqttHexMsg msg = new MqttHexMsg();
         msg.setTopic(topic);
         msg.setParentTopic(splitIndex > 0 ? topic.substring(0, splitIndex) : topic);
-        msg.setSubTopic(splitIndex > 0 ? topic.substring(splitIndex + 1): "#");
+        msg.setSubTopic(splitIndex > 0 ? topic.substring(splitIndex + 1) : "#");
         msg.setId(context.getId());
         msg.setQos(context.getQos());
         msg.setPayload(context.getPayload());
 
-        //处理入参
+        // 处理入参
         Parameter[] parameters = method.getParameters();
         Object[] paramValues = new Object[parameters.length];
 
@@ -90,7 +89,6 @@ public class MqttSubcribe  {
             method.invoke(MqttHandlerFactory.getMqttController(topicMappingKey), paramValues);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            e.printStackTrace();
         }
     }
 

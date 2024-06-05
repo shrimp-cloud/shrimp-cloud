@@ -13,7 +13,6 @@ import org.springframework.context.event.ContextRefreshedEvent;
  * @date 2022-04-08
  */
 @Configuration
-// @ConditionalOnBean(MqttClient.class)
 public class MqttApplicationListener implements ApplicationListener<ContextRefreshedEvent> {
 
     private static final Logger logger = LoggerFactory.getLogger(MqttApplicationListener.class);

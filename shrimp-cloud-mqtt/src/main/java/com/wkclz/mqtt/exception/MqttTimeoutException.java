@@ -6,11 +6,11 @@ package com.wkclz.mqtt.exception;
  */
 public class MqttTimeoutException extends MqttRemoteException {
 
-	public MqttTimeoutException() {
-		super();
-	}
+    public MqttTimeoutException() {
+        super();
+    }
 
-	public MqttTimeoutException(String message) {
-		super(message);
-	}
+    public MqttTimeoutException(String message) {
+        super(message);
+    }
 }

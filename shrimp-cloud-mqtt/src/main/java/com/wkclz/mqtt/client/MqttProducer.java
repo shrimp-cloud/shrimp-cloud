@@ -2,7 +2,6 @@ package com.wkclz.mqtt.client;
 
 import cn.hutool.core.thread.ThreadUtil;
 import com.alibaba.fastjson2.JSONObject;
-import com.wkclz.common.exception.BizException;
 import com.wkclz.mqtt.enums.Qos;
 import com.wkclz.mqtt.exception.MqttBeansException;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +22,6 @@ import java.util.List;
  */
 @Slf4j
 @Component
-// @ConditionalOnBean(MqttClient.class)
 public class MqttProducer {
 
     @Autowired(required = false)
@@ -112,7 +110,7 @@ public class MqttProducer {
         try {
             mqttAsyncClient.publish(topic, message);
         } catch (MqttException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 

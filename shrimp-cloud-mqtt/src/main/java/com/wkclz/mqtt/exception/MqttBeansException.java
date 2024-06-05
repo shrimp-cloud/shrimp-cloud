@@ -8,11 +8,11 @@ import org.springframework.beans.BeansException;
  */
 public class MqttBeansException extends BeansException {
 
-	public MqttBeansException(String msg) {
-		super(msg);
-	}
+    public MqttBeansException(String msg) {
+        super(msg);
+    }
 
-	public MqttBeansException(String msg, Throwable cause) {
-		super(msg, cause);
-	}
+    public MqttBeansException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
 }

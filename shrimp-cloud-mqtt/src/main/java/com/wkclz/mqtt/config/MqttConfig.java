@@ -32,7 +32,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
-// @ConditionalOnProperty(prefix = "shrimp.cloud.mqtt", value = {"client-id-prefix"})
 public class MqttConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(MqttConfig.class);
