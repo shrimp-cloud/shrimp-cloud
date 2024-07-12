@@ -67,8 +67,8 @@ public class BaseEntity {
     private String remark;
     @Desc("数据版本")
     private Integer version;
-    @Desc("数据状态:0(已删除),1(有效)")
-    private Integer status;
+    @Desc("数据状态:1(有效), 时间戳(删除)")
+    private Long status;
 
     private Integer debug;
 
@@ -244,11 +244,11 @@ public class BaseEntity {
         this.version = version;
     }
 
-    public Integer getStatus() {
+    public Long getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Long status) {
         this.status = status;
     }
 
