@@ -33,6 +33,7 @@
         <commons-lang3.version>3.14.0</commons-lang3.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <commons-collections4.version>4.4</commons-collections4.version>
+        <commons-compress.version>1.26.2</commons-compress.version>
         <spring-beans.version>6.1.8</spring-beans.version>
         <fastjson2.version>2.0.50</fastjson2.version>
         <hutool.version>5.8.27</hutool.version>
@@ -154,7 +155,20 @@
                 <groupId>com.wkclz.util</groupId>
                 <artifactId>excel</artifactId>
                 <version>${wkclz-excel.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.commons</groupId>
+                        <artifactId>commons-compress</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>${commons-compress.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.aliyun.oss</groupId>
                 <artifactId>aliyun-sdk-oss</artifactId>
