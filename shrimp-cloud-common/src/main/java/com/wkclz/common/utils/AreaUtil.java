@@ -168,7 +168,7 @@ public class AreaUtil {
 
             // 乡镇 url
             Elements a1 = tds.get(0).select("a");
-            if (a1 == null || a1.size() == 0) {
+            if (a1 == null || a1.isEmpty()) {
                 area.setIsLeaf(1);
                 continue;
             }

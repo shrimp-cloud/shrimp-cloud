@@ -102,7 +102,7 @@ public class RequestHelper {
     }
 
     public static String getDomainFronUrl(String url) {
-        if (url == null || url.trim().length() == 0) {
+        if (url == null || url.trim().isEmpty()) {
             return url;
         }
         if (!url.startsWith("http")) {

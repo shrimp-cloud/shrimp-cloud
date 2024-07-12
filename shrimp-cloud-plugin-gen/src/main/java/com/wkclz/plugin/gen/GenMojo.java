@@ -33,7 +33,7 @@ public class GenMojo extends AbstractMojo {
             log.info("gen url: " + url);
             GenHelper.setBaseUrl(url);
         }
-        if (options == null || options.size() == 0){
+        if (options == null || options.isEmpty()){
             log.error("未发现可用的配置");
         }
         for (String option : options) {

@@ -88,7 +88,6 @@ public class UpdateInterceptor implements Interceptor {
         BaseEntity clearPatameter = (BaseEntity) paramter;
         // insert, upadte, delete 修改人/时间
         clearPatameter.setUpdateBy(username);
-        clearPatameter.setStatus(1);
         if (clearPatameter.getUpdateTime() != null) {
             clearPatameter.setUpdateTime(new Date());
         }

@@ -13,7 +13,7 @@ public class StringUtil {
 
     private static final char UNDERLINE = '_';
 
-    private static final Pattern PATTERN = Pattern.compile("\t|\r|\n");
+    private static final Pattern PATTERN = Pattern.compile("[\t\r\n]");
 
     /**
      * 下划线 转Camel
@@ -22,7 +22,7 @@ public class StringUtil {
      * @return
      */
     public static String underlineToCamel(String param) {
-        if (param == null || param.trim().length() == 0) {
+        if (param == null || param.trim().isEmpty()) {
             return param;
         }
         int len = param.length();
@@ -48,11 +48,11 @@ public class StringUtil {
      * @return
      */
     public static String firstChatToUpperCase(String param) {
-        if (param == null || param.trim().length() == 0) {
+        if (param == null || param.trim().isEmpty()) {
             return param;
         }
         String fistChar = param.substring(0, 1).toUpperCase();
-        return fistChar + param.substring(1, param.length());
+        return fistChar + param.substring(1);
     }
 
 
@@ -63,7 +63,7 @@ public class StringUtil {
      * @return
      */
     public static String camelToUnderline(String param) {
-        if (param == null || param.trim().length() == 0) {
+        if (param == null || param.trim().isEmpty()) {
             return param;
         }
         int len = param.length();
@@ -96,13 +96,11 @@ public class StringUtil {
             return varMap;
         }
         String[] variablesArr = str.split(separator);
-        if (variablesArr.length > 0) {
-            for (String varStr : variablesArr) {
-                if (varStr.contains("=")) {
-                    String key = varStr.substring(0, varStr.indexOf("="));
-                    String value = varStr.substring(varStr.indexOf("=") + 1, varStr.length());
-                    varMap.put(key, value);
-                }
+        for (String varStr : variablesArr) {
+            if (varStr.contains("=")) {
+                String key = varStr.substring(0, varStr.indexOf("="));
+                String value = varStr.substring(varStr.indexOf("=") + 1);
+                varMap.put(key, value);
             }
         }
         return varMap;
@@ -117,7 +115,7 @@ public class StringUtil {
      * @return
      */
     public static String check2LowerCase(String str, String toLower) {
-        if (str == null || toLower == null || str.trim().length() == 0 || toLower.trim().length() == 0) {
+        if (str == null || toLower == null || str.trim().isEmpty() || toLower.trim().isEmpty()) {
             return str;
         }
         int index = str.indexOf(toLower);

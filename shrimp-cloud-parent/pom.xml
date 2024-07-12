@@ -23,7 +23,6 @@
         <spring-cloud.version>2023.0.2</spring-cloud.version>
         <shrimp.cloud.bom.version>4.0.0-SNAPSHOT</shrimp.cloud.bom.version>
 
-
         <!-- shrimp 相关依赖 -->
         <shrimp-common.version>4.0.0-SNAPSHOT</shrimp-common.version>
         <shrimp-redis.version>4.0.0-SNAPSHOT</shrimp-redis.version>
@@ -116,6 +115,14 @@
             </plugin>
             -->
 
+            <!-- springboot3 开始，parent 中默认附带了 spring-boot-maven-plugin， 需要全局关闭，按需打开 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
             <!-- Source attach plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

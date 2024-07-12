@@ -5,7 +5,7 @@ import com.wkclz.common.emuns.ResultStatus;
 import com.wkclz.common.entity.BaseEntity;
 import com.wkclz.common.exception.BizException;
 import com.wkclz.common.utils.AssertUtil;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -207,7 +207,7 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
 
     @Desc("删除")
     public Integer delete(List<Long> ids){
-        if (ids == null || ids.size() == 0) {
+        if (ids == null || ids.isEmpty()) {
             throw BizException.error(ResultStatus.PARAM_NULL);
         }
         BaseEntity baseEntity = new BaseEntity();
@@ -228,7 +228,7 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
         if (baseEntity == null) {
             throw BizException.error(ResultStatus.PARAM_NULL);
         }
-        if (baseEntity.getId() == null && (baseEntity.getIds() == null || baseEntity.getIds().size() == 0)) {
+        if (baseEntity.getId() == null && (baseEntity.getIds() == null || baseEntity.getIds().isEmpty())) {
             throw BizException.error("id or ids can not be null at the same time");
         }
         Entity entity = (Entity) baseEntity;

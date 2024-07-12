@@ -185,7 +185,8 @@ public class MapUtil {
     public static <T> Map<String, T> removeBlank(Map<String, T> map) {
         Set<String> keySet = map.keySet();
         for (String key : keySet) {
-            if (map.get(key) != null && map.get(key).toString().trim().length() == 0) {
+            T t = map.get(key);
+            if (t != null && t.toString().trim().isEmpty()) {
                 map.put(key, null);
             }
         }

@@ -38,7 +38,7 @@ public class BeanUtil {
             for (PropertyDescriptor property : propertyDescriptors) {
                 Method getter = property.getReadMethod();
                 Object value = getter.invoke(obj);
-                if (value != null && value.toString().trim().length() == 0) {
+                if (value != null && value.toString().trim().isEmpty()) {
                     Method setter = property.getWriteMethod();
                     setter.invoke(obj, new Object[]{null});
                 }
@@ -130,7 +130,7 @@ public class BeanUtil {
      * @return
      */
     public static <S, T> List<T> cp(List<S> source, Class<T> clazz) {
-        if (source == null || source.size() == 0) {
+        if (source == null || source.isEmpty()) {
             return null;
         }
         List<T> list = new ArrayList<>();

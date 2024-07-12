@@ -183,7 +183,7 @@
 //     * @return
 //     */
 //    protected static Map<String, String> getMapColumns(List<String> columns) {
-//        if (columns == null || columns.size() == 0) {
+//        if (columns == null || columns.isEmpty()) {
 //            return null;
 //        }
 //        Map<String, String> columnsMap = new HashMap<>();

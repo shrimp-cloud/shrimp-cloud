@@ -222,7 +222,7 @@ public class RestUtil {
                     }
                     String value = o.toString();
                     // 找到 restInfo
-                    List<RestInfo> infos = rests.stream().filter(t -> t.getUri().equals(value)).collect(Collectors.toList());
+                    List<RestInfo> infos = rests.stream().filter(t -> t.getUri().equals(value)).toList();
                     if (infos.size() == 1) {
                         RestInfo restInfo = infos.get(0);
                         Desc desc = field.getAnnotation(Desc.class);

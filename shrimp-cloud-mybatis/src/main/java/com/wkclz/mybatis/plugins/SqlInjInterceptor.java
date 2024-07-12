@@ -61,7 +61,7 @@ public class SqlInjInterceptor implements Interceptor {
 
         WallCheckResult checkResult = PROVIDER.check(sql);
         List<Violation> violations = checkResult.getViolations();
-        if (violations.size() == 0) {
+        if (violations.isEmpty()) {
             return;
         }
         Violation firstViolation = violations.get(0);

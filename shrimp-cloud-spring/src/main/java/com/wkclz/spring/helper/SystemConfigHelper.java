@@ -69,11 +69,11 @@ public class SystemConfigHelper {
     }
 
     public static String getSystemConfig(String key) {
-        if (key == null || key.trim().length() == 0) {
+        if (key == null || key.trim().isEmpty()) {
             throw BizException.error("key must not be null ot empty!");
         }
         Map<String, String> systemConfigs = getLocal();
-        if (systemConfigs == null || systemConfigs.size() == 0) {
+        if (systemConfigs == null || systemConfigs.isEmpty()) {
             throw BizException.error("systemConfigs must be init after system start up!");
         }
         String value = systemConfigs.get(key);

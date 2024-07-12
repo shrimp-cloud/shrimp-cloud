@@ -269,13 +269,12 @@ public class BaseEntity {
         return target;
     }
 
-    public static <T extends BaseEntity> T copyIfNotNull(T source, T target) {
+    public static <T extends BaseEntity> void copyIfNotNull(T source, T target) {
         T newTarget = checkSourceAndTarget(source, target);
         if(newTarget == null) {
-            return target;
+            return;
         }
         BeanUtil.cpNotNull(source, newTarget);
-        return newTarget;
     }
 
     // 生成 new target
@@ -288,6 +287,7 @@ public class BaseEntity {
         }
         if (target == null) {
             try {
+                //noinspection unchecked
                 target = (T)source.getClass().getDeclaredConstructor().newInstance();
             } catch (Exception e) {
                 // who care ?
