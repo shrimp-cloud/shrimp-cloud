@@ -1,5 +1,6 @@
 package com.wkclz.common.entity;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.wkclz.common.annotation.Desc;
 import com.wkclz.common.utils.BeanUtil;
 
@@ -67,6 +68,7 @@ public class BaseEntity {
     private String remark;
     @Desc("数据版本")
     private Integer version;
+    @JSONField(serialize=false, deserialize=false)
     @Desc("数据状态:1(有效), 时间戳(删除)")
     private Long status;
 
