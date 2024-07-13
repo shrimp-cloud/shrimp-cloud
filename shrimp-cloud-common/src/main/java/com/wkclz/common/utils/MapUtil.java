@@ -2,12 +2,12 @@ package com.wkclz.common.utils;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import org.apache.commons.beanutils.BeanMap;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
@@ -24,36 +24,41 @@ public class MapUtil {
      */
     public static <T> LinkedHashMap<String, Object> obj2Map(T... objs) {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+
+        // 反射方式 obj2Map
         for (T obj : objs) {
-            Map m = new BeanMap(obj);
-            map.putAll(m);
+            // 考虑父类存在的情况
+            Class superClass = obj.getClass().getSuperclass();
+            if (superClass != null) {
+                Field[] superClassFields = superClass.getDeclaredFields();
+                for (Field field : superClassFields) {
+                    field.setAccessible(true);
+                    String key = field.getName();
+                    Object value = null;
+                    try {
+                        value = field.get(obj);
+                    } catch (IllegalAccessException e) {
+                        logger.error("object to map fail: {}", e.getMessage());
+                    }
+                    map.put(key, value);
+                }
+            }
+            // it self
+            Field[] fields = obj.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                String key = field.getName();
+                Object value = null;
+                try {
+                    value = field.get(obj);
+                } catch (IllegalAccessException e) {
+                    logger.error("object to map fail: {}", e.getMessage());
+                }
+                map.put(key, value);
+            }
         }
         return map;
 
-        /* 反射方式 obj2Map
-        try {
-            for (T obj : objs){
-                // 考虑父类存在的情况
-                Class superClass = obj.getClass().getSuperclass();
-                if (superClass != null){
-                    Field[] superClassFields = superClass.getDeclaredFields();
-                    for(Field field : superClassFields){
-                        field.setAccessible(true);
-                        map.put(field.getName(), field.get(obj));
-                    }
-                }
-                // it self
-                Field[] fields = obj.getClass().getDeclaredFields();
-                for(Field field : fields){
-                    field.setAccessible(true);
-                    map.put(field.getName(), field.get(obj));
-                }
-            }
-        } catch (IllegalAccessException e) {
-            // who care ?
-        }
-        return map;
-        */
     }
 
     /**
@@ -63,6 +68,7 @@ public class MapUtil {
      * @return
      * @throws Exception
      */
+    @SafeVarargs
     public static <T> List<LinkedHashMap<String, Object>> obj2MapList(T... objs) {
         List<LinkedHashMap<String, Object>> list = new ArrayList();
         for (T obj : objs) {
@@ -108,14 +114,9 @@ public class MapUtil {
         T obj = null;
         try {
             obj = clazz.getDeclaredConstructor().newInstance();
-            BeanUtils.populate(obj, map);
-        } catch (InstantiationException e) {
-            logger.error(e.getMessage(), e);
-        } catch (IllegalAccessException e) {
-            logger.error(e.getMessage(), e);
-        } catch (InvocationTargetException e) {
-            logger.error(e.getMessage(), e);
-        } catch (NoSuchMethodException e) {
+            BeanUtils.copyProperties(map, obj);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
             logger.error(e.getMessage(), e);
         }
         return obj;
