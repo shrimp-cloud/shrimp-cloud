@@ -25,9 +25,10 @@
         <!-- Spring 依赖(非spring-cloud-dependencies定义的依赖)  -->
         <feign-okhttp.version>13.2.1</feign-okhttp.version>
         <dom4j.version>2.1.4</dom4j.version>
-        <druid-spring-boot-3-starter.version>1.2.22</druid-spring-boot-3-starter.version>
+        <druid-spring-boot-3-starter.version>1.2.23</druid-spring-boot-3-starter.version>
         <mybatis-spring-boot-starter.version>3.0.3</mybatis-spring-boot-starter.version>
         <pagehelper-spring-boot-starter.version>2.1.0</pagehelper-spring-boot-starter.version>
+        <jsqlparser.version>5.0</jsqlparser.version>
 
         <!-- 三方静态依赖 -->
         <mysql.version>8.4.0</mysql.version>
@@ -87,6 +88,12 @@
                 <artifactId>pagehelper-spring-boot-starter</artifactId>
                 <version>${pagehelper-spring-boot-starter.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.github.jsqlparser</groupId>
+                <artifactId>jsqlparser</artifactId>
+                <version>${jsqlparser.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.mysql</groupId>
                 <artifactId>mysql-connector-j</artifactId>
