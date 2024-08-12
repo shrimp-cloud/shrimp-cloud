@@ -1,6 +1,8 @@
 package com.wkclz.common.utils;
 
 
+import com.wkclz.common.tools.Base64Tool;
+
 import javax.crypto.Cipher;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
@@ -28,7 +30,7 @@ public class RsaUtil {
         String result = "";
         try {
             // 将Base64编码后的公钥转换成PublicKey对象
-            byte[] buffer = SecretUtil.base64Decode(rsaPublicKey);
+            byte[] buffer = Base64Tool.base64Decode(rsaPublicKey);
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(buffer);
             PublicKey publicKey = keyFactory.generatePublic(keySpec);
@@ -54,7 +56,7 @@ public class RsaUtil {
                 resultBytes = Arrays.copyOf(resultBytes, resultBytes.length + cache.length);
                 System.arraycopy(cache, 0, resultBytes, resultBytes.length - cache.length, cache.length);
             }
-            result = SecretUtil.base64Encode(resultBytes);
+            result = Base64Tool.base64Encode(resultBytes);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -67,11 +69,11 @@ public class RsaUtil {
     public static String decryptByPrivateKey(String encryptedStr, String privateKeyStr) {
         try {
             // 对私钥解密
-            byte[] privateKeyBytes = SecretUtil.base64Decode(privateKeyStr);
+            byte[] privateKeyBytes = Base64Tool.base64Decode(privateKeyStr);
             // 获得私钥
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
             // 获得待解密数据
-            byte[] data = SecretUtil.base64Decode(encryptedStr.replaceAll(" ", "+"));
+            byte[] data = Base64Tool.base64Decode(encryptedStr.replaceAll(" ", "+"));
             KeyFactory factory = KeyFactory.getInstance(KEY_RSA);
             PrivateKey privateKey = factory.generatePrivate(keySpec);
             // 对数据解密

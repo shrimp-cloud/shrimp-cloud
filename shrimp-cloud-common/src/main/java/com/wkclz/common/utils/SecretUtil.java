@@ -1,17 +1,11 @@
 package com.wkclz.common.utils;
 
 import com.wkclz.common.annotation.Desc;
+import com.wkclz.common.tools.AesTool;
+import com.wkclz.common.tools.Md5Tool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.spec.SecretKeySpec;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.Base64;
 import java.util.UUID;
 
 /**
@@ -62,7 +56,7 @@ public class SecretUtil {
     public static String getEncryptPassword(String pwdStr, String salt) {
         String encryptPassword = null;
         try {
-            encryptPassword = aesEncrypt(pwdStr, salt);
+            encryptPassword = AesTool.encrypt(pwdStr, salt);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -85,7 +79,7 @@ public class SecretUtil {
     public static String getDecryptPassword(String encryptPwdStr, String salt) {
         String decryptPassword = null;
         try {
-            decryptPassword = aesDecrypt(encryptPwdStr, salt);
+            decryptPassword = AesTool.decrypt(encryptPwdStr, salt);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -102,100 +96,6 @@ public class SecretUtil {
      */
 
 
-
-    /**
-     * String 2 MD5
-     *
-     * @param str
-     * @return
-     */
-    public static String md5(String str) {
-        byte[] secretBytes = null;
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(str.getBytes());
-            secretBytes = md.digest();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("没有md5这个算法！");
-        }
-        StringBuilder md5code = new StringBuilder(new BigInteger(1, secretBytes).toString(16));
-        int x = 32 - md5code.length();
-        for (int i = 0; i < x; i++) {
-            md5code.insert(0, "0");
-        }
-        return md5code.toString();
-    }
-
-
-    /**
-     * byte[] 2 Base64
-     *
-     * @param b
-     * @return
-     */
-    public static String base64Encode(byte[] b) {
-        return Base64.getEncoder().encodeToString(b);
-    }
-    public static String base64Encode(String b) {
-        if (b == null){
-            return null;
-        }
-        return Base64.getEncoder().encodeToString(b.getBytes());
-    }
-
-    /**
-     * Base64 2 byte[]
-     *
-     * @param base64Code
-     * @return
-     * @throws Exception
-     */
-    public static byte[] base64Decode(String base64Code)  {
-        return Base64.getDecoder().decode(base64Code);
-    }
-    public static String base64Decode2String(String base64Code) {
-        byte[] decode = Base64.getDecoder().decode(base64Code);
-        return new String(decode);
-    }
-
-    /**
-     * String 2 AES
-     *
-     * @param content
-     * @param encryptKey
-     * @return
-     * @throws Exception
-     */
-    public static String aesEncrypt(String content, String encryptKey) throws Exception {
-        KeyGenerator kgen = KeyGenerator.getInstance("AES");
-        SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
-        secureRandom.setSeed(encryptKey.getBytes("UTF-8"));
-        kgen.init(128, secureRandom);
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(kgen.generateKey().getEncoded(), "AES"));
-        byte[] result = cipher.doFinal(content.getBytes("utf-8"));
-        return base64Encode(result);
-    }
-
-    /**
-     * AES 2 String
-     *
-     * @param encryptContent
-     * @param decryptKey
-     * @return
-     * @throws Exception
-     */
-    public static String aesDecrypt(String encryptContent, String decryptKey) throws Exception {
-        KeyGenerator kgen = KeyGenerator.getInstance("AES");
-        SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
-        secureRandom.setSeed(decryptKey.getBytes("UTF-8"));
-        kgen.init(128, secureRandom);
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(kgen.generateKey().getEncoded(), "AES"));
-        byte[] result = cipher.doFinal(base64Decode(encryptContent));
-        return new String(result);
-    }
-
     public static String getJavaUuid() {
         UUID uuid = UUID.randomUUID();
         String s = uuid.toString();
@@ -210,7 +110,7 @@ public class SecretUtil {
     public static String getKey() {
         String javaUuid = getJavaUuid();
         long l = System.currentTimeMillis();
-        return md5(javaUuid + l);
+        return Md5Tool.md5(javaUuid + l);
     }
 
 

@@ -2,7 +2,6 @@ package com.wkclz.file.utils;
 
 import cn.hutool.core.date.DateUtil;
 import com.wkclz.common.utils.RegularUtil;
-import com.wkclz.file.api.impl.AliOssApiImpl;
 import com.wkclz.file.domain.ContentTypeEnum;
 import com.wkclz.spring.config.Sys;
 import org.apache.commons.lang3.StringUtils;
@@ -101,7 +100,5 @@ public class OssUtil {
         }
         return str;
     }
-
-
 
 }

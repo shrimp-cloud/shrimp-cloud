@@ -4,7 +4,7 @@ import cn.hutool.core.map.MapUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.wkclz.common.entity.BaseEntity;
-import com.wkclz.common.utils.SecretUtil;
+import com.wkclz.common.tools.Md5Tool;
 import com.wkclz.mybatis.base.PageData;
 import com.wkclz.spring.config.SpringContextHolder;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
@@ -131,7 +131,7 @@ public class MyBatisHelper {
      * 重新加载资源
      */
     private synchronized static String reloadSql(String sql) {
-        String md5 = SecretUtil.md5(sql);
+        String md5 = Md5Tool.md5(sql);
         String namespace = "namespace_" + md5;
         String selectId = "select_" + md5;
         String statement = namespace + "." + selectId;

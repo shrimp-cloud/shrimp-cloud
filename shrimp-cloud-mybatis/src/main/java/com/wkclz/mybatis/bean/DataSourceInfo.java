@@ -3,7 +3,7 @@ package com.wkclz.mybatis.bean;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidPooledConnection;
 import com.wkclz.common.exception.BizException;
-import com.wkclz.common.utils.SecretUtil;
+import com.wkclz.common.tools.Md5Tool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +39,7 @@ public class DataSourceInfo {
             dataConns = new HashMap<>();
         }
         String url = dataSourceInfo.getUrl();
-        String hex = SecretUtil.md5(url);
+        String hex = Md5Tool.md5(url);
         DruidPooledConnection conn = dataConns.get(hex);
         try {
 
