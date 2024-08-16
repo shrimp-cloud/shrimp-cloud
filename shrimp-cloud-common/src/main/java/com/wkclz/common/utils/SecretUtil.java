@@ -135,26 +135,6 @@ public class SecretUtil {
     }
 
 
-    /**
-     * Test
-     * @param args
-     * @throws Exception
-     */
-    /*
-    public static void main(String[] args) throws Exception {
-        String xx = "admin";
-        System.out.println("xx：" + xx);
-        String key = getKey();
-        System.out.println("key：" + key);
-        String aesEncrypt = aesEncrypt(xx, key);
-        System.out.println("aesEncrypt：" + aesEncrypt);
-        String aesDecrypt = aesDecrypt(aesEncrypt, key);
-        System.out.println("aesDecrypt：" + aesDecrypt);
-    }
-    */
-
-
-
 
     /**
      * 密码简单对称加密示例
