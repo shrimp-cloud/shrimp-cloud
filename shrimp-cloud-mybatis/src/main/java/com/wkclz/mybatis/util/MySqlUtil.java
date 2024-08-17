@@ -21,7 +21,7 @@ import java.util.List;
 
 public class MySqlUtil {
 
-    private static TableInfo getTableInfo(String ddl) {
+    public static TableInfo getTableInfo(String ddl) {
         MySqlCreateTableStatement tableStatement = getTableByCreateTableDdl(ddl);
         TableInfo tableInfo = new TableInfo();
 
