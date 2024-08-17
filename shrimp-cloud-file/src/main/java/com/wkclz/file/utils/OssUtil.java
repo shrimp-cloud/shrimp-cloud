@@ -1,7 +1,7 @@
 package com.wkclz.file.utils;
 
 import cn.hutool.core.date.DateUtil;
-import com.wkclz.common.utils.RegularUtil;
+import com.wkclz.common.tools.RegularTool;
 import com.wkclz.file.domain.ContentTypeEnum;
 import com.wkclz.spring.config.Sys;
 import org.apache.commons.lang3.StringUtils;
@@ -87,10 +87,10 @@ public class OssUtil {
             str = str.substring(1);
         }
 
-        if (RegularUtil.haveDoubleByte(str)) {
+        if (RegularTool.haveDoubleByte(str)) {
             StringBuilder sb = new StringBuilder();
             for (char c : str.toCharArray()) {
-                if (RegularUtil.isDoubleByte(c)) {
+                if (RegularTool.isDoubleByte(c)) {
                     sb.append(URLEncoder.encode(String.valueOf(c), StandardCharsets.UTF_8));
                 } else {
                     sb.append(c);

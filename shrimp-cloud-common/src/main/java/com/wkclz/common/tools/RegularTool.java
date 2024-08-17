@@ -1,14 +1,20 @@
-package com.wkclz.common.utils;
+package com.wkclz.common.tools;
 
-import org.apache.commons.lang3.StringUtils;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Description:
  * Created: wangkaicun @ 2017-10-20 上午1:06
  */
-public class RegularUtil {
+
+public class RegularTool {
+
+    private final static Map<String, Pattern> PATTERN_MAP = new HashMap<>();
 
     private static final Pattern IS_POSITIVE_INTEGER = Pattern.compile("^[1-9]\\d*$");
     private static final Pattern IS_LETTER = Pattern.compile("^[A-Za-z]+$");
@@ -19,6 +25,9 @@ public class RegularUtil {
     private static final Pattern IS_IP = Pattern.compile("(?=(\\b|\\D))(((\\d{1,2})|(1\\d{1,2})|(2[0-4]\\d)|(25[0-5]))\\.){3}((\\d{1,2})|(1\\d{1,2})|(2[0-4]\\d)|(25[0-5]))(?=(\\b|\\D))");
     private static final Pattern IS_DOMAIN = Pattern.compile("^(?=^.{3,255}$)(http(s)?:\\/\\/)?(www\\.)?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:\\d+)*(\\/\\w+\\.\\w+)*$");
 
+
+
+
     /**
      * 匹配正整数
      *
@@ -26,7 +35,7 @@ public class RegularUtil {
      * @return
      */
     public static boolean isPositiveInteger(String str) {
-        return reg(str, IS_POSITIVE_INTEGER);
+        return match(str, IS_POSITIVE_INTEGER);
     }
 
 
@@ -36,7 +45,7 @@ public class RegularUtil {
      * @return
      */
     public static boolean isLetter(String str){
-        return reg(str, IS_LETTER);
+        return match(str, IS_LETTER);
     }
 
     /**
@@ -45,7 +54,7 @@ public class RegularUtil {
      * @return
      */
     public static boolean isLegalChar(String str){
-        return reg(str, IS_LEGAL_CHAR);
+        return match(str, IS_LEGAL_CHAR);
     }
 
 
@@ -56,7 +65,7 @@ public class RegularUtil {
      * @return
      */
     public static boolean isDate(String dateStr) {
-        return reg(dateStr, IS_DATE);
+        return match(dateStr, IS_DATE);
     }
 
     /**
@@ -66,7 +75,7 @@ public class RegularUtil {
      * @return
      */
     public static boolean isEmail(String str) {
-        return reg(str, IS_EMAIL);
+        return match(str, IS_EMAIL);
     }
 
     /**
@@ -76,7 +85,7 @@ public class RegularUtil {
      * @return
      */
     public static boolean isMobile(String str) {
-        return reg(str, IS_MOBILE);
+        return match(str, IS_MOBILE);
     }
 
     /**
@@ -86,7 +95,7 @@ public class RegularUtil {
      * @return
      */
     public static boolean isDomain(String str) {
-        return reg(str, IS_DOMAIN);
+        return match(str, IS_DOMAIN);
     }
 
     /**
@@ -96,7 +105,7 @@ public class RegularUtil {
      * @return
      */
     public static boolean isIp(String str) {
-        return reg(str, IS_IP);
+        return match(str, IS_IP);
     }
 
 
@@ -132,28 +141,71 @@ public class RegularUtil {
     }
 
 
-    /**
-     * 正则判断过程
-     *
-     * @param str
-     * @param pattern
-     * @return
-     */
-    private static boolean reg(String str, Pattern pattern) {
-        if (StringUtils.isBlank(str)) {
+
+    public static boolean match(String str, String regex) {
+        if (str == null || regex == null) {
             return false;
         }
-        return pattern.matcher(str.trim()).matches();
+        Pattern pattern = getPattern(regex);
+        return match(str, pattern);
+    }
+
+    public static boolean match(String str, Pattern pattern) {
+        if (str == null || pattern == null) {
+            return false;
+        }
+        return pattern.matcher(str).matches();
+    }
+
+    public static List<String> find(String str, String regex) {
+        if (str == null || regex == null) {
+            return null;
+        }
+        Pattern pattern = getPattern(regex);
+
+        // 创建matcher对象
+        Matcher matcher = pattern.matcher(str);
+        // 遍历所有匹配的结果
+        List<String> result = new ArrayList<>();
+        while (matcher.find()) {
+            // 提取匹配的数字
+            String rt = matcher.group();
+            result.add(rt);
+        }
+        return result;
+
+    }
+
+    public static String replaceAll(String str, String regex, String replacement) {
+        if (str == null) {
+            return null;
+        }
+        if (regex == null) {
+            return str;
+        }
+        if (replacement == null) {
+            replacement = "";
+        }
+        return str.replaceAll(regex, replacement);
+    }
+
+    private static Pattern getPattern(String regex) {
+        Pattern pattern = PATTERN_MAP.get(regex);
+        if (pattern == null) {
+            pattern = Pattern.compile(regex);
+            PATTERN_MAP.put(regex, pattern);
+        }
+        return pattern;
     }
 
 
+
     public static void main(String[] args) {
-        /*
         System.out.println(isIp("127.0.0.1"));
         System.out.println(isDomain("www.www.wklz.com"));
         System.out.println(isDate("2019-02-29"));
         System.out.println(isLetter("dDD"));
-        */
     }
+
 
 }

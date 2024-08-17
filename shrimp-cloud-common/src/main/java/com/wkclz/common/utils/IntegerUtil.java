@@ -1,5 +1,7 @@
 package com.wkclz.common.utils;
 
+import com.wkclz.common.tools.RegularTool;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class IntegerUtil {
         List<Integer> intArr = new ArrayList<>();
         for (String id : split) {
             // 只有是数字型的字符串才加进去
-            if (RegularUtil.isPositiveInteger(id)) {
+            if (RegularTool.isPositiveInteger(id)) {
                 intArr.add(Integer.parseInt(id));
             }
         }
@@ -33,7 +35,7 @@ public class IntegerUtil {
         List<Long> intArr = new ArrayList<>();
         for (String id : split) {
             // 只有是数字型的字符串才加进去
-            if (RegularUtil.isPositiveInteger(id)) {
+            if (RegularTool.isPositiveInteger(id)) {
                 intArr.add(Long.parseLong(id));
             }
         }
