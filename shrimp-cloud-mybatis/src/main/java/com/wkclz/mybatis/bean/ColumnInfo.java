@@ -9,7 +9,7 @@ public class ColumnInfo {
     private Boolean autoIncrement;
     private String columnName;
     private String dataType;
-    private String charSetName;
+    private String charset;
     private String collate;
     private Number length;
     private String comment;

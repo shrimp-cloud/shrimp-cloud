@@ -8,7 +8,7 @@ import java.util.List;
 public class TableInfo {
 
     private String tableName;
-    private String tableComment;
+    private String comment;
     private String dbType;
 
     private String engine;

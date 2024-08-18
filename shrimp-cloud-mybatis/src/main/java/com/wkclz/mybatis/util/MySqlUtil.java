@@ -32,7 +32,7 @@ public class MySqlUtil {
         // 备注信息
         SQLExpr sqlExpr = tableStatement.getComment();
         if (sqlExpr instanceof SQLCharExpr sqlCharExpr) {
-            tableInfo.setTableComment(sqlCharExpr.getText());
+            tableInfo.setComment(sqlCharExpr.getText());
         }
         // 表 options 信息
         List<SQLAssignItem> tableOptions = tableStatement.getTableOptions();
@@ -119,7 +119,7 @@ public class MySqlUtil {
                     }
                 }
                 if (dataType instanceof SQLCharacterDataType type) {
-                    column.setCharSetName(type.getCharSetName());
+                    column.setCharset(type.getCharSetName());
                     column.setCollate(type.getCollate());
                 } else if (dataType instanceof SQLDataTypeImpl t) {
                     column.setUnsigned(t.isUnsigned() ? true : null);
