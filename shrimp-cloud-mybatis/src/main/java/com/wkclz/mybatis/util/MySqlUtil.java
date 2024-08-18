@@ -28,7 +28,7 @@ public class MySqlUtil {
         // 数据库类型
         tableInfo.setDbType(tableStatement.getDbType().name());
         // 表名
-        tableInfo.setTableName(tableStatement.getTableName().replace("`", ""));
+        tableInfo.setTableName(tableStatement.getTableName().trim().replace("`", ""));
         // 备注信息
         SQLExpr sqlExpr = tableStatement.getComment();
         if (sqlExpr instanceof SQLCharExpr sqlCharExpr) {
@@ -76,7 +76,7 @@ public class MySqlUtil {
                 ColumnInfo column = new ColumnInfo();
                 columns.add(column);
                 column.setAutoIncrement(e.isAutoIncrement() ? true : null);
-                column.setColumnName(e.getColumnName().replace("`", ""));
+                column.setColumnName(e.getColumnName().trim().replace("`", ""));
                 SQLExpr comment = e.getComment();
                 if (comment instanceof SQLCharExpr sqlCharExpr) {
                     column.setComment(sqlCharExpr.getText());
@@ -136,7 +136,7 @@ public class MySqlUtil {
                 key.setType(indexDefinition.getType());
                 SQLName name = indexDefinition.getName();
                 if (name != null) {
-                    key.setName(name.getSimpleName().replace("`", ""));
+                    key.setName(name.getSimpleName().trim().replace("`", ""));
                 }
 
                 List<SQLSelectOrderByItem> keyColumns = indexDefinition.getColumns();
@@ -148,7 +148,7 @@ public class MySqlUtil {
                         indexColumns.add(idxColumn);
                         SQLExpr expr = keyColumn.getExpr();
                         if (expr instanceof SQLIdentifierExpr t) {
-                            idxColumn.setColumnName(t.getName().replace("`", ""));
+                            idxColumn.setColumnName(t.getName().trim().replace("`", ""));
                         } else {
                             System.out.println(keyColumn);
                         }
