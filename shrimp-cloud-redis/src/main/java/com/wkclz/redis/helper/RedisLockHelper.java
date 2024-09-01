@@ -29,10 +29,11 @@ public class RedisLockHelper {
 
     /**
      * redis 锁，
+     *
      * @param key
      * @return true, 加锁成功，可以继续， false, 加锁失败，需要等待
      */
-    public boolean lock(String key){
+    public boolean lock(String key) {
         int randomInt = RandomUtil.randomInt(1, 10);
         return lock(key, 60 - randomInt);
     }
@@ -40,40 +41,42 @@ public class RedisLockHelper {
 
     /**
      * redis 锁，
+     *
      * @param key
      * @param second
      * @return true, 加锁成功，可以继续， false, 加锁失败，需要等待
      */
-    public boolean lock(String key, Integer second){
-        if(StringUtils.isBlank(key)){
+    public boolean lock(String key, Integer second) {
+        if (StringUtils.isBlank(key)) {
             throw BizException.error("key can not be null");
         }
-        if(second == null){
+        if (second == null) {
             throw BizException.error("second can not be null");
         }
         long currentTimeMillis = System.currentTimeMillis();
         key = getKey(key);
         boolean boo = redisTemplate.opsForValue().setIfAbsent(key, currentTimeMillis + "", second, TimeUnit.SECONDS);
-        if (!boo){
+        if (!boo) {
             Object o = redisTemplate.opsForValue().get(key);
-            if (o == null){
+            if (o == null) {
                 throw BizException.error("found lock {}, but can not found value!", key);
             }
             Long aLong = Long.valueOf(o.toString());
             Date date = new Date(aLong);
             logger.warn("lock {} faild, it has rocked @ {}", key, DateUtil.format(date, "yyyy-M-dd HH:mm:ss"));
-        };
+        }
         return boo;
     }
 
 
     /**
      * 解锁
+     *
      * @param key
      * @return
      */
-    public boolean unlock(String key){
-        if(StringUtils.isBlank(key)){
+    public boolean unlock(String key) {
+        if (StringUtils.isBlank(key)) {
             throw BizException.error("key can not be null");
         }
         key = getKey(key);
@@ -82,7 +85,7 @@ public class RedisLockHelper {
     }
 
 
-    private static String getKey(String key){
+    private static String getKey(String key) {
         String finalKey = REDIS_LOCK_PREFIS + ":";
         finalKey = finalKey + key;
         return finalKey;

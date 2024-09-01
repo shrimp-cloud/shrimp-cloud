@@ -119,7 +119,7 @@ public class FileUtil {
      * @param fileS
      * @return
      */
-    public static String formetFileSize(long fileS) {
+    public static String formatFileSize(long fileS) {
         DecimalFormat df = new DecimalFormat("#.00");
         String fileSizeString = "";
         if (fileS < 1024) {
