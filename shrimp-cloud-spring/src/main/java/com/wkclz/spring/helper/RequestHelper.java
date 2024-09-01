@@ -13,7 +13,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
-
+/**
+ * Description:
+ * Created: wangkaicun @ 2018-03-07 下午10:17
+ */
 public class RequestHelper {
 
     private final static Logger logger = LoggerFactory.getLogger(RequestHelper.class);

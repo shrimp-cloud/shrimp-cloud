@@ -10,6 +10,7 @@ import freemarker.template.TemplateExceptionHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,6 +76,6 @@ public class FreeMarkerTemplateUtil {
         stringLoader.putTemplate("_template_", content);
         stringConfig.setTemplateLoader(stringLoader);
         Template tpl = stringConfig.getTemplate("_template_", "utf-8");
-        return org.springframework.ui.freemarker.FreeMarkerTemplateUtils.processTemplateIntoString(tpl, params);
+        return FreeMarkerTemplateUtils.processTemplateIntoString(tpl, params);
     }
 }

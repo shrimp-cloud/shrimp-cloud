@@ -3,7 +3,6 @@ package com.wkclz.mybatis.plugins;
 import com.wkclz.common.entity.BaseEntity;
 import com.wkclz.common.exception.BizException;
 import com.wkclz.common.utils.BeanUtil;
-import com.wkclz.common.utils.DateUtil;
 import com.wkclz.common.utils.StringUtil;
 import com.wkclz.mybatis.util.JdbcUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -38,7 +37,7 @@ public class QueryInterceptor implements Interceptor {
 
         // 参数为对象
         if (parameter instanceof BaseEntity) {
-            checkEntity(parameter, false);
+            checkEntity(parameter);
         }
 
         // 参数为 List 【在 Map 里面】
@@ -49,7 +48,7 @@ public class QueryInterceptor implements Interceptor {
                 if (parameterObj instanceof Collection){
                     Collection parameters = (Collection)parameterObj;
                     for (Object p:parameters) {
-                        boolean isBaseEntity = checkEntity(p, true);
+                        boolean isBaseEntity = checkEntity(p);
                         if (!isBaseEntity) {
                             break;
                         }
@@ -75,7 +74,7 @@ public class QueryInterceptor implements Interceptor {
     public void setProperties(Properties properties) {
     }
 
-    private static boolean checkEntity(Object paramter, boolean isBatch){
+    private static boolean checkEntity(Object paramter){
         if (!(paramter instanceof BaseEntity)) {
             return false;
         }
