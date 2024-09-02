@@ -26,13 +26,8 @@ public class JdbcUtil {
 
     /**
      * SQL 执行查询，指定返回类型
-     * @param dataSourceInfo
-     * @param sql
-     * @param clazz
-     * @param <T>
-     * @return
      */
-    public static <T> List<T> jdbcExecutor(DataSourceInfo dataSourceInfo, String sql, Class<T> clazz){
+    public static <T> List<T> jdbcExecutor(DataSourceInfo dataSourceInfo, String sql, Class<T> clazz) {
         List<LinkedHashMap> maps = jdbcExecutor(dataSourceInfo, sql);
         List<T> list = MapUtil.map2ObjList(maps, clazz);
         return list;
@@ -40,26 +35,23 @@ public class JdbcUtil {
 
     /**
      * SQL 执行
-     * @param dataSourceInfo
-     * @param sql
-     * @return
      */
-    public static List<LinkedHashMap> jdbcExecutor(DataSourceInfo dataSourceInfo, String sql){
+    public static List<LinkedHashMap> jdbcExecutor(DataSourceInfo dataSourceInfo, String sql) {
         DruidPooledConnection conn = getConn(dataSourceInfo);
 
         // SQL 解析，检测
         String dbType = JdbcConstants.MYSQL.name();
         String sqlFormat = SQLUtils.format(sql, dbType);
-        logger.info("sql to excute: \n {}",sqlFormat);
+        logger.info("sql to excute: \n {}", sqlFormat);
 
         List<SQLStatement> stmtList;
         try {
             stmtList = SQLUtils.parseStatements(sql, dbType);
-        } catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage(), e);
             throw BizException.error("can not parse sql: {}", sql);
         }
-        if (stmtList.size() > 1){
+        if (stmtList.size() > 1) {
             throw BizException.error("can only excute 1 sql at once");
         }
         SQLStatement stmt = stmtList.get(0);
@@ -70,7 +62,7 @@ public class JdbcUtil {
         // sql 操作类型预判
         boolean select = true;
         for (TableStat tableStat : visitor.getTables().values()) {
-            if (tableStat.getSelectCount() == 0){
+            if (tableStat.getSelectCount() == 0) {
                 select = false;
                 break;
             }
@@ -78,7 +70,7 @@ public class JdbcUtil {
 
         // sql 执行
         List<LinkedHashMap> maps;
-        if (select){
+        if (select) {
             maps = jdbcQueryExecutor(conn, sql);
         } else {
             int update = jdbcUpdateExecutor(conn, sql);
@@ -89,30 +81,9 @@ public class JdbcUtil {
         return maps;
     }
 
-    private static DruidPooledConnection getConn(DataSourceInfo dataSourceInfo){
-        if (StringUtils.isBlank(dataSourceInfo.getUrl())){
-            throw BizException.error("get conn, url can not be null");
-        }
-        if (StringUtils.isBlank(dataSourceInfo.getDriverClassName())){
-            throw BizException.error("get conn, driverClass can not be null");
-        }
-        if (StringUtils.isBlank(dataSourceInfo.getUsername())){
-            throw BizException.error("get username, url can not be null");
-        }
-        if (StringUtils.isBlank(dataSourceInfo.getPassword())){
-            throw BizException.error("get password, url can not be null");
-        }
-        DruidPooledConnection conn = DataSourceInfo.getConnect(dataSourceInfo);
-        return conn;
-
-    }
-
 
     /**
      * 查询类 （SELECT）
-     * @param conn
-     * @param sql
-     * @return
      */
     public static List<LinkedHashMap> jdbcQueryExecutor(Connection conn, String sql) {
         Statement statement = null;
@@ -137,9 +108,6 @@ public class JdbcUtil {
 
     /**
      * 更新类（UPDATE, INSERT, DELETE, SQLDDL）
-     * @param conn
-     * @param sql
-     * @return
      */
     public static int jdbcUpdateExecutor(Connection conn, String sql) {
         Statement statement = null;
@@ -161,6 +129,23 @@ public class JdbcUtil {
         return 0;
     }
 
+    private static DruidPooledConnection getConn(DataSourceInfo dataSourceInfo) {
+        if (StringUtils.isBlank(dataSourceInfo.getUrl())) {
+            throw BizException.error("get conn, url can not be null");
+        }
+        if (StringUtils.isBlank(dataSourceInfo.getDriverClassName())) {
+            throw BizException.error("get conn, driverClass can not be null");
+        }
+        if (StringUtils.isBlank(dataSourceInfo.getUsername())) {
+            throw BizException.error("get username, url can not be null");
+        }
+        if (StringUtils.isBlank(dataSourceInfo.getPassword())) {
+            throw BizException.error("get password, url can not be null");
+        }
+        DruidPooledConnection conn = DataSourceInfo.getConnect(dataSourceInfo);
+        return conn;
+
+    }
 
 
     /**
@@ -186,7 +171,6 @@ public class JdbcUtil {
         }
         return false;
     }
-
 
 
 }

@@ -14,46 +14,23 @@ import java.util.Map;
 public class DataSourceInfo {
     private static final Logger logger = LoggerFactory.getLogger(DataSourceInfo.class);
 
-
-    private static Map<String, DruidPooledConnection> dataConns = null;
-
+    private static final Map<String, DruidDataSource> DS_MAP = new HashMap<>();
 
     private String url;
-
     private String driverClassName = "com.mysql.cj.jdbc.Driver";
-
     private String username;
-
     private String password;
-
 
     /**
      * 取得已经构造生成的数据库连接
-     *
-     * @return 返回数据库连接对象
-     * @throws Exception
      */
-    public static synchronized DruidPooledConnection getConnect(DataSourceInfo dataSourceInfo) {
-
-        if (dataConns == null) {
-            dataConns = new HashMap<>();
-        }
-        String url = dataSourceInfo.getUrl();
-        String hex = Md5Tool.md5(url);
-        DruidPooledConnection conn = dataConns.get(hex);
+    public static DruidPooledConnection getConnect(DataSourceInfo dataSourceInfo) {
+        DruidDataSource druidDataSource = getDruidDataSource(dataSourceInfo);
         try {
-
-            if (conn != null && !conn.isClosed() && !conn.isAbandonded()){
-                return conn;
-            }
-
-            DruidDataSource druidDataSource = getDruidDataSource(dataSourceInfo);
-            conn = druidDataSource.getConnection();
-            dataConns.put(hex, conn);
-            return conn;
+            return druidDataSource.getConnection();
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
-            throw BizException.error("can not get conn from {}, err: {}", url, e.getMessage());
+            throw BizException.error("can not get conn from {}, err: {}", dataSourceInfo.getUrl(), e.getMessage());
         }
     }
 
@@ -66,44 +43,57 @@ public class DataSourceInfo {
     }
 
 
+    /**
+     * 建立连接池
+     * TODO 同地址，同数据库名，若其他信息变更，需要销毁连接池
+     * 简单方案: 为 DS_MAP 设置过期时间，时间到了做销毁动作
+     * 复杂方案: 数据源变更时，主动取出此连接池做销毁动作
+     */
     public static DruidDataSource getDruidDataSource(DataSourceInfo dataSourceInfo) {
 
-        DruidDataSource db = new DruidDataSource();
+        String key = Md5Tool.md5(dataSourceInfo.getUrl() + "_" +
+            dataSourceInfo.getUsername() + "_" + dataSourceInfo.getPassword());
 
-        //设置连接参数
-        db.setUrl(dataSourceInfo.getUrl());
-        db.setDriverClassName(dataSourceInfo.getDriverClassName());
-        db.setUsername(dataSourceInfo.getUsername());
-        db.setPassword(dataSourceInfo.getPassword());
-        //配置初始化大小、最小、最大
-        db.setInitialSize(1);
-        db.setMinIdle(1);
-        db.setMaxActive(20);
-        //连接泄漏监测
-        db.setRemoveAbandoned(true);
-        db.setRemoveAbandonedTimeout(30);
-        //配置获取连接等待超时的时间
-        db.setMaxWait(20000);
-        //配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
-        db.setTimeBetweenEvictionRunsMillis(20000);
-        //防止过期
-        db.setValidationQuery("SELECT 'x'");
-        db.setTestWhileIdle(true);
-        db.setTestOnBorrow(true);
-        db.setBreakAfterAcquireFailure(true);
-        db.setConnectionErrorRetryAttempts(0);
+        DruidDataSource ds = DS_MAP.get(key);
+        if (ds != null) {
+            return ds;
+        }
 
-        return db;
+        synchronized (DataSourceInfo.class.getName()) {
+            ds = DS_MAP.get(key);
+            if (ds != null) {
+                return ds;
+            }
+            ds = new DruidDataSource();
+
+            //设置连接参数
+            ds.setUrl(dataSourceInfo.getUrl());
+            ds.setDriverClassName(dataSourceInfo.getDriverClassName());
+            ds.setUsername(dataSourceInfo.getUsername());
+            ds.setPassword(dataSourceInfo.getPassword());
+            //配置初始化大小、最小、最大
+            ds.setInitialSize(1);
+            ds.setMinIdle(1);
+            ds.setMaxActive(20);
+            //连接泄漏监测
+            ds.setRemoveAbandoned(true);
+            ds.setRemoveAbandonedTimeout(30);
+            //配置获取连接等待超时的时间
+            ds.setMaxWait(20000);
+            //配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+            ds.setTimeBetweenEvictionRunsMillis(20000);
+            //防止过期
+            ds.setValidationQuery("SELECT 'x'");
+            ds.setTestWhileIdle(true);
+            ds.setTestOnBorrow(true);
+            ds.setBreakAfterAcquireFailure(true);
+            ds.setConnectionErrorRetryAttempts(0);
+
+            DS_MAP.put(key, ds);
+        }
+        return DS_MAP.get(key);
     }
 
-
-    public static Map<String, DruidPooledConnection> getDataConns() {
-        return dataConns;
-    }
-
-    public static void setDataConns(Map<String, DruidPooledConnection> dataConns) {
-        DataSourceInfo.dataConns = dataConns;
-    }
 
     public String getUrl() {
         return url;

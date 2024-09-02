@@ -12,6 +12,7 @@ import org.apache.ibatis.builder.xml.XMLMapperEntityResolver;
 import org.apache.ibatis.parsing.XPathParser;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -162,20 +163,7 @@ public class MyBatisHelper {
         sql = sql.replace(LT_TAG, "<");
         sql = sql.replace(GT_TAG, ">");
 
-
-        String xmlStr = """
-            <?xml version="1.0" encoding="UTF-8"?>
-            <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-            <mapper namespace="{{namespace}}">
-                <select id="{{selectId}}" parameterType="java.util.Map" resultType="java.util.Map">
-                    {{sql}}
-                </select>
-            </mapper>
-            """;
-
-        xmlStr = xmlStr.replace("{{namespace}}", namespace);
-        xmlStr = xmlStr.replace("{{selectId}}", selectId);
-        xmlStr = xmlStr.replace("{{sql}}", sql);
+        String xmlStr = getXmlStr(sql, namespace, selectId);
 
         Object o = System.getProperties().get("user.dir");
         String userDir = o.toString();
@@ -214,6 +202,24 @@ public class MyBatisHelper {
             return statement;
         }
         return statement;
+    }
+
+    @NotNull
+    private static String getXmlStr(String sql, String namespace, String selectId) {
+        String xmlStr = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+            <mapper namespace="{{namespace}}">
+                <select id="{{selectId}}" parameterType="java.util.Map" resultType="java.util.Map">
+                    {{sql}}
+                </select>
+            </mapper>
+            """;
+
+        xmlStr = xmlStr.replace("{{namespace}}", namespace);
+        xmlStr = xmlStr.replace("{{selectId}}", selectId);
+        xmlStr = xmlStr.replace("{{sql}}", sql);
+        return xmlStr;
     }
 
     /**

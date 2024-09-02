@@ -1,7 +1,12 @@
 package com.wkclz.mybatis.dynamicdb;
 
 import cn.hutool.core.thread.ThreadUtil;
+import com.alibaba.druid.pool.DruidDataSource;
+import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.wkclz.common.exception.BizException;
+import com.wkclz.common.utils.MapUtil;
+import com.wkclz.mybatis.bean.DataSourceInfo;
+import com.wkclz.mybatis.config.DefaultDataSourceConfig;
 import com.wkclz.mybatis.config.ShrimpMyBatisConfig;
 import com.wkclz.spring.config.SpringContextHolder;
 import org.slf4j.Logger;
@@ -34,14 +39,21 @@ public class DynamicDataSource extends AbstractShrimpRoutingDataSource {
         long now = System.currentTimeMillis();
         ShrimpMyBatisConfig shrimpMyBatisConfig = SpringContextHolder.getBean(ShrimpMyBatisConfig.class);
         Integer cacheTime = shrimpMyBatisConfig.getDatasourceCacheSecond();
-        if (latest != null && ((now - latest) < cacheTime * 60)) {
+        if (latest != null && ((now - latest) < cacheTime * 1_000)) {
             return key;
         }
 
         synchronized (this) {
             latest = hasCreateDataSource.get(key);
-            if (latest != null) {
+            if (latest != null && ((now - latest) < cacheTime * 1_000)) {
                 return key;
+            }
+
+            if (latest != null) {
+                DataSource dataSource = getDataSource(key);
+                if (dataSource instanceof DruidDataSource dds) {
+                    dds.close();
+                }
             }
 
             // 使用异步线程。否则使用默认数据源管理三方数据的场景下，会进入死循环
@@ -52,7 +64,34 @@ public class DynamicDataSource extends AbstractShrimpRoutingDataSource {
                 if (dynamicDataSourceFactory == null) {
                     throw BizException.error("please init dynamicDataSourceFactory before use dynamic dataSource");
                 }
-                DataSource dataSource = dynamicDataSourceFactory.createDataSource(key);
+
+                // 只返回基础数据
+                DataSourceInfo ds = dynamicDataSourceFactory.createDataSource(key);
+                if (ds == null) {
+                    throw BizException.error("can not find dataSource by key: {}", key);
+                }
+
+                // 使用当前数据库连接池参数，仅是换了地址，用户名，密码的方案
+                DefaultDataSourceConfig config = new DefaultDataSourceConfig();
+                config.setUrl(ds.getUrl());
+                config.setUsername(ds.getUsername());
+                config.setPassword(ds.getPassword());
+                Map<String, Object> map = MapUtil.obj2Map(config);
+                DataSource dataSource = null;
+                try {
+                    dataSource = DruidDataSourceFactory.createDataSource(map);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                if (dataSource == null) {
+                    throw BizException.error("can not create dataSource by key: {}", key);
+                }
+
+                /*
+                使用默认参数的方案
+                DruidDataSource druidDataSource = DataSourceInfo.getDruidDataSource(ds);
+                */
+
                 addDataSource(key, dataSource);
                 hasCreateDataSource.put(key, now);
                 countDownLatch.countDown();
