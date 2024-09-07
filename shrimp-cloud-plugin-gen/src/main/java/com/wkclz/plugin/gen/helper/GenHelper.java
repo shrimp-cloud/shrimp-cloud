@@ -52,7 +52,7 @@ public class GenHelper {
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setConnectTimeout(3 * 1000);
-            conn.setRequestProperty("User-Agent", "lz-gen client");
+            conn.setRequestProperty("User-Agent", "shrimp-gen plugin");
 
             //得到输入流
             InputStream inputStream = conn.getInputStream();

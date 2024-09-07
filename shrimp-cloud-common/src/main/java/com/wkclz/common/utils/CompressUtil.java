@@ -188,8 +188,8 @@ public class CompressUtil {
 
     public static void main(String[] args) {
         try {
-            FileOutputStream fos = new FileOutputStream(new File("/Users/wangkc/project/code/lz-gen/temp/gen/20190908113830301/src.zip"));
-            CompressUtil.zip("/Users/wangkc/project/code/lz-gen/temp/gen/20190908113830301/src", fos);
+            FileOutputStream fos = new FileOutputStream(new File("/Users/wangkc/project/code/shrimp-gen/temp/gen/20190908113830301/src.zip"));
+            CompressUtil.zip("/Users/wangkc/project/code/shrimp-gen/temp/gen/20190908113830301/src", fos);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
