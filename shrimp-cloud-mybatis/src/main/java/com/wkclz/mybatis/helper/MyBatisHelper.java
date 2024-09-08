@@ -1,6 +1,5 @@
 package com.wkclz.mybatis.helper;
 
-import cn.hutool.core.map.MapUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.wkclz.common.entity.BaseEntity;
@@ -93,7 +92,7 @@ public class MyBatisHelper {
         SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
         String statement = reloadSql(sql);
         List<LinkedHashMap> list = sqlSession.selectList(statement, param);
-        list = list.stream().map(t -> (LinkedHashMap)MapUtil.toCamelCaseMap(t)).collect(Collectors.toList());
+        list = list.stream().filter(Objects::nonNull).collect(Collectors.toList());
         return list;
     }
 
@@ -114,14 +113,13 @@ public class MyBatisHelper {
         Long size = (sizeObj == null) ? 10L : Long.parseLong(sizeObj.toString());
         try {
             PageHelper.startPage(current.intValue(), size.intValue());
-            List<LinkedHashMap> list = sqlSession.selectList(statement, param);
-
+            List list = sqlSession.selectList(statement, param);
             Page listPage = (Page) list;
             long total = listPage.getTotal();
-            PageData<LinkedHashMap> pageData = new PageData<>(current, size);
+            PageData pageData = new PageData<>(current, size);
             pageData.setTotal(total);
-            list = list.stream().map(t -> (LinkedHashMap)MapUtil.toCamelCaseMap(t)).collect(Collectors.toList());
-            pageData.setRows(list);
+            List rows = list.stream().toList();
+            pageData.setRows(rows);
             return pageData;
         } finally {
             PageHelper.clearPage();
@@ -210,7 +208,7 @@ public class MyBatisHelper {
             <?xml version="1.0" encoding="UTF-8"?>
             <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
             <mapper namespace="{{namespace}}">
-                <select id="{{selectId}}" parameterType="java.util.Map" resultType="java.util.Map">
+                <select id="{{selectId}}" parameterType="java.util.Map" resultType="java.util.LinkedHashMap">
                     {{sql}}
                 </select>
             </mapper>
