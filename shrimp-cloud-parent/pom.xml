@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.0</version>
+        <version>3.3.3</version>
         <relativePath/>
     </parent>
 
@@ -20,7 +20,7 @@
     <description>shrimp-parent 定义公共依赖</description>
 
     <properties>
-        <spring-cloud.version>2023.0.2</spring-cloud.version>
+        <spring-cloud.version>2023.0.3</spring-cloud.version>
         <shrimp.cloud.bom.version>4.0.0-SNAPSHOT</shrimp.cloud.bom.version>
 
         <!-- shrimp 相关依赖 -->
@@ -139,7 +139,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
-                <version>1.3.0</version>
+                <version>1.6.0</version>
                 <configuration>
                     <updatePomFile>true</updatePomFile>
                     <flattenMode>resolveCiFriendliesOnly</flattenMode>

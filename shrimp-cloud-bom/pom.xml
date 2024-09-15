@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
-        <version>3.3.0</version>
+        <version>3.3.3</version>
     </parent>
 
     <groupId>com.wkclz.bom</groupId>
@@ -23,7 +23,7 @@
         <maven.compiler.target>21</maven.compiler.target>
 
         <!-- Spring 依赖(非spring-cloud-dependencies定义的依赖)  -->
-        <feign-okhttp.version>13.2.1</feign-okhttp.version>
+        <feign-okhttp.version>13.3</feign-okhttp.version>
         <dom4j.version>2.1.4</dom4j.version>
         <druid-spring-boot-3-starter.version>1.2.23</druid-spring-boot-3-starter.version>
         <mybatis-spring-boot-starter.version>3.0.3</mybatis-spring-boot-starter.version>
@@ -31,30 +31,30 @@
         <jsqlparser.version>5.0</jsqlparser.version>
 
         <!-- 三方静态依赖 -->
-        <mysql.version>8.4.0</mysql.version>
-        <commons-lang3.version>3.14.0</commons-lang3.version>
+        <mysql.version>9.0.0</mysql.version>
+        <commons-lang3.version>3.17.0</commons-lang3.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <commons-collections4.version>4.4</commons-collections4.version>
-        <commons-compress.version>1.26.2</commons-compress.version>
+        <commons-compress.version>1.27.1</commons-compress.version>
         <bcpkix-jdk18on.version>1.78.1</bcpkix-jdk18on.version>
         <bcprov-jdk18on.version>1.78.1</bcprov-jdk18on.version>
-        <spring-beans.version>6.1.8</spring-beans.version>
-        <fastjson2.version>2.0.50</fastjson2.version>
-        <hutool.version>5.8.27</hutool.version>
-        <guava.version>33.2.0-jre</guava.version>
-        <jsoup.version>1.17.2</jsoup.version>
+        <spring-beans.version>6.1.13</spring-beans.version>
+        <fastjson2.version>2.0.52</fastjson2.version>
+        <hutool.version>5.8.32</hutool.version>
+        <guava.version>33.3.0-jre</guava.version>
+        <jsoup.version>1.18.1</jsoup.version>
         <zxing.version>3.5.3</zxing.version>
         <jasypt-spring-boot.version>3.0.5</jasypt-spring-boot.version>
         <wkclz-excel.version>1.0.11.RELEASE</wkclz-excel.version>
-        <aliyun-sdk-oss.version>3.17.4</aliyun-sdk-oss.version>
-        <aws-java-sdk-s3.version>1.12.728</aws-java-sdk-s3.version>
-        <dysmsapi20170525.version>2.0.24</dysmsapi20170525.version>
+        <aliyun-sdk-oss.version>3.18.1</aliyun-sdk-oss.version>
+        <aws-java-sdk-s3.version>1.12.772</aws-java-sdk-s3.version>
+        <dysmsapi20170525.version>3.0.0</dysmsapi20170525.version>
         <swagger.version>3.0.0</swagger.version>
         <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
         <weixin-java.version>4.6.0</weixin-java.version>
-        <client-java.version>21.0.0</client-java.version>
+        <client-java.version>21.0.1</client-java.version>
 
-        <jjwt.version>0.12.5</jjwt.version>
+        <jjwt.version>0.12.6</jjwt.version>
         <kaptcha.version>2.3.2</kaptcha.version>
     </properties>
 
@@ -234,7 +234,7 @@
             </dependency>
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt</artifactId>
+                <artifactId>jjwt-api</artifactId>
                 <version>${jjwt.version}</version>
             </dependency>
 
