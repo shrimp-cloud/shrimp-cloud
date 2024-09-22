@@ -1,5 +1,6 @@
 package com.wkclz.common.utils;
 
+import com.wkclz.common.exception.BizException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +13,24 @@ public class FileUtil {
 
 
     private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
+
+
+    public static String getTempPath() {
+        File file = getTempPathFile();
+        return file.getAbsolutePath();
+    }
+
+    public static File getTempPathFile() {
+        Object o = System.getProperties().get("user.dir");
+        String savePath =  o.toString() + "/temp/";
+        //文件保存位置
+        File saveDir = new File(savePath);
+        if (!saveDir.exists()) {
+            saveDir.mkdirs();
+        }
+        return saveDir;
+    }
+
 
     public static List<String> getFileList(List<String> filesResult, String strPath) {
 
@@ -72,8 +91,6 @@ public class FileUtil {
             }
             bReader.close();
             return sb.toString();
-        } catch (FileNotFoundException e) {
-            logger.error(e.getMessage(), e);
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         } finally {
@@ -93,6 +110,41 @@ public class FileUtil {
             }
         }
         return null;
+    }
+
+    public static File writeFile(String filePath, String context) {
+        return writeFile(new File(filePath), context);
+    }
+    public static File writeFile(File file, String context) {
+        FileWriter writer = null;
+        try {
+            if (file.exists()) {
+                throw BizException.error("文件已存在，无法覆盖： {}", file.getAbsolutePath());
+            }
+            file.createNewFile();
+            writer = new FileWriter(file);
+            writer.write(context);
+            writer.flush();
+            writer.close();
+            return file;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.flush();
+                } catch (IOException e) {
+
+                    // do nothing
+                }
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    logger.error("write {} and close error: {}", file.getAbsoluteFile(), e.getMessage());
+                    // do nothing
+                }
+            }
+        }
     }
 
 
