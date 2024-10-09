@@ -1,9 +1,11 @@
 package com.wkclz.common.entity;
 
+import java.io.Serializable;
+
 /**
  * 枚举类型实体
  */
-public class EnumTypeEntity {
+public class EnumTypeEntity implements Serializable {
 
     private Class clazz;
     private String enumType;

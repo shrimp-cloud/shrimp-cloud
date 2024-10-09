@@ -3,6 +3,7 @@ package com.wkclz.common.entity;
 import com.wkclz.common.annotation.Desc;
 import com.wkclz.common.utils.BeanUtil;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * Description:
  * Created: wangkaicun @ 2017-10-20 下午10:47
  */
-public class BaseEntity {
+public class BaseEntity implements Serializable {
 
     public static final String DEFAULE_ORDER_BY = "sort, id desc";
 

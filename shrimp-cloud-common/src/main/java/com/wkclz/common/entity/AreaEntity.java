@@ -1,11 +1,13 @@
 package com.wkclz.common.entity;
 
+import java.io.Serializable;
+
 /**
  * Description: Create by Shrimp Generator
  *
  * @author: wangkaicun @ current time
  */
-public class AreaEntity {
+public class AreaEntity implements Serializable {
 
     /**
      * 父区划代码

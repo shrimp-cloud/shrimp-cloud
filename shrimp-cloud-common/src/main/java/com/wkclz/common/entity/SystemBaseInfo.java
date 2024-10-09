@@ -1,5 +1,6 @@
 package com.wkclz.common.entity;
 
+import java.io.Serializable;
 import java.lang.management.MemoryType;
 import java.lang.management.MemoryUsage;
 import java.lang.management.ThreadInfo;
@@ -7,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-public class SystemBaseInfo {
+public class SystemBaseInfo implements Serializable {
 
     private List<Disk> disks;
     private ClassLoading classLoading;

@@ -4,13 +4,14 @@ import cn.hutool.core.util.StrUtil;
 import com.wkclz.common.emuns.ResultStatus;
 import com.wkclz.common.exception.BizException;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Description:
  * Created: wangkaicun @ 2017-10-20 下午9:11
  */
-public class Result<T> {
+public class Result<T> implements Serializable {
 
     /**
      * 代码执行状态
