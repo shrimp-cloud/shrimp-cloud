@@ -536,12 +536,12 @@ public class JedisHelper {
             return s;
         }
 
-		/*public long zadd(String key, Map<Double, String> scoreMembers) {
-			Jedis jedis = getJedis();
-			long s = jedis.zadd(key, scoreMembers);
-			returnJedis(jedis);
-			return s;
-		}*/
+        /*public long zadd(String key, Map<Double, String> scoreMembers) {
+            Jedis jedis = getJedis();
+            long s = jedis.zadd(key, scoreMembers);
+            returnJedis(jedis);
+            return s;
+        }*/
 
         /**
          * 获取集合中元素的数量
