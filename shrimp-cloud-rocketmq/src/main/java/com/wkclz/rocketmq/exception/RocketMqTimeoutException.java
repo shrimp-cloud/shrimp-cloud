@@ -6,11 +6,11 @@ package com.wkclz.rocketmq.exception;
  */
 public class RocketMqTimeoutException extends RocketMqRemoteException {
 
-	public RocketMqTimeoutException() {
-		super();
-	}
+    public RocketMqTimeoutException() {
+        super();
+    }
 
-	public RocketMqTimeoutException(String message) {
-		super(message);
-	}
+    public RocketMqTimeoutException(String message) {
+        super(message);
+    }
 }

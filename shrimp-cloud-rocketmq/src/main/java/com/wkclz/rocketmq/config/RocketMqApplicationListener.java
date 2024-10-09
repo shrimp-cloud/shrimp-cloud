@@ -36,7 +36,7 @@ public class RocketMqApplicationListener implements ApplicationListener<ContextR
     private RocketMqConfig rocketMqConfig;;
 
     @Override
-	public void onApplicationEvent(ContextRefreshedEvent event) {
+    public void onApplicationEvent(ContextRefreshedEvent event) {
         // Spring是父容器，SpringMVC是其子容器，只需要在父容器触发时处理逻辑即可
         if (event.getApplicationContext().getParent() != null) {
             return;
@@ -44,9 +44,9 @@ public class RocketMqApplicationListener implements ApplicationListener<ContextR
 
         Map<String, RocketMqHandlerInfo> handlerInfos = RocketMqHandlerFactory.getRocketMqTags();
         if (CollectionUtils.isEmpty(handlerInfos)) {
-			logger.warn("当前应用并未有任何topic订阅");
-			return;
-		}
+            logger.warn("当前应用并未有任何topic订阅");
+            return;
+        }
 
         String endpoint = rocketMqConfig.getEndpoint();
         String consumerGroup = rocketMqConfig.getConsumerGroup();
@@ -54,9 +54,9 @@ public class RocketMqApplicationListener implements ApplicationListener<ContextR
         final ClientServiceProvider provider = ClientServiceProvider.loadService();
         ClientConfiguration clientConfiguration = ClientConfiguration.newBuilder().setEndpoints(endpoint).build();
 
-		//订阅所有 topic-tag，再根据 分发
+        //订阅所有 topic-tag，再根据 分发
         for (Map.Entry<String, RocketMqHandlerInfo> entry : handlerInfos.entrySet()) {
-			logger.info("Add a new mq subscription, topic-tag:{}", entry.getKey());
+            logger.info("Add a new mq subscription, topic-tag:{}", entry.getKey());
             RocketMqHandlerInfo info = entry.getValue();
             FilterExpression filterExpression = new FilterExpression(info.getTag(), FilterExpressionType.TAG);
 
@@ -97,8 +97,8 @@ public class RocketMqApplicationListener implements ApplicationListener<ContextR
                 throw new RuntimeException(e);
             }
         }
-		logger.info("MqConsumer Started");
-	}
+        logger.info("MqConsumer Started");
+    }
 
 
 }

@@ -12,10 +12,10 @@ import java.util.Map;
  */
 public class RocketMqHandlerFactory {
 
-	private static Map<String, RocketMqHandlerInfo> rocketMqTagHandlers = new HashMap<>();
+    private static Map<String, RocketMqHandlerInfo> rocketMqTagHandlers = new HashMap<>();
 
 
-	public static void registerRocketMqTagHandler(Object bean, String topic, Method method, String tag) {
+    public static void registerRocketMqTagHandler(Object bean, String topic, Method method, String tag) {
         if (tag == null || "".equals(tag.trim())) {
             tag = "*";
         }
@@ -26,7 +26,7 @@ public class RocketMqHandlerFactory {
         info.setMethod(method);
         info.setTag(tag);
         rocketMqTagHandlers.put(key, info);
-	}
+    }
 
     public static Map<String, RocketMqHandlerInfo> getRocketMqTags() {
         return rocketMqTagHandlers;
@@ -36,11 +36,11 @@ public class RocketMqHandlerFactory {
         return rocketMqTagHandlers.get(topic + "/*");
     }
 
-	public static RocketMqHandlerInfo getRocketMqTagHandler(String topic, String tag) {
+    public static RocketMqHandlerInfo getRocketMqTagHandler(String topic, String tag) {
         if (tag == null || "".equals(tag.trim())) {
             tag = "*";
         }
         String key = topic + "/" + tag;
-		return rocketMqTagHandlers.get(key);
-	}
+        return rocketMqTagHandlers.get(key);
+    }
 }

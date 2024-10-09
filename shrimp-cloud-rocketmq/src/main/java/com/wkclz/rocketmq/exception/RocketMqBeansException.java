@@ -8,11 +8,11 @@ import org.springframework.beans.BeansException;
  */
 public class RocketMqBeansException extends BeansException {
 
-	public RocketMqBeansException(String msg) {
-		super(msg);
-	}
+    public RocketMqBeansException(String msg) {
+        super(msg);
+    }
 
-	public RocketMqBeansException(String msg, Throwable cause) {
-		super(msg, cause);
-	}
+    public RocketMqBeansException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
 }
