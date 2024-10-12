@@ -165,7 +165,7 @@ public class MyBatisHelper {
 
         Object o = System.getProperties().get("user.dir");
         String userDir = o.toString();
-        String savePath = userDir + "/tmp/mapper/";
+        String savePath = userDir + "/temp/mapper/";
         String filePath = savePath + namespace + ".xml";
 
         FileWriter writer;
