@@ -70,12 +70,6 @@
             <groupId>com.github.ulisesbocchio</groupId>
             <artifactId>jasypt-spring-boot</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.wkclz.util</groupId>
-            <artifactId>excel</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk18on</artifactId>
