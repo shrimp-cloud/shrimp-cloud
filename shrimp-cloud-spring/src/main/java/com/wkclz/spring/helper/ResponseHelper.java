@@ -31,6 +31,9 @@ public class ResponseHelper {
     }
 
 
+    public static void resopnseExcel(HttpServletResponse response, String file) {
+        resopnseExcel(response, new File(file));
+    }
     public static void resopnseExcel(HttpServletResponse response, File file) {
         if (response == null || file == null) {
             throw BizException.error("response and file can not be null!");
