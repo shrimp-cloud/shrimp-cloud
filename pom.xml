@@ -19,7 +19,6 @@
         <module>shrimp-cloud-spring</module>
         <module>shrimp-cloud-mybatis</module>
         <!-- 业务相关中间件 -->
-        <module>shrimp-cloud-file</module>
         <module>shrimp-cloud-mqtt</module>
         <module>shrimp-cloud-opencv</module>
         <!--
