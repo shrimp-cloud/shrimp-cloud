@@ -27,6 +27,9 @@
         <!-- 工具 -->
         <module>shrimp-cloud-plugin-gen</module>
         <module>shrimp-cloud-swagger-starter</module>
+
+        <!-- 测试库 -->
+        <module>shrimp-cloud-test</module>
     </modules>
 
 </project>

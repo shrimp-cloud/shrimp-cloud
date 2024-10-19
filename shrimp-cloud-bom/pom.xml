@@ -53,6 +53,7 @@
         <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
         <weixin-java.version>4.6.0</weixin-java.version>
         <client-java.version>21.0.1</client-java.version>
+        <sensitive-word.version>0.21.0</sensitive-word.version>
 
         <jjwt.version>0.12.6</jjwt.version>
         <kaptcha.version>2.3.2</kaptcha.version>
@@ -284,6 +285,13 @@
                 <groupId>io.kubernetes</groupId>
                 <artifactId>client-java</artifactId>
                 <version>${client-java.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.github.houbb</groupId>
+                <artifactId>sensitive-word</artifactId>
+                <version>${sensitive-word.version}</version>
             </dependency>
 
             <dependency>
