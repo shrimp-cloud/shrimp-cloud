@@ -60,6 +60,24 @@ public class PageData<T> {
         this.rows = pageList;
     }
 
+
+    public static PageData newInstance() {
+        return new PageData();
+    }
+    public static <T extends BaseEntity> PageData<T> newInstance(T entity) {
+        return new PageData(entity);
+    }
+    public static PageData newInstance(Long current, Long size) {
+        return new PageData(current, size);
+    }
+    public static <T> PageData<T> newInstance(Long current, Long size, Long total, List<T> list) {
+        return new PageData(current, size, total, list);
+    }
+    public static <T> PageData<T> newInstance(PageData oldPageData, List<T> pageList) {
+        return new PageData(oldPageData, pageList);
+    }
+
+
     public List<T> getRows() {
         return rows;
     }
