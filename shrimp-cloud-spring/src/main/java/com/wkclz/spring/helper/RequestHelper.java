@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -19,7 +20,19 @@ import java.util.*;
  */
 public class RequestHelper {
 
+    private final static AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
+
+
     private final static Logger logger = LoggerFactory.getLogger(RequestHelper.class);
+
+
+    public static boolean match(String rule, String uri) {
+        if (StringUtils.isBlank(rule) || StringUtils.isBlank(uri)) {
+            return false;
+        }
+        return ANT_PATH_MATCHER.match(rule, uri);
+    }
+
 
     public static List<Long> getIdsFromBaseModel(BaseEntity entity) {
         List<Long> ids = entity.getIds();
