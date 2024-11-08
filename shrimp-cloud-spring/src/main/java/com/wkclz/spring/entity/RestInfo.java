@@ -2,17 +2,25 @@ package com.wkclz.spring.entity;
 
 public class RestInfo {
 
+    private String appCode;
     private String apiCode;
     private String module;
-    private String appCode;
-    private String method;
-    private String uri;
-    private String name;
-    private String desc;
+    private String apiMethod;
+    private String apiUri;
+    private String apiName;
+
     /*
     private Class<?> returnType;
     private List<Class<?>> parameterTypes;
     */
+
+    public String getAppCode() {
+        return appCode;
+    }
+
+    public void setAppCode(String appCode) {
+        this.appCode = appCode;
+    }
 
     public String getApiCode() {
         return apiCode;
@@ -30,44 +38,27 @@ public class RestInfo {
         this.module = module;
     }
 
-    public String getAppCode() {
-        return appCode;
+    public String getApiMethod() {
+        return apiMethod;
     }
 
-    public void setAppCode(String appCode) {
-        this.appCode = appCode;
+    public void setApiMethod(String apiMethod) {
+        this.apiMethod = apiMethod;
     }
 
-    public String getMethod() {
-        return method;
+    public String getApiUri() {
+        return apiUri;
     }
 
-    public void setMethod(String method) {
-        this.method = method;
+    public void setApiUri(String apiUri) {
+        this.apiUri = apiUri;
     }
 
-    public String getUri() {
-        return uri;
+    public String getApiName() {
+        return apiName;
     }
 
-    public void setUri(String uri) {
-        this.uri = uri;
+    public void setApiName(String apiName) {
+        this.apiName = apiName;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
 }

@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.JSONObject;
 import com.wkclz.common.annotation.Desc;
 import com.wkclz.common.annotation.Router;
 import com.wkclz.common.utils.ClassUtil;
-import com.wkclz.common.utils.StringUtil;
 import com.wkclz.spring.entity.RestInfo;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -45,7 +44,7 @@ public class RestUtil {
             mappings = getMapping(packagePath);
         }
         if (StringUtils.isNotBlank(filter)) {
-            mappings = mappings.stream().filter(t -> t.getUri().contains(filter)).collect(Collectors.toList());
+            mappings = mappings.stream().filter(t -> t.getApiUri().contains(filter)).collect(Collectors.toList());
         }
         mappings.forEach(t -> t.setAppCode(appCode));
         return mappings;
@@ -170,9 +169,9 @@ public class RestUtil {
 
         // 确定是 rest 接口，提取信息
         RestInfo restInfo = new RestInfo();
-        restInfo.setMethod(requestMethod.name());
-        restInfo.setUri(uri);
-        restInfo.setDesc(desc);
+        restInfo.setApiMethod(requestMethod.name());
+        restInfo.setApiUri(uri);
+        restInfo.setApiName(desc);
         /*
         restInfo.setReturnType(method.getReturnType());
         Class<?>[] parameterTypes = method.getParameterTypes();
@@ -193,11 +192,13 @@ public class RestUtil {
         }
         */
 
-        // 方法名
+        // 方法名 【无意义，不再转换】
+        /*
         String restName = uri.substring(1);
         restName = restName.replaceAll("/", "_");
         restName = StringUtil.underlineToCamel(restName);
-        restInfo.setName(restName);
+        restInfo.setDesc(restName);
+        */
         return restInfo;
     }
 
@@ -205,7 +206,7 @@ public class RestUtil {
         if (CollectionUtils.isEmpty(classes) || CollectionUtils.isEmpty(rests)) {
             return;
         }
-        List<Class<?>> routersClassList = classes.stream().filter(clazz -> clazz.isAnnotationPresent(Router.class)).collect(Collectors.toList());
+        List<Class<?>> routersClassList = classes.stream().filter(clazz -> clazz.isAnnotationPresent(Router.class)).toList();
         for (Class<?> routerClazz : routersClassList) {
             Field[] fields = routerClazz.getDeclaredFields();
             try {
@@ -222,12 +223,12 @@ public class RestUtil {
                     }
                     String value = o.toString();
                     // 找到 restInfo
-                    List<RestInfo> infos = rests.stream().filter(t -> t.getUri().equals(value)).toList();
+                    List<RestInfo> infos = rests.stream().filter(t -> t.getApiUri().equals(value)).toList();
                     if (infos.size() == 1) {
                         RestInfo restInfo = infos.get(0);
                         Desc desc = field.getAnnotation(Desc.class);
                         if (desc != null) {
-                            restInfo.setDesc(desc.value());
+                            restInfo.setApiName(desc.value());
                         }
                         restInfo.setModule(module);
                     }
