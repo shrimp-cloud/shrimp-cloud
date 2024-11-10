@@ -10,6 +10,7 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -94,6 +95,33 @@ public class BeanUtil {
         return null;
     }
 
+
+    /**
+     * Bean 复制【 copyProperties，效率极低，推荐使用】
+     *
+     * @param source 源Bean
+     * @param <S>    Source
+     */
+    public static <S> S cpAll(S source) {
+        return cp(source, true);
+    }
+    public static <S> S cpNotNull(S source) {
+        return cp(source, false);
+    }
+    public static <S> S cp(S source, boolean cpoyNull) {
+        if (source == null) {
+            return null;
+        }
+        S s;
+        try {
+            Constructor<?> constructor = source.getClass().getDeclaredConstructor();
+            s = (S)constructor.newInstance();
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        return cp(source, s, cpoyNull);
+    }
+
     /**
      * Bean 复制【 copyProperties，效率极低，推荐使用】
      *
@@ -102,6 +130,7 @@ public class BeanUtil {
      * @param <S>    Source
      * @param <T>    Target
      */
+
     public static <S, T> T cpAll(S source, T target) {
         return cp(source, target, true);
     }
@@ -124,19 +153,32 @@ public class BeanUtil {
      * List Bean 复制【 copyProperties，效率极低，推荐使用】
      *
      * @param source 源ListBean
-     * @param clazz  目标ListType
      * @param <S>    Source
-     * @param <T>    Target
      * @return
      */
-    public static <S, T> List<T> cp(List<S> source, Class<T> clazz) {
-        if (source == null || source.isEmpty()) {
+
+    public static <S> List<S> cp(List<S> source) {
+        if (source == null) {
             return null;
         }
-        List<T> list = new ArrayList<>();
+        if (source.isEmpty()) {
+            return new ArrayList<>();
+        }
+        Class<S> clazz = (Class<S>)source.get(0).getClass();
+        return cp(source, clazz);
+    }
+
+    public static <S> List<S> cp(List<S> source, Class<S> clazz) {
+        if (source == null) {
+            return null;
+        }
+        if (source.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<S> list = new ArrayList<>();
         try {
             for (S s : source) {
-                T t = clazz.getDeclaredConstructor().newInstance();
+                S t = clazz.getDeclaredConstructor().newInstance();
                 cp(s, t, true);
                 list.add(t);
             }
