@@ -83,7 +83,7 @@ public class ErrorHandler {
         }
 
         String message = e.getMessage();
-        if (message == null || "".equals(message.trim()) || "null".equals(message)){
+        if (message == null || message.trim().isEmpty() || "null".equals(message)){
             StringWriter out = new StringWriter();
             e.printStackTrace(new PrintWriter(out));
             message = out.toString();
