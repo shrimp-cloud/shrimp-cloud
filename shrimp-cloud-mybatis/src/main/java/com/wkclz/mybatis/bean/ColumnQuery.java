@@ -17,6 +17,8 @@ public class ColumnQuery implements Serializable {
 
     private String columnName;
     private String dataType;
+    private String tsType;
+    private String inputType;
     private String columnComment;
     private Integer count;
 
