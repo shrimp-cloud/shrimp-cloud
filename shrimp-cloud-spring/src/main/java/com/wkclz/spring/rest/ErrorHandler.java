@@ -29,7 +29,7 @@ public class ErrorHandler {
     public Result httpHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e,
             HttpServletRequest request, HttpServletResponse response) {
         HttpStatus status = HttpStatus.UNSUPPORTED_MEDIA_TYPE;
-        printErrorLog(request, response, status);
+        printErrorLog(request, response, status, e.getMessage());
         return Result.error(status.value(), status.getReasonPhrase());
     }
 
@@ -37,7 +37,7 @@ public class ErrorHandler {
     public Result httpRequestMethodHandler(HttpRequestMethodNotSupportedException e,
                                            HttpServletRequest request, HttpServletResponse response) {
         HttpStatus status = HttpStatus.METHOD_NOT_ALLOWED;
-        printErrorLog(request, response, status);
+        printErrorLog(request, response, status, e.getMessage());
         return Result.error(status.value(), status.getReasonPhrase());
     }
 
@@ -45,7 +45,7 @@ public class ErrorHandler {
     public Result httpNoResourceFoundException(NoResourceFoundException e,
                                            HttpServletRequest request, HttpServletResponse response) {
         HttpStatus status = HttpStatus.NOT_FOUND;
-        printErrorLog(request, response, status);
+        printErrorLog(request, response, status, e.getMessage());
         return Result.error(status.value(), status.getReasonPhrase());
     }
 
@@ -53,7 +53,8 @@ public class ErrorHandler {
     public Result httpSQLSyntaxErrorException(SQLSyntaxErrorException e,
                                               HttpServletRequest request, HttpServletResponse response) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        printErrorLog(request, response, status);
+        logger.error("SQLSyntaxErrorException: {}", e.getMessage());
+        printErrorLog(request, response, status, "SQLSyntaxErrorException");
         return Result.error(status.value(), status.getReasonPhrase());
     }
 
@@ -61,17 +62,16 @@ public class ErrorHandler {
     public Result httpBadSqlGrammarException(BadSqlGrammarException e,
                                              HttpServletRequest request, HttpServletResponse response) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        printErrorLog(request, response, status);
+        logger.error("BadSqlGrammarException: {}", e.getMessage());
+        printErrorLog(request, response, status, "BadSqlGrammarException");
         return Result.error(status.value(), status.getReasonPhrase());
     }
-
 
     @ExceptionHandler(BizException.class)
     public Result bizExceptionHandler(BizException e){
         logger.error(e.getMessage(), e);
         return Result.error(-1, e.getMessage());
     }
-
 
     @ExceptionHandler(value = Exception.class)
     public Result errorHandler(Exception e) {
@@ -121,10 +121,10 @@ public class ErrorHandler {
         return null;
     }
 
-    private static void printErrorLog(HttpServletRequest request, HttpServletResponse response, HttpStatus status) {
+    private static void printErrorLog(HttpServletRequest request, HttpServletResponse response, HttpStatus status, String errMsg) {
         String method = request.getMethod();
         String uri = request.getRequestURI();
-        logger.error("error request: {} {}, {}", method, uri, status.getReasonPhrase());
+        logger.error("error request: {} {}, {}", method, uri, errMsg);
         response.setStatus(status.value());
     }
 
