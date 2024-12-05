@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.wkclz.common.entity.BaseEntity;
 import com.wkclz.common.tools.Md5Tool;
+import com.wkclz.common.utils.MapUtil;
 import com.wkclz.mybatis.base.PageData;
 import com.wkclz.spring.config.SpringContextHolder;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
@@ -43,11 +44,6 @@ public class MyBatisHelper {
 
     /**
      * 自定义 sql 查询-List
-     *
-     * @param sql
-     * @param param
-     * @param <T>
-     * @return
      */
     public static <T extends BaseEntity> List<T> selectList(String sql, T param) {
         SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
@@ -57,11 +53,6 @@ public class MyBatisHelper {
 
     /**
      * 自定义 sql查询-page
-     *
-     * @param sql
-     * @param param
-     * @param <T>
-     * @return
      */
     public static <T extends BaseEntity> PageData<T> selectPage(String sql, T param) {
         SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
@@ -83,11 +74,11 @@ public class MyBatisHelper {
 
     /**
      * 自定义 sql查询-List
-     *
-     * @param sql
-     * @param param
-     * @return
      */
+    public static List<LinkedHashMap> selectListToCamel(String sql, Map param) {
+        List<LinkedHashMap> maps = selectList(sql, param);
+        return MapUtil.toReplaceLinkedHashMapKeyLow(maps);
+    }
     public static List<LinkedHashMap> selectList(String sql, Map param) {
         SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
         String statement = reloadSql(sql);
@@ -98,11 +89,14 @@ public class MyBatisHelper {
 
     /**
      * 自定义 sql查询-page
-     *
-     * @param sql
-     * @param param
-     * @return
      */
+    public static PageData<LinkedHashMap> selectPageToCamel(String sql, Map param) {
+        PageData<LinkedHashMap> page = selectPage(sql, param);
+        List<LinkedHashMap> rows = page.getRows();
+        rows = MapUtil.toReplaceLinkedHashMapKeyLow(rows);
+        page.setRows(rows);
+        return page;
+    }
     public static PageData<LinkedHashMap> selectPage(String sql, Map param) {
         SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
         String statement = reloadSql(sql);

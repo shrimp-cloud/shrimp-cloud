@@ -142,14 +142,18 @@ public class MapUtil {
 
     /**
      * 驼峰转换
-     *
-     * @param maps
-     * @return
      */
-    public static <T> List<Map<String, T>> toReplaceKeyLow(List<Map<String, T>> maps) {
-        List<Map<String, T>> rts = new ArrayList<>();
-        for (Map<String, T> map : maps) {
-            rts.add(toReplaceKeyLow(map));
+    public static <T> List<Map> toReplaceMapKeyLow(List<Map> maps) {
+        List<Map> rts = new ArrayList<>();
+        for (Map map : maps) {
+            rts.add(toReplaceMapKeyLow(map));
+        }
+        return rts;
+    }
+    public static <T> List<LinkedHashMap> toReplaceLinkedHashMapKeyLow(List<LinkedHashMap> maps) {
+        List<LinkedHashMap> rts = new ArrayList<>();
+        for (LinkedHashMap map : maps) {
+            rts.add(toReplaceLinkedHashMapKeyLow(map));
         }
         return rts;
     }
@@ -160,13 +164,27 @@ public class MapUtil {
      * @param map
      * @return
      */
-    public static <T> Map<String, T> toReplaceKeyLow(Map<String, T> map) {
+    public static Map toReplaceMapKeyLow(Map map) {
         Map reRap = new HashMap();
         if (reRap != null) {
             Iterator var2 = map.entrySet().iterator();
             while (var2.hasNext()) {
-                Map.Entry<String, T> entry = (Map.Entry) var2.next();
-                reRap.put(StringUtil.underlineToCamel(entry.getKey()), map.get(entry.getKey()));
+                Map.Entry entry = (Map.Entry) var2.next();
+                String key = entry.getKey().toString();
+                reRap.put(StringUtil.underlineToCamel(key), map.get(key));
+            }
+            map.clear();
+        }
+        return reRap;
+    }
+    public static <T> LinkedHashMap toReplaceLinkedHashMapKeyLow(LinkedHashMap map) {
+        LinkedHashMap reRap = new LinkedHashMap();
+        if (reRap != null) {
+            Iterator var2 = map.entrySet().iterator();
+            while (var2.hasNext()) {
+                Map.Entry entry = (Map.Entry) var2.next();
+                String key = entry.getKey().toString();
+                reRap.put(StringUtil.underlineToCamel(key), map.get(key));
             }
             map.clear();
         }
