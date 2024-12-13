@@ -10,16 +10,14 @@ import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.SelectItem;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -44,7 +42,6 @@ public class SqlHelper {
         params.addAll(listParams);
         return params;
     }
-
     private static List<String> getObjParams(String sql) {
         Matcher matcher = OBJ_PATTERN.matcher(sql);
         // 遍历所有匹配的结果
@@ -125,5 +122,61 @@ public class SqlHelper {
         }).collect(Collectors.toList());
         return results;
     }
+
+
+    public static Object sqlActuator(String resultType, String sql, Map<String, Object> map, boolean toCamel) {
+        if (StringUtils.isBlank(resultType)) {
+            throw BizException.error("resultType 不能为空");
+        }
+        if (StringUtils.isBlank(sql)) {
+            throw BizException.error("dataScript 不能为空");
+        }
+
+        // 必填参数，参数格式
+        if ("OBJECT".equals(resultType)) {
+            List<LinkedHashMap> maps;
+            if (toCamel) {
+                maps = MyBatisHelper.selectListToCamel(sql, map);
+            } else {
+                maps = MyBatisHelper.selectList(sql, map);
+            }
+            if (CollectionUtils.isEmpty(maps)) {
+                return new LinkedHashMap<>();
+            }
+            return maps.get(0);
+        }
+        if ("LIST".equals(resultType)) {
+            if (toCamel) {
+                return MyBatisHelper.selectListToCamel(sql, map);
+            } else {
+                return MyBatisHelper.selectList(sql, map);
+            }
+        }
+        if ("PAGE".equals(resultType)) {
+            if (toCamel) {
+                return MyBatisHelper.selectPageToCamel(sql, map);
+            } else {
+                return MyBatisHelper.selectPage(sql, map);
+            }
+        }
+        throw BizException.error("无法识别的返回类型: " + resultType);
+    }
+
+    public static List<LinkedHashMap> linkedHashMap2List(LinkedHashMap linkedHashMap) {
+        List<LinkedHashMap> data = new ArrayList<>();
+        if (linkedHashMap == null) {
+            return data;
+        }
+        Set set = linkedHashMap.keySet();
+        for (Object o : set) {
+            Object value = linkedHashMap.get(o);
+            LinkedHashMap<String, Object> row = new LinkedHashMap<>();
+            row.put("key", o);
+            row.put("value", value);
+            data.add(row);
+        }
+        return data;
+    }
+
 
 }
