@@ -5,7 +5,6 @@ import com.alibaba.fastjson2.JSONObject;
 import com.wkclz.plugin.gen.bean.GenResult;
 import com.wkclz.plugin.gen.bean.GenTaskInfo;
 import com.wkclz.plugin.gen.utils.CompressUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.logging.Log;
 
 import java.io.*;
@@ -38,7 +37,7 @@ public class GenHelper {
     public static boolean genCode(Log log) {
         String authCode = AUTH_CODE;
 
-        if (StringUtils.isBlank(authCode)) {
+        if (authCode == null || authCode.trim().isBlank()) {
             log.error("authCode can not be null");
             return false;
         }
@@ -64,7 +63,7 @@ public class GenHelper {
             //获取文件信息
             byte[] getData = readInputStream(inputStream);
             String contentType = conn.getHeaderField("Content-Type");
-            if (StringUtils.isNotBlank(contentType) && contentType.contains("application/json")) {
+            if (contentType != null && contentType.contains("application/json")) {
                 JSONObject obj = JSON.parseObject(new String(getData));
                 Object msg = obj.get("msg");
                 log.error("代码生成异常: " + msg);
@@ -290,7 +289,7 @@ public class GenHelper {
     }
 
     private static String getGenZipAddr(String authCode, Log log) {
-        if (StringUtils.isBlank(authCode)) {
+        if (authCode == null || authCode.trim().isBlank()) {
             log.error("authCode can not be blank");
             return null;
         }
@@ -298,7 +297,7 @@ public class GenHelper {
     }
 
     private static String getGenRule(String authCode, Log log) {
-        if (StringUtils.isBlank(authCode)) {
+        if (authCode == null || authCode.trim().isBlank()) {
             log.error("authCode can not be blank");
         }
         return BASE_URL + "/public/gen/rule/" + authCode;
