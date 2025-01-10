@@ -12,7 +12,6 @@ import org.apache.ibatis.builder.xml.XMLMapperEntityResolver;
 import org.apache.ibatis.parsing.XPathParser;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -196,7 +195,6 @@ public class MyBatisHelper {
         return statement;
     }
 
-    @NotNull
     private static String getXmlStr(String sql, String namespace, String selectId) {
         String xmlStr = """
             <?xml version="1.0" encoding="UTF-8"?>
