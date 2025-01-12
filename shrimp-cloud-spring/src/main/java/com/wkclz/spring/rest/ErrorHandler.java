@@ -1,5 +1,6 @@
 package com.wkclz.spring.rest;
 
+import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import com.wkclz.common.entity.Result;
 import com.wkclz.common.exception.BizException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,32 +27,28 @@ public class ErrorHandler {
 
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-    public Result httpHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e,
-            HttpServletRequest request, HttpServletResponse response) {
+    public Result httpHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e, HttpServletRequest request, HttpServletResponse response) {
         HttpStatus status = HttpStatus.UNSUPPORTED_MEDIA_TYPE;
         printErrorLog(request, response, status, e.getMessage());
         return Result.error(status.value(), status.getReasonPhrase());
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public Result httpRequestMethodHandler(HttpRequestMethodNotSupportedException e,
-                                           HttpServletRequest request, HttpServletResponse response) {
+    public Result httpRequestMethodHandler(HttpRequestMethodNotSupportedException e, HttpServletRequest request, HttpServletResponse response) {
         HttpStatus status = HttpStatus.METHOD_NOT_ALLOWED;
         printErrorLog(request, response, status, e.getMessage());
         return Result.error(status.value(), status.getReasonPhrase());
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
-    public Result httpNoResourceFoundException(NoResourceFoundException e,
-                                           HttpServletRequest request, HttpServletResponse response) {
+    public Result httpNoResourceFoundException(NoResourceFoundException e, HttpServletRequest request, HttpServletResponse response) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         printErrorLog(request, response, status, e.getMessage());
         return Result.error(status.value(), status.getReasonPhrase());
     }
 
     @ExceptionHandler(SQLSyntaxErrorException.class)
-    public Result httpSQLSyntaxErrorException(SQLSyntaxErrorException e,
-                                              HttpServletRequest request, HttpServletResponse response) {
+    public Result httpSQLSyntaxErrorException(SQLSyntaxErrorException e, HttpServletRequest request, HttpServletResponse response) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         logger.error("SQLSyntaxErrorException: {}", e.getMessage());
         printErrorLog(request, response, status, "SQLSyntaxErrorException");
@@ -59,13 +56,21 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler(BadSqlGrammarException.class)
-    public Result httpBadSqlGrammarException(BadSqlGrammarException e,
-                                             HttpServletRequest request, HttpServletResponse response) {
+    public Result httpBadSqlGrammarException(BadSqlGrammarException e, HttpServletRequest request, HttpServletResponse response) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         logger.error("BadSqlGrammarException: {}", e.getMessage());
         printErrorLog(request, response, status, "BadSqlGrammarException");
         return Result.error(status.value(), status.getReasonPhrase());
     }
+
+    @ExceptionHandler(MysqlDataTruncation.class)
+    public Result httpMysqlDataTruncation(MysqlDataTruncation e, HttpServletRequest request, HttpServletResponse response) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        logger.error("MysqlDataTruncation: {}", e.getMessage());
+        printErrorLog(request, response, status, "MysqlDataTruncation");
+        return Result.error(status.value(), status.getReasonPhrase());
+    }
+
 
     @ExceptionHandler(BizException.class)
     public Result bizExceptionHandler(BizException e){
