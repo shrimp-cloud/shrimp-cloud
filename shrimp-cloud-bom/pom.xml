@@ -23,6 +23,7 @@
         <maven.compiler.target>21</maven.compiler.target>
 
         <!-- Spring 依赖(非spring-cloud-dependencies定义的依赖)  -->
+        <okhttp.version>4.12.0</okhttp.version>
         <feign-okhttp.version>13.5</feign-okhttp.version>
         <dom4j.version>2.1.4</dom4j.version>
         <druid-spring-boot-3-starter.version>1.2.24</druid-spring-boot-3-starter.version>
@@ -64,6 +65,11 @@
     <dependencyManagement>
         <dependencies>
             <!-- spring -->
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
+            </dependency>
             <dependency>
                 <groupId>io.github.openfeign</groupId>
                 <artifactId>feign-okhttp</artifactId>
