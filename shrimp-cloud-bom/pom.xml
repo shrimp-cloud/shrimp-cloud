@@ -53,9 +53,10 @@
         <swagger.version>3.0.0</swagger.version>
         <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
         <weixin-java.version>4.7.0</weixin-java.version>
-        <client-java.version>22.0.0</client-java.version>
+        <client-java.version>22.0.1</client-java.version>
         <sensitive-word.version>0.24.0</sensitive-word.version>
         <rhino.version>1.8.0</rhino.version>
+        <xxl-job.version>3.0.0</xxl-job.version>
 
         <jjwt.version>0.12.6</jjwt.version>
         <kaptcha.version>2.3.2</kaptcha.version>
@@ -305,6 +306,12 @@
                 <groupId>org.mozilla</groupId>
                 <artifactId>rhino</artifactId>
                 <version>${rhino.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.xuxueli</groupId>
+                <artifactId>xxl-job-core</artifactId>
+                <version>${xxl-job.version}</version>
             </dependency>
 
             <dependency>
