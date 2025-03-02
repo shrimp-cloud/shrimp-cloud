@@ -10,7 +10,7 @@
         <relativePath>../shrimp-cloud-parent/pom.xml</relativePath>
     </parent>
 
-    <groupId>com.wkclz.mqtt</groupId>
+    <groupId>com.wkclz.xxljob</groupId>
     <artifactId>shrimp-cloud-xxljob</artifactId>
     <version>4.0.0-SNAPSHOT</version>
 
