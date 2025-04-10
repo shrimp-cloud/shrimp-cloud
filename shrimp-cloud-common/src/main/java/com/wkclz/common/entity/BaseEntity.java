@@ -2,6 +2,7 @@ package com.wkclz.common.entity;
 
 import com.wkclz.common.annotation.Desc;
 import com.wkclz.common.utils.BeanUtil;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,6 +12,8 @@ import java.util.List;
  * Description:
  * Created: wangkaicun @ 2017-10-20 下午10:47
  */
+
+@Data
 public class BaseEntity implements Serializable {
 
     public static final String DEFAULE_ORDER_BY = "sort, id desc";
@@ -69,7 +72,6 @@ public class BaseEntity implements Serializable {
     @Desc("数据版本")
     private Integer version;
 
-
     private Integer debug;
 
 
@@ -83,174 +85,6 @@ public class BaseEntity implements Serializable {
         this.offset = (this.current -1 ) * this.size;
     }
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getTenantCode() {
-        return tenantCode;
-    }
-
-    public void setTenantCode(String tenantCode) {
-        this.tenantCode = tenantCode;
-    }
-
-    public Long getTotal() {
-        return total;
-    }
-
-    public void setTotal(Long total) {
-        this.total = total;
-    }
-
-    public Long getCurrent() {
-        return current;
-    }
-
-    public void setCurrent(Long current) {
-        this.current = current;
-    }
-
-    public Long getSize() {
-        return size;
-    }
-
-    public void setSize(Long size) {
-        this.size = size;
-    }
-
-    public Long getOffset() {
-        return offset;
-    }
-
-    public void setOffset(Long offset) {
-        this.offset = offset;
-    }
-
-    public String getOrderBy() {
-        return orderBy;
-    }
-
-    public void setOrderBy(String orderBy) {
-        this.orderBy = orderBy;
-    }
-
-    public Long getCount() {
-        return count;
-    }
-
-    public void setCount(Long count) {
-        this.count = count;
-    }
-
-    public List<Long> getIds() {
-        return ids;
-    }
-
-    public void setIds(List<Long> ids) {
-        this.ids = ids;
-    }
-
-    public String getKeyword() {
-        return keyword;
-    }
-
-    public void setKeyword(String keyword) {
-        this.keyword = keyword;
-    }
-
-    public Date getTimeFrom() {
-        return timeFrom;
-    }
-
-    public void setTimeFrom(Date timeFrom) {
-        this.timeFrom = timeFrom;
-    }
-
-    public Date getTimeTo() {
-        return timeTo;
-    }
-
-    public void setTimeTo(Date timeTo) {
-        this.timeTo = timeTo;
-    }
-
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(String createBy) {
-        this.createBy = createBy;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public String getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(String updateBy) {
-        this.updateBy = updateBy;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    public Integer getDebug() {
-        return debug;
-    }
-
-    public void setDebug(Integer debug) {
-        this.debug = debug;
-    }
 
     public static <T extends BaseEntity> T copy(T source, T target) {
         T newTarget = checkSourceAndTarget(source, target);

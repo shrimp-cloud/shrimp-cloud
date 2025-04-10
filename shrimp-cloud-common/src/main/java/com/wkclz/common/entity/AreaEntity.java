@@ -1,5 +1,7 @@
 package com.wkclz.common.entity;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -7,6 +9,7 @@ import java.io.Serializable;
  *
  * @author: wangkaicun @ current time
  */
+@Data
 public class AreaEntity implements Serializable {
 
     /**
@@ -39,51 +42,4 @@ public class AreaEntity implements Serializable {
      */
     private Integer isLeaf;
 
-    public Long getParentAreaCode() {
-        return parentAreaCode;
-    }
-
-    public void setParentAreaCode(Long parentAreaCode) {
-        this.parentAreaCode = parentAreaCode;
-    }
-
-    public Long getAreaCode() {
-        return areaCode;
-    }
-
-    public void setAreaCode(Long areaCode) {
-        this.areaCode = areaCode;
-    }
-
-    public Integer getTypeCode() {
-        return typeCode;
-    }
-
-    public void setTypeCode(Integer typeCode) {
-        this.typeCode = typeCode;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getLevel() {
-        return level;
-    }
-
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
-
-    public Integer getIsLeaf() {
-        return isLeaf;
-    }
-
-    public void setIsLeaf(Integer isLeaf) {
-        this.isLeaf = isLeaf;
-    }
 }

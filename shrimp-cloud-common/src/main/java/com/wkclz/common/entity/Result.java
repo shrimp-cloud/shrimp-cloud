@@ -3,6 +3,7 @@ package com.wkclz.common.entity;
 import cn.hutool.core.util.StrUtil;
 import com.wkclz.common.emuns.ResultStatus;
 import com.wkclz.common.exception.BizException;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.Date;
  * Description:
  * Created: wangkaicun @ 2017-10-20 下午9:11
  */
+@Data
 public class Result<T> implements Serializable {
 
     /**
@@ -48,21 +50,6 @@ public class Result<T> implements Serializable {
         this.data = data;
     }
 
-    public Integer getCode() {
-        return code;
-    }
-
-    public void setCode(Integer code) {
-        this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
 
     public Result setError(CharSequence template, Object... params) {
         this.msg = StrUtil.format(template, params);;
@@ -89,31 +76,6 @@ public class Result<T> implements Serializable {
         this.data = data;
         return this;
     }
-
-    public Date getRequestTime() {
-        return requestTime;
-    }
-
-    public void setRequestTime(Date requestTime) {
-        this.requestTime = requestTime;
-    }
-
-    public Date getResponseTime() {
-        return responseTime;
-    }
-
-    public void setResponseTime(Date responseTime) {
-        this.responseTime = responseTime;
-    }
-
-    public Long getCostTime() {
-        return costTime;
-    }
-
-    public void setCostTime(Long costTime) {
-        this.costTime = costTime;
-    }
-
 
     public static Result error(CharSequence template, Object... params) {
         Result result = new Result();
