@@ -88,26 +88,24 @@ public class BaseEntity implements Serializable {
 
     public static <T extends BaseEntity> T copy(T source, T target) {
         T newTarget = checkSourceAndTarget(source, target);
-        if(newTarget != null) {
-            return target;
+        if(newTarget == null) {
+            return null;
         }
         BeanUtil.cpAll(source, newTarget);
         return target;
     }
 
-    public static <T extends BaseEntity> void copyIfNotNull(T source, T target) {
+    public static <T extends BaseEntity> T copyIfNotNull(T source, T target) {
         T newTarget = checkSourceAndTarget(source, target);
         if(newTarget == null) {
-            return;
+            return null;
         }
         BeanUtil.cpNotNull(source, newTarget);
+        return newTarget;
     }
 
     // 生成 new target
     private static <T extends BaseEntity> T checkSourceAndTarget(T source, T target) {
-        if (source == null && target == null) {
-            return null;
-        }
         if (source == null) {
             return null;
         }
