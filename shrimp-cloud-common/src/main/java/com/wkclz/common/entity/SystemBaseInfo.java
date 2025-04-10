@@ -8,6 +8,7 @@ import java.lang.management.MemoryUsage;
 import java.lang.management.ThreadInfo;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class SystemBaseInfo implements Serializable {
@@ -91,6 +92,8 @@ public class SystemBaseInfo implements Serializable {
         private String vmName;
         private String vmVendor;
         private String vmVersion;
+
+        private Map<String, String> systemProperties;
     }
 
     @Data
