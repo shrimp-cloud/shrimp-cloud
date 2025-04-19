@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.1</version>
+        <version>3.4.4</version>
         <relativePath/>
     </parent>
 
@@ -20,7 +20,7 @@
     <description>shrimp-parent 定义公共依赖</description>
 
     <properties>
-        <spring.version>3.4.1</spring.version>
+        <spring.version>3.4.4</spring.version>
         <spring-cloud.version>2024.0.0</spring-cloud.version>
         <shrimp.cloud.bom.version>4.0.0-SNAPSHOT</shrimp.cloud.bom.version>
 
