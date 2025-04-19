@@ -247,7 +247,7 @@
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt-api</artifactId>
-                <version>${jjwt.version}</version>
+                <version>${jjwt-api.version}</version>
             </dependency>
 
             <!--微信小程序：weixin-java-miniapp -->
