@@ -58,6 +58,7 @@
         <rhino.version>1.8.0</rhino.version>
         <xxl-job.version>3.0.0</xxl-job.version>
 
+        <jjwt.version>0.12.6</jjwt.version>
         <jjwt-api.version>0.12.6</jjwt-api.version>
         <kaptcha.version>2.3.2</kaptcha.version>
         <lombok.version>1.18.38</lombok.version>
@@ -240,10 +241,15 @@
             </dependency>
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt-api</artifactId>
                 <version>${jjwt-api.version}</version>
             </dependency>
-
             <!--微信小程序：weixin-java-miniapp -->
             <dependency>
                 <groupId>com.github.binarywang</groupId>
