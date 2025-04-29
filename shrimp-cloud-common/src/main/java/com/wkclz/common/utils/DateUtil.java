@@ -30,11 +30,8 @@ public class DateUtil {
 
     /**
      * 字符串格式化为时间
-     *
-     * @param dateStr
-     * @return
      */
-    public static final Date getDate(String dateStr) {
+    public static Date getDate(String dateStr) {
         if (dateStr == null) {
             return null;
         }
@@ -44,8 +41,7 @@ public class DateUtil {
         if (dateStr.length() == SDF_YYYY_MM_DD_HH_MM_SS.length()) {
             SimpleDateFormat sdfYmdhms = new SimpleDateFormat(SDF_YYYY_MM_DD_HH_MM_SS);
             try {
-                Date date = sdfYmdhms.parse(dateStr);
-                return date;
+                return sdfYmdhms.parse(dateStr);
             } catch (ParseException e) {
                 logger.error(e.getMessage(), e);
             }
@@ -67,30 +63,31 @@ public class DateUtil {
 
     /**
      * 计算历史到两套上的时间，转换为直观的文字描述
-     * @param history
-     * @return
      */
-    public static String getTimeDifference(Date history){
+    public static String getTimeDifference(Date history) {
+        return getTimeDifference(history.getTime(), null);
+    }
+    public static String getTimeDifference(Long history) {
         return getTimeDifference(history, null);
     }
 
     /**
      * 计算历史到两套上的时间，转换为直观的文字描述
-     * @param history
-     * @param future
-     * @return
      */
-    public static String getTimeDifference(Date history, Date future){
+    public static String getTimeDifference(Date history, Date future) {
+        return getTimeDifference(history == null ? null : history.getTime(), future == null ? null : future.getTime());
+    }
+    public static String getTimeDifference(Long history, Long future) {
         long now = System.currentTimeMillis();
 
         long his = now;
         long fut = now;
 
-        if (history != null){
-            his = history.getTime();
+        if (history != null) {
+            his = history;
         }
-        if (future != null){
-            fut = future.getTime();
+        if (future != null) {
+            fut = future;
         }
 
         long timeLess = fut - his;
@@ -106,25 +103,24 @@ public class DateUtil {
 
         long sec = timeLess / SEC;
 
-        StringBuffer sb = new StringBuffer();
-        if (day > 0){
-            sb.append(day + "天 ");
+        StringBuilder sb = new StringBuilder();
+        if (day > 0) {
+            sb.append(day).append("天 ");
         }
-        if (day > 0 || hour > 0){
-            sb.append(hour + "时 ");
+        if (day > 0 || hour > 0) {
+            sb.append(hour).append("时 ");
         }
-        if (day > 0 || hour > 0 || min > 0){
-            sb.append(min + "分 ");
+        if (day > 0 || hour > 0 || min > 0) {
+            sb.append(min).append("分 ");
         }
-        if (day > 0 || hour > 0 || min > 0 || sec > 0){
-            sb.append(sec + "秒");
+        if (day > 0 || hour > 0 || min > 0 || sec > 0) {
+            sb.append(sec).append("秒");
         }
-        if (sb.length() == 0){
+        if (sb.isEmpty()) {
             sb.append("0秒");
         }
         return sb.toString();
     }
-
 
 
 }

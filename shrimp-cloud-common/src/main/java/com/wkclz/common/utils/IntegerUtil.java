@@ -19,7 +19,7 @@ public class IntegerUtil {
      * @return
      */
     public static List<Integer> str2IntegerList(String str) {
-        String[] split = str.split(",");
+        String[] split = str.split("[,，;；|]");
         List<Integer> intArr = new ArrayList<>();
         for (String id : split) {
             // 只有是数字型的字符串才加进去
@@ -31,7 +31,7 @@ public class IntegerUtil {
     }
 
     public static List<Long> str2LongList(String str) {
-        String[] split = str.split(",");
+        String[] split = str.split("[,，;；|]");
         List<Long> intArr = new ArrayList<>();
         for (String id : split) {
             // 只有是数字型的字符串才加进去
