@@ -15,7 +15,7 @@ public interface LogTraceConstant {
 
     // 用户信息
     String TENANT_CODE = "tenant-code";
-    String USER_CODE = "usercode";
+    String USER_CODE = "userCode";
 
 
 }
