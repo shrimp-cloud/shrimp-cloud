@@ -2,6 +2,7 @@ package com.wkclz.spring.constant;
 
 /**
  * 日志链路常量
+ * @author shrimp
  */
 public interface LogTraceConstant {
 
@@ -14,7 +15,7 @@ public interface LogTraceConstant {
 
     // 用户信息
     String TENANT_CODE = "tenant-code";
-    String USER_NAME = "username";
+    String USER_CODE = "usercode";
 
 
 }

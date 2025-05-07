@@ -11,6 +11,7 @@ import java.util.List;
 /**
  * Description:
  * Created: wangkaicun @ 2017-10-20 下午10:47
+ * @author shrimp
  */
 
 @Data
@@ -21,8 +22,8 @@ public class BaseEntity implements Serializable {
     @Desc("主键ID")
     private Long id;
 
-    @Desc("用户名")
-    private String username;
+    @Desc("用户编码")
+    private String userCode;
     @Desc("租户编码")
     private String tenantCode;
 
