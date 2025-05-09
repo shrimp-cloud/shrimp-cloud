@@ -22,7 +22,7 @@ import java.util.Properties;
 public class UpdateInterceptor implements Interceptor {
 
     private static final Logger logger = LoggerFactory.getLogger(UpdateInterceptor.class);
-    private final static String MDC_USER_CODE_KEY = "user_code";
+    private final static String MDC_USER_CODE_KEY = "userCode";
     private final static String DEFAULT_USER_CODE = "guest";
 
     @Override
