@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wkclz.mybatis.mapper.TableInfoMapper">
+
+    <select id="getColumnInfos" parameterType="com.wkclz.mybatis.bean.ColumnQuery" resultType="com.wkclz.mybatis.bean.ColumnQuery">
+        SELECT
+            column_name,
+            data_type,
+            column_comment,
+            count(*) count
+        FROM
+            information_schema.COLUMNS
+        WHERE
+            1 = 1
+            <if test="tableSchema != null">AND table_schema = #{tableSchema} </if>
+            AND column_name IN ( <foreach collection="columnNames" item="item" separator=","> #{item} </foreach> )
+        GROUP BY
+            column_name,
+            data_type,
+            column_comment
+        ORDER BY
+            count DESC
+    </select>
+
+</mapper>
+
