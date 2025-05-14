@@ -13,9 +13,10 @@ import java.util.List;
 public class ColumnQuery implements Serializable {
 
     private String tableSchema;
+    private String tableName;
+    private String columnName;
     private List<String> columnNames;
 
-    private String columnName;
     private String dataType;
     private String javaType;
     private String tsType;

@@ -273,7 +273,7 @@ public class BeanUtil {
                         info.setFileName(name);
                         info.setGetter(method);
                         info.setFileClass(field.getType());
-                        getters.put(getter, info);
+                        getters.put(name, info);
                     }
                 }
             }

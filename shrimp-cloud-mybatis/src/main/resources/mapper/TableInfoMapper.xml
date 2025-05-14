@@ -12,7 +12,8 @@
             information_schema.COLUMNS
         WHERE
             1 = 1
-            <if test="tableSchema != null">AND table_schema = #{tableSchema} </if>
+            AND table_schema = #{tableSchema}
+            <if test="tableName != null">AND table_name = #{tableName} </if>
             <if test="columnNames != null and columnNames.size > 0">
                 AND column_name IN ( <foreach collection="columnNames" item="item" separator=","> #{item} </foreach> )
             </if>
