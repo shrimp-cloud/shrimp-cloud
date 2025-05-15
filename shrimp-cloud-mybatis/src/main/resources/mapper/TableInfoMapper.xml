@@ -28,6 +28,7 @@
             1 = 1
             AND table_schema = #{tableSchema}
             <if test="tableName != null">AND table_name = #{tableName} </if>
+            <if test="columnName != null">AND column_name = #{columnName} </if>
             <if test="columnNames != null and columnNames.size > 0">
                 AND column_name IN ( <foreach collection="columnNames" item="item" separator=","> #{item} </foreach> )
             </if>
