@@ -2,11 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wkclz.mybatis.dao.TableInfoMapper">
 
+    <select id="getTables" parameterType="com.wkclz.mybatis.bean.TableInfo" resultType="com.wkclz.mybatis.bean.TableInfo">
+        SELECT
+            table_name,
+            table_comment comment
+        FROM
+            information_schema.TABLES
+        WHERE
+            table_schema = #{tableSchema}
+            <if test="tableName != null">AND table_name LIKE CONCAT('%', #{tableName}, '%') </if>
+            <if test="comment != null">AND table_comment LIKE CONCAT('%', #{comment}, '%') </if>
+        ORDER BY
+            table_name
+    </select>
+
     <select id="getColumnInfos" parameterType="com.wkclz.mybatis.bean.ColumnQuery" resultType="com.wkclz.mybatis.bean.ColumnQuery">
         SELECT
             column_name,
             data_type,
-            column_comment,
+            column_comment comment,
             count(*) count
         FROM
             information_schema.COLUMNS

@@ -7,6 +7,8 @@ import java.util.List;
 @Data
 public class TableInfo {
 
+    private String tableSchema;
+
     private String tableName;
     private String comment;
     private String dbType;
