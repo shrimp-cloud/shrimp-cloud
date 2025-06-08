@@ -24,9 +24,7 @@ public class RegularTool {
     private static final Pattern IS_MOBILE = Pattern.compile("^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\\d{8}$");
     private static final Pattern IS_IP = Pattern.compile("(?=(\\b|\\D))(((\\d{1,2})|(1\\d{1,2})|(2[0-4]\\d)|(25[0-5]))\\.){3}((\\d{1,2})|(1\\d{1,2})|(2[0-4]\\d)|(25[0-5]))(?=(\\b|\\D))");
     private static final Pattern IS_DOMAIN = Pattern.compile("^(?=^.{3,255}$)(http(s)?:\\/\\/)?(www\\.)?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:\\d+)*(\\/\\w+\\.\\w+)*$");
-
-
-
+    private static final Pattern IS_URL = Pattern.compile("^(https?://)?(www\\.)?(([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}|localhost|\\d{1,3}(\\.\\d{1,3}){3}|\\$$?[a-fA-F0-9:]+\\$$?)(:\\d+)?(/[\\-a-zA-Z0-9@:%._\\+~#&//=]*)?(\\?[;&a-zA-Z0-9%_.~+=-]*)?(#[-a-zA-Z0-9_]*)?$");
 
     /**
      * 匹配正整数
@@ -106,6 +104,16 @@ public class RegularTool {
      */
     public static boolean isIp(String str) {
         return match(str, IS_IP);
+    }
+
+    /**
+     * 判断字符串是否为IP
+     *
+     * @param str
+     * @return
+     */
+    public static boolean isUrl(String str) {
+        return match(str, IS_URL);
     }
 
 
@@ -205,6 +213,7 @@ public class RegularTool {
         System.out.println(isDomain("www.www.wklz.com"));
         System.out.println(isDate("2019-02-29"));
         System.out.println(isLetter("dDD"));
+        System.out.println(isUrl("https://www.wkclz.com/xxx/xxxx?aa=bb#ddd"));
     }
 
 
