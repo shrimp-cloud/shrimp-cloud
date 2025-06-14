@@ -6,6 +6,10 @@ import cn.hutool.crypto.asymmetric.RSA;
 import com.wkclz.common.exception.BizException;
 
 import java.security.*;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 
 public class RsaTool {
 
@@ -64,6 +68,60 @@ public class RsaTool {
         RSA rsa = SecureUtil.rsa(rsaPrivateKey, null);
         byte[] decrypt = rsa.decrypt(input, KeyType.PrivateKey);
         return new String(decrypt);
+    }
+
+
+    public PublicKey convertToPublicKey(String publicKeyStr) {
+        if (publicKeyStr == null || publicKeyStr.isEmpty()) {
+            return null;
+        }
+        try {
+            // Base64解码
+            byte[] keyBytes = Base64.getDecoder().decode(publicKeyStr);
+
+            // 创建KeySpec并生成公钥
+            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            return keyFactory.generatePublic(keySpec);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                throw new RuntimeException(e);
+        }
+    }
+
+//    public static PrivateKey convertToPrivateKey(String privateKeyStr) {
+//        if (privateKeyStr == null || privateKeyStr.isEmpty()) {
+//            return null;
+//        }
+//        try {
+//            byte[] privateKeyBytes = Base64.getDecoder().decode(privateKeyStr);
+//            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
+//            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+//            return keyFactory.generatePrivate(keySpec);
+//        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
+    public static PrivateKey convertToPrivateKey(String privateKeyStr) {
+        if (privateKeyStr == null || privateKeyStr.isEmpty()) {
+            return null;
+        }
+        try {
+            // 读取PEM文件内容
+            // 清理PEM标记和空白
+            String privateKeyPem = privateKeyStr
+                .replace("-----BEGIN PRIVATE KEY-----", "")
+                .replace("-----END PRIVATE KEY-----", "")
+                .replaceAll("\\s+", "");
+            // Base64解码
+            byte[] decodedKey = Base64.getDecoder().decode(privateKeyPem);
+            // 生成私钥对象
+            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            return keyFactory.generatePrivate(keySpec);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
