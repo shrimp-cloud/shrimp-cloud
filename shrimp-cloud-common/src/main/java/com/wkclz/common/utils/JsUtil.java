@@ -1,5 +1,6 @@
 package com.wkclz.common.utils;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.wkclz.common.exception.BizException;
 import com.wkclz.common.tools.Md5Tool;
 import org.apache.commons.lang3.StringUtils;
@@ -18,10 +19,21 @@ public class JsUtil {
     private final static Map<String, Function> JS_FUNCTION = new HashMap<>();
 
     public static String exec(String script, String param) {
+        Object[] params = { param };
+        return exec(script, params);
+    }
+    public static String exec(String script, JSONObject param) {
+        Object[] params = { param };
+        return exec(script, params);
+    }
+    public static String exec(String script, Map<String, Object> param) {
+        Object[] params = { param };
+        return exec(script, params);
+    }
+    private static String exec(String script, Object[] params) {
         String funName = getFunName(script);
         Context context = getContext();
         Function function = getFunction(script, funName, context);
-        Object[] params = { param };
         Object result = function.call(context, SCOPE, SCOPE, params);
         // 处理返回值
         if (result == null || result instanceof Undefined) {
