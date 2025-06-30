@@ -1,23 +1,31 @@
 package com.wkclz.common.utils;
 
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.wkclz.common.exception.BizException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 生成二维码帮助类
+ * @author shrimp
  */
 public class QrCodeUtil {
     private static final Logger logger = LoggerFactory.getLogger(QrCodeUtil.class);
@@ -31,17 +39,8 @@ public class QrCodeUtil {
      * @throws IOException
      */
     public static String createBase64QrCode(String url) {
-        try {
-            MultiFormatWriter writer = new MultiFormatWriter();
-            BitMatrix bitMatrix = writer.encode(url, BarcodeFormat.QR_CODE, 400, 400);
-            BufferedImage bufferedImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            ImageIO.write(bufferedImage, "jpg", Base64.getEncoder().wrap(os));
-            return "data:image/jpg;base64," + os.toString();
-        } catch (WriterException | IOException e) {
-            logger.error(e.getMessage(), e);
-        }
-        return null;
+        BufferedImage bufferedImage = createQrCode(url, BarcodeFormat.QR_CODE, 400, 400);
+        return bufferedImage2Base64(bufferedImage);
     }
 
     /**
@@ -51,19 +50,8 @@ public class QrCodeUtil {
      * @return
      */
     public static String createBase64BarCode(String url) {
-        try {
-            MultiFormatWriter writer = new MultiFormatWriter();
-            BitMatrix bitMatrix = writer.encode(url, BarcodeFormat.CODE_39, 600, 280);
-            BufferedImage bufferedImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            ImageIO.write(bufferedImage, "jpg", Base64.getEncoder().wrap(os));
-            return "data:image/jpg;base64," + os.toString();
-        } catch (WriterException e) {
-            logger.error(e.getMessage(), e);
-        } catch (IOException e) {
-
-        }
-        return null;
+        BufferedImage bufferedImage = createQrCode(url, BarcodeFormat.CODE_39, 600, 200);
+        return bufferedImage2Base64(bufferedImage);
     }
 
     /**
@@ -100,6 +88,53 @@ public class QrCodeUtil {
         }
         return Base64.getEncoder().encodeToString(baos.toByteArray());
     }
+
+
+    // 文本转 二维码
+    public static BufferedImage createQrCode(String txt, BarcodeFormat format, int width, int height) {
+        if (StringUtils.isBlank(txt)) {
+            throw BizException.error("no txt to create QR code");
+        }
+        try {
+            Map<EncodeHintType, Object> hints = new HashMap<>();
+            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+            // 设置白边为1，最小可设为0
+            hints.put(EncodeHintType.MARGIN, 1);
+            MultiFormatWriter writer = new MultiFormatWriter();
+            BitMatrix bitMatrix = writer.encode(txt, format, width, height, hints);
+            return MatrixToImageWriter.toBufferedImage(bitMatrix);
+        } catch (WriterException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // 图片转 Base64
+    public static String bufferedImage2Base64(BufferedImage image) {
+        if (image == null) {
+            return null;
+        }
+        try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+            ImageIO.write(image, "png", Base64.getEncoder().wrap(os));
+            return "data:image/png;base64," + os;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static File bufferedImage2File(BufferedImage image, String file) {
+        return bufferedImage2File(image, new File(file));
+    }
+    public static File bufferedImage2File(BufferedImage image, File file) {
+        try {
+            ImageIO.write(image, "png", file);
+            return file;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
 }
 
 
