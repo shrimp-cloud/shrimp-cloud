@@ -33,4 +33,20 @@
         <module>shrimp-cloud-test</module>
     </modules>
 
+    <properties>
+        <sonar.host.url>http://10.0.1.97:9000</sonar.host.url>
+        <sonar.projectKey>shrimp-cloud</sonar.projectKey>
+        <sonar.login>sqp_8e09aac0eb4d9efae77bef2525df713d1ec8b0ee</sonar.login>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>5.1.0.4751</version>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

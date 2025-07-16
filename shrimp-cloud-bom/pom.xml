@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-dependencies</artifactId>
-        <version>3.5.0</version>
+        <groupId>com.wkclz</groupId>
+        <artifactId>shrimp-cloud</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
     </parent>
 
     <groupId>com.wkclz.bom</groupId>
