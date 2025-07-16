@@ -1,6 +1,7 @@
 package com.wkclz.common.utils;
 
 
+import com.wkclz.common.exception.BizException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,52 +75,66 @@ public class CompressUtil {
      * @param name             压缩后的名称
      * @param keepDirStructure 是否保留原来的目录结构,true:保留目录结构;
      *                         false:所有文件跑到压缩包根目录下(注意：不保留目录结构可能会出现同名文件,会压缩失败)
-     * @throws Exception
      */
     private static void zip(File sourceFile, ZipOutputStream zos, String name, boolean keepDirStructure) {
         byte[] buf = new byte[BUFFER_SIZE];
-        try {
-            if (sourceFile.isFile()) {
-                // 向zip输出流中添加一个zip实体，构造器中name为zip实体的文件的名字
+
+        if (sourceFile.isFile()) {
+            // 向zip输出流中添加一个zip实体，构造器中name为zip实体的文件的名字
+            // copy文件到zip输出流中
+            int len;
+            FileInputStream in = null;
+            try {
                 zos.putNextEntry(new ZipEntry(name));
-                // copy文件到zip输出流中
-                int len;
-                FileInputStream in = new FileInputStream(sourceFile);
+                in = new FileInputStream(sourceFile);
                 while ((len = in.read(buf)) != -1) {
                     zos.write(buf, 0, len);
                 }
-                // Complete the entry
-                zos.closeEntry();
-                in.close();
-            } else {
-                File[] listFiles = sourceFile.listFiles();
-                if (listFiles == null || listFiles.length == 0) {
-                    // 需要保留原来的文件结构时,需要对空文件夹进行处理
-                    if (keepDirStructure) {
-                        // 空文件夹的处理
-                        zos.putNextEntry(new ZipEntry(name + "/"));
-                        // 没有文件，不需要文件的copy
-                        zos.closeEntry();
-                    }
-
-                } else {
-                    for (File file : listFiles) {
-                        // 判断是否需要保留原来的文件结构
-                        if (keepDirStructure) {
-                            // 注意：file.getName()前面需要带上父文件夹的名字加一斜杠,
-                            // 不然最后压缩包中就不能保留原来的文件结构,即：所有文件都跑到压缩包根目录下了
-                            zip(file, zos, name + "/" + file.getName(), keepDirStructure);
-                        } else {
-                            zip(file, zos, file.getName(), keepDirStructure);
-                        }
-
+            } catch (IOException e) {
+                throw BizException.error(e.getMessage());
+            } finally {
+                if (in != null) {
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                        //
                     }
                 }
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            // Complete the entry
+            try {
+                zos.closeEntry();
+            } catch (IOException e) {
+                throw BizException.error(e.getMessage());
+            }
+            return;
+        }
+
+        File[] listFiles = sourceFile.listFiles();
+        if (listFiles == null || listFiles.length == 0) {
+            // 需要保留原来的文件结构时,需要对空文件夹进行处理
+            if (keepDirStructure) {
+                try {
+                    // 空文件夹的处理
+                    zos.putNextEntry(new ZipEntry(name + "/"));
+                    // 没有文件，不需要文件的copy
+                    zos.closeEntry();
+                } catch (IOException e) {
+                    throw BizException.error(e.getMessage());
+                }
+            }
+            return;
+        }
+
+        for (File file : listFiles) {
+            // 判断是否需要保留原来的文件结构
+            if (keepDirStructure) {
+                // 注意：file.getName()前面需要带上父文件夹的名字加一斜杠,
+                // 不然最后压缩包中就不能保留原来的文件结构,即：所有文件都跑到压缩包根目录下了
+                zip(file, zos, name + "/" + file.getName(), keepDirStructure);
+            } else {
+                zip(file, zos, file.getName(), keepDirStructure);
+            }
         }
     }
 

@@ -44,6 +44,7 @@ public class GenHelper {
 
         long start = System.currentTimeMillis();
 
+        FileOutputStream fos = null;
         try {
             String urlStr = getGenZipAddr(authCode, log);
             URL url = new URL(urlStr);
@@ -74,7 +75,7 @@ public class GenHelper {
 
             // 保存文件
             File file = new File(savePath);
-            FileOutputStream fos = new FileOutputStream(file);
+            fos = new FileOutputStream(file);
             fos.write(getData);
 
             // 解压
@@ -97,7 +98,15 @@ public class GenHelper {
             long end = System.currentTimeMillis();
             log.info("=======> 完成代码生成, 耗时 " + (end - start) + "ms <=========");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    // who care ?
+                }
+            }
         }
         return true;
     }

@@ -161,7 +161,8 @@ public class MyBatisHelper {
         String savePath = userDir + "/temp/mapper/";
         String filePath = savePath + namespace + ".xml";
 
-        FileWriter writer;
+        InputStream inputStream = null;
+        FileWriter writer = null;
         try {
 
             //文件保存位置
@@ -179,18 +180,32 @@ public class MyBatisHelper {
             writer.write("");
             writer.write(xmlStr);
             writer.flush();
-            writer.close();
 
             clearMap(configuration, namespace);
             clearSet(configuration, filePath);
 
-            InputStream inputStream = new FileInputStream(filePath);
+            inputStream = new FileInputStream(filePath);
             XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(inputStream, configuration, filePath, configuration.getSqlFragments());
             xmlMapperBuilder.parse();
 
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
             return statement;
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    //
+                }
+            }
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    //
+                }
+            }
         }
         return statement;
     }
