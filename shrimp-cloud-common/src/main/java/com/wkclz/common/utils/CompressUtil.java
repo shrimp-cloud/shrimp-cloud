@@ -83,24 +83,16 @@ public class CompressUtil {
             // 向zip输出流中添加一个zip实体，构造器中name为zip实体的文件的名字
             // copy文件到zip输出流中
             int len;
-            FileInputStream in = null;
-            try {
+            try (FileInputStream in = new FileInputStream(sourceFile);) {
                 zos.putNextEntry(new ZipEntry(name));
-                in = new FileInputStream(sourceFile);
+
                 while ((len = in.read(buf)) != -1) {
                     zos.write(buf, 0, len);
                 }
             } catch (IOException e) {
                 throw BizException.error(e.getMessage());
-            } finally {
-                if (in != null) {
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        //
-                    }
-                }
             }
+
             // Complete the entry
             try {
                 zos.closeEntry();

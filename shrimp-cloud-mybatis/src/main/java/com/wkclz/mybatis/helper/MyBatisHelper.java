@@ -161,10 +161,7 @@ public class MyBatisHelper {
         String savePath = userDir + "/temp/mapper/";
         String filePath = savePath + namespace + ".xml";
 
-        InputStream inputStream = null;
-        FileWriter writer = null;
         try {
-
             //文件保存位置
             File saveDir = new File(savePath);
             if (!saveDir.exists()) {
@@ -176,36 +173,21 @@ public class MyBatisHelper {
                 file.createNewFile();
             }
 
-            writer = new FileWriter(file);
-            writer.write("");
-            writer.write(xmlStr);
-            writer.flush();
+            try (FileWriter writer = new FileWriter(file);) {
+                writer.write("");
+                writer.write(xmlStr);
+                writer.flush();
+            }
+            try (InputStream inputStream = new FileInputStream(filePath);) {
+                clearMap(configuration, namespace);
+                clearSet(configuration, filePath);
 
-            clearMap(configuration, namespace);
-            clearSet(configuration, filePath);
-
-            inputStream = new FileInputStream(filePath);
-            XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(inputStream, configuration, filePath, configuration.getSqlFragments());
-            xmlMapperBuilder.parse();
-
+                XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(inputStream, configuration, filePath, configuration.getSqlFragments());
+                xmlMapperBuilder.parse();
+            }
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
             return statement;
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    //
-                }
-            }
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    //
-                }
-            }
         }
         return statement;
     }

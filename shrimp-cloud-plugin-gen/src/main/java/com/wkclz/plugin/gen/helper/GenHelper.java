@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.wkclz.plugin.gen.bean.GenResult;
 import com.wkclz.plugin.gen.bean.GenTaskInfo;
+import com.wkclz.plugin.gen.exception.GenException;
 import com.wkclz.plugin.gen.utils.CompressUtil;
 import org.apache.maven.plugin.logging.Log;
 
@@ -44,7 +45,6 @@ public class GenHelper {
 
         long start = System.currentTimeMillis();
 
-        FileOutputStream fos = null;
         try {
             String urlStr = getGenZipAddr(authCode, log);
             URL url = new URL(urlStr);
@@ -75,8 +75,10 @@ public class GenHelper {
 
             // 保存文件
             File file = new File(savePath);
-            fos = new FileOutputStream(file);
-            fos.write(getData);
+
+            try (FileOutputStream fos = new FileOutputStream(file);) {
+                fos.write(getData);
+            }
 
             // 解压
             int lastSeparator = savePath.lastIndexOf("/");
@@ -98,15 +100,7 @@ public class GenHelper {
             long end = System.currentTimeMillis();
             log.info("=======> 完成代码生成, 耗时 " + (end - start) + "ms <=========");
         } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    // who care ?
-                }
-            }
+            throw GenException.error(e.getMessage());
         }
         return true;
     }

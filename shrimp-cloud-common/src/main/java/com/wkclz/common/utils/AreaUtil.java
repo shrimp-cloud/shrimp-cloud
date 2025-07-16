@@ -287,7 +287,6 @@ public class AreaUtil {
         }
         File file2Save = new File(savePath + urlStr.substring(urlStr.lastIndexOf("/")));
 
-        InputStream inputStream = null;
         FileOutputStream fos = null;
         OutputStreamWriter osw = null;
         try {
