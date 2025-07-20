@@ -64,24 +64,23 @@ public class RedisIdGenHelper {
         long currentSecond = this.timeGen();
         // 闰秒：如果当前时间小于上一次ID生成的时间戳，说明系统时钟回退过，这个时候应当抛出异常
         if (currentSecond < LAST_SECOND.get()) {
-            synchronized (this){
+            synchronized (this) {
                 // 校验时间偏移回拨量
                 long offset = LAST_SECOND.get() - currentSecond;
                 if (offset > TIME_OFFSET) {
                     throw new RuntimeException("Clock moved backwards, refusing to generate id for [" + offset + "ms]");
                 }
-                try {
-                    // 时间回退timeOffset毫秒内，则允许等待2倍的偏移量后重新获取，解决小范围的时间回拨问题
-                    this.wait(offset << 1);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    throw BizException.error(e.getMessage());
-                }
-                // 再次获取
-                currentSecond = this.timeGen();
-                // 再次校验
-                if (currentSecond < LAST_SECOND.get()) {
-                    throw BizException.error("Clock moved backwards, refusing to generate id for [" + offset + "ms]");
+
+                // 将 wait 移入 while 循环，避免虚假唤醒
+                while (currentSecond < LAST_SECOND.get()) {
+                    try {
+                        this.wait(offset << 1);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        throw BizException.error(e.getMessage());
+                    }
+                    // 再次获取当前时间戳
+                    currentSecond = this.timeGen();
                 }
             }
         }
