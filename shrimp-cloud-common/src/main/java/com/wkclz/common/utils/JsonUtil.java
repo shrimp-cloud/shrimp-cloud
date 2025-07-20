@@ -87,8 +87,7 @@ public class JsonUtil {
             }
             //遇到"{"和"["要增加空格和换行，遇到"}"和"]"要减少空格，以对应，遇到","要换行
             switch (c) {
-                case '{':
-                case '[':
+                case '{', '[':
                     jsonForMatStr.append(c).append("\n");
                     level++;
                     break;
@@ -98,8 +97,7 @@ public class JsonUtil {
                         jsonForMatStr.append("\n");
                     }
                     break;
-                case '}':
-                case ']':
+                case '}', ']':
                     jsonForMatStr.append("\n");
                     level--;
                     jsonForMatStr.append(getLevelStr(level));

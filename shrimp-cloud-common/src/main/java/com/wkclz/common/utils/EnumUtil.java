@@ -51,7 +51,7 @@ public class EnumUtil {
             boolean anno = clazz.isAnnotationPresent(Desc.class);
             if (anno) {
                 // 获取类上的注解
-                Desc annotation = (Desc) clazz.getAnnotation(Desc.class);
+                Desc annotation = clazz.getAnnotation(Desc.class);
                 // 输出注解上的属性
                 dictTypeEntity.setEnumTypeDesc(annotation.value());
             }

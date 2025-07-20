@@ -26,17 +26,17 @@ public class SystemConfigHelper {
     /**
      * 初始化 SYSTEM_CONFIG
      */
-    public static boolean reflash() {
-        return reflash(SYSTEM_CONFIG);
+    public static void reflash() {
+        reflash(SYSTEM_CONFIG);
     }
-    public static boolean reflash(Map<String, String> systemConfigs) {
+    public static void reflash(Map<String, String> systemConfigs) {
         if (CollectionUtils.isEmpty(systemConfigs)) {
             throw BizException.error("systemConfigs can not be null or empty!");
         }
 
         if (!SpringContextHolder.getBean(SystemConfig.class).isCloud()){
             SYSTEM_CONFIG = systemConfigs;
-            return true;
+            return;
         }
 
         RedisMsgBody body = new RedisMsgBody();
@@ -46,7 +46,6 @@ public class SystemConfigHelper {
         String msg = JSON.toJSONString(body);
         StringRedisTemplate stringRedisTemplate = SpringContextHolder.getBean(StringRedisTemplate.class);
         stringRedisTemplate.convertAndSend(SpringContextHolder.getBean(RedisTopicConfig.class).getCacheTopic(), msg);
-        return true;
     }
 
     public static boolean setLocal(Object msg) {

@@ -6,16 +6,18 @@ import com.wkclz.common.tools.Md5Tool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Random;
 import java.util.UUID;
 
 /**
- * Description:
  * Created: wangkaicun @ 2017-10-23 上午12:28
+ * @author shrimp
  */
 public class SecretUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(SecretUtil.class);
 
+    private static final Random RANDOM = new Random(System.currentTimeMillis());
     // 使用时请覆盖此 salt
     private static final String GENERAL_SALT = "shrimp@450330#cc$wkclz";
 
@@ -38,11 +40,13 @@ public class SecretUtil {
 
     /**
      * 获取 6 位随机数
-     *
-     * @return
      */
     public static String getCapchaCode() {
-        return (int) ((Math.random() * 9 + 1) * 100000) + "";
+        int i = RANDOM.nextInt(999_999);
+        if (i < 100_000) {
+            i = i + 100_000;
+        }
+        return i + "";
     }
 
 

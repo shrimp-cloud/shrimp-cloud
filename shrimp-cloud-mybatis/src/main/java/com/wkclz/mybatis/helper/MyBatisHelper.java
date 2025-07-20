@@ -225,7 +225,7 @@ public class MyBatisHelper {
             if (value instanceof Map<?, ?> map) {
                 List<Object> list = map.keySet().stream().filter(o -> o.toString().startsWith(nameSpace + ".")).collect(Collectors.toList());
                 logger.debug("需要清理的元素: {}", list);
-                list.forEach(k -> map.remove((Object) k));
+                list.forEach(map::remove);
             }
         });
     }

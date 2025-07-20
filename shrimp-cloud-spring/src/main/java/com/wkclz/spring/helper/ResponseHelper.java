@@ -23,11 +23,11 @@ public class ResponseHelper {
             rep.setHeader("Content-Type", "application/json;charset=UTF-8");
             rep.getWriter().print(string);
             rep.getWriter().close();
+            return true;
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
             return false;
         }
-        return false;
     }
 
 

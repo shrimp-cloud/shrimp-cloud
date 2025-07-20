@@ -160,12 +160,7 @@ public class RegularTool {
     }
 
     private static Pattern getPattern(String regex) {
-        Pattern pattern = PATTERN_MAP.get(regex);
-        if (pattern == null) {
-            pattern = Pattern.compile(regex);
-            PATTERN_MAP.put(regex, pattern);
-        }
-        return pattern;
+        return PATTERN_MAP.computeIfAbsent(regex, Pattern::compile);
     }
 
 

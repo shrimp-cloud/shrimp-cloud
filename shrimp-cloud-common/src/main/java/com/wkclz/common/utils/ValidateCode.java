@@ -213,7 +213,7 @@ public class ValidateCode {
             fy = randomLocation ? (int) ((Math.random() * 0.3 + 0.6) * height) : fy;
             g.setColor(foreColor == null ? getRandomColor() : foreColor);
             g.drawString(textCode.charAt(i) + "", fx, fy);
-            fx += fsize * 0.9;
+            fx += (int) (fsize * 0.9);
         }
 
         g.dispose();
