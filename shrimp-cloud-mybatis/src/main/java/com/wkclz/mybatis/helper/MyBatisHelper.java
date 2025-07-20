@@ -83,7 +83,7 @@ public class MyBatisHelper {
         SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
         String statement = reloadSql(sql);
         List<LinkedHashMap> list = sqlSession.selectList(statement, param);
-        list = list.stream().filter(Objects::nonNull).collect(Collectors.toList());
+        list = list.stream().filter(Objects::nonNull).toList();
         return list;
     }
 

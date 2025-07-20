@@ -11,6 +11,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 
@@ -107,14 +109,12 @@ public class RequestHelper {
      */
     public static String getFrontDomain(HttpServletRequest req) {
         String frontUrl = getFrontUrl(req);
-        String domain = getDomainFronUrl(frontUrl);
-        return domain;
+        return getDomainFronUrl(frontUrl);
     }
 
     public static Integer getFrontPort(HttpServletRequest req) {
         String frontUrl = getFrontUrl(req);
-        Integer port = getPortFronUrl(frontUrl);
-        return port;
+        return getPortFronUrl(frontUrl);
     }
 
     public static String getDomainFronUrl(String url) {
@@ -125,10 +125,9 @@ public class RequestHelper {
             url = "http://" + url;
         }
         try {
-            URL url1 = new URL(url);
-            String host = url1.getHost();
-            return host;
-        } catch (MalformedURLException e) {
+            URL url1 = new URI(url).toURL();
+            return url1.getHost();
+        } catch (MalformedURLException | URISyntaxException e) {
             logger.error(e.getMessage(), e);
         }
         return null;
@@ -139,13 +138,13 @@ public class RequestHelper {
             return null;
         }
         try {
-            URL url1 = new URL(url);
+            URL url1 = new URI(url).toURL();
             int port = url1.getPort();
             if (port < 1){
                 return null;
             }
             return port;
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException | URISyntaxException e) {
             logger.error(e.getMessage(), e);
         }
         return null;

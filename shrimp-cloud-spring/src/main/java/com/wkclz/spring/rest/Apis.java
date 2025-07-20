@@ -106,7 +106,7 @@ public class Apis {
             router = "/" + router;
         }
         List<RestInfo> mappings = RestUtil.getMapping("com.wkclz." + router.replace("/", ""));
-        mappings = mappings.stream().filter(m -> !m.getApiUri().contains("{")).collect(Collectors.toList());
+        mappings = mappings.stream().filter(m -> !m.getApiUri().contains("{")).toList();
         return mappings;
     }
 

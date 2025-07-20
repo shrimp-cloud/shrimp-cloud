@@ -7,6 +7,7 @@ import com.wkclz.mybatis.dao.TableInfoMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,7 +32,7 @@ public class TableInfoService {
 
     public List<ColumnQuery> getColumnInfos(ColumnQuery query) {
         if (query == null) {
-            return null;
+            return Collections.emptyList();
         }
         query.setTableSchema(config.getTableSchema());
         return tableInfoMapper.getColumnInfos(query);

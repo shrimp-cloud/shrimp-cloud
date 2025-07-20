@@ -17,7 +17,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 public class JdbcUtil {
 
@@ -86,47 +88,27 @@ public class JdbcUtil {
      * 查询类 （SELECT）
      */
     public static List<LinkedHashMap> jdbcQueryExecutor(Connection conn, String sql) {
-        Statement statement = null;
-        try {
-            statement = conn.createStatement();
+        try (Statement statement = conn.createStatement()) {
             ResultSet results = statement.executeQuery(sql);
             List<LinkedHashMap> maps = ResultSetMapper.toMapList(results);
             return maps;
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
-        } finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                    logger.error(e.getMessage(), e);
-                }
-            }
+            throw BizException.error("sql error: {}", sql);
         }
-        return null;
     }
 
     /**
      * 更新类（UPDATE, INSERT, DELETE, SQLDDL）
      */
     public static int jdbcUpdateExecutor(Connection conn, String sql) {
-        Statement statement = null;
-        try {
-            statement = conn.createStatement();
+        try (Statement statement = conn.createStatement()) {
             int update = statement.executeUpdate(sql);
             return update;
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
-        } finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                    logger.error(e.getMessage(), e);
-                }
-            }
+            throw BizException.error("sql error: {}", sql);
         }
-        return 0;
     }
 
     private static DruidPooledConnection getConn(DataSourceInfo dataSourceInfo) {
@@ -142,8 +124,7 @@ public class JdbcUtil {
         if (StringUtils.isBlank(dataSourceInfo.getPassword())) {
             throw BizException.error("get password, url can not be null");
         }
-        DruidPooledConnection conn = DataSourceInfo.getConnect(dataSourceInfo);
-        return conn;
+        return DataSourceInfo.getConnect(dataSourceInfo);
 
     }
 

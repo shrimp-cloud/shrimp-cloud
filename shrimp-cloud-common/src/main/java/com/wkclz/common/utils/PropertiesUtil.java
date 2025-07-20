@@ -75,10 +75,10 @@ public class PropertiesUtil {
     // 从文件读取 Properties
     public static Properties readProp(String propertiesPath) {
         File file = new File(propertiesPath);
-        if (!file.exists()) {
-            return null;
-        }
         Properties props = new Properties();
+        if (!file.exists()) {
+            return props;
+        }
         try (InputStream in = new BufferedInputStream(new FileInputStream(file))) {
             props.load(in);
         } catch (IOException e) {
@@ -92,9 +92,7 @@ public class PropertiesUtil {
     // 向文件写入 Properties
     public static void writeProp(String propertiesPath, Properties newProps) {
         Properties oldProp = readProp(propertiesPath);
-        newProps.forEach((propKey, propValue) -> {
-            oldProp.setProperty(propKey.toString(), propValue.toString());
-        });
+        newProps.forEach((propKey, propValue) -> oldProp.setProperty(propKey.toString(), propValue.toString()));
 
         Properties sortProp = MapUtil.map2Prop(MapUtil.sortMapByKey(MapUtil.prop2Map(oldProp)));
 

@@ -67,7 +67,7 @@ public class DesTool {
     }
 
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         String plaintext = "admin";
         String key = "keykeykeykey";
         System.out.println("plaintext：" + plaintext);

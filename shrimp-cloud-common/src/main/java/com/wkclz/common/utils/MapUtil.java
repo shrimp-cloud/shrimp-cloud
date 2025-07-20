@@ -92,9 +92,7 @@ public class MapUtil {
             return Collections.emptyList();
         }
         List<T> list = new ArrayList<>();
-        maps.forEach(map -> {
-            list.add(map2Obj(map, clazz));
-        });
+        maps.forEach(map -> list.add(map2Obj(map, clazz)));
         return list;
     }
 
@@ -233,9 +231,7 @@ public class MapUtil {
      */
     public static Map<String, String> prop2Map(Properties prop) {
         Map<String, String> map = new HashMap<>();
-        prop.forEach((propKey, propValue) -> {
-            map.put(propKey.toString(), propValue.toString());
-        });
+        prop.forEach((propKey, propValue) -> map.put(propKey.toString(), propValue.toString()));
         return map;
     }
 
@@ -262,7 +258,7 @@ public class MapUtil {
      */
     public static Map<String, String> sortMapByKey(Map<String, String> map) {
         if (map == null || map.isEmpty()) {
-            return null;
+            return Collections.emptyMap();
         }
         Map<String, String> sortMap = new TreeMap<>(new MapKeyComparator());
         sortMap.putAll(map);

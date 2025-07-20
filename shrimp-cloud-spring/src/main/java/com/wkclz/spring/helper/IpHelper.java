@@ -91,7 +91,7 @@ public class IpHelper {
                 return false;
             }
             return true;
-        }).collect(Collectors.toList());
+        }).toList();
         if (!CollectionUtils.isEmpty(usefullInterface)) {
             return usefullInterface.get(0).getHostAddress();
         }
@@ -108,7 +108,7 @@ public class IpHelper {
             logger.error(e.getMessage(), e);
         }
         if (interfaces == null) {
-            return null;
+            return Collections.emptyList();
         }
         try {
             while (interfaces.hasMoreElements()) {

@@ -18,6 +18,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Base64;
 import java.util.HashMap;
@@ -63,30 +65,24 @@ public class QrCodeUtil {
      */
     public static String createBase64QrCodeWxapp(String urls) {
 
-        InputStream is = null;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
-            URL url = new URL(urls);
-            is = url.openStream();
+            URL url = new URI(urls).toURL();
             // Or whatever size you want to read in at a time.
-            byte[] byteChunk = new byte[4096];
-            int n;
-
-            while ((n = is.read(byteChunk)) > 0) {
-                baos.write(byteChunk, 0, n);
-            }
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    logger.error(e.getMessage(), e);
+            try (
+                InputStream is = url.openStream();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ) {
+                byte[] byteChunk = new byte[4096];
+                int i;
+                while ((i = is.read(byteChunk)) > 0) {
+                    baos.write(byteChunk, 0, i);
                 }
+                return Base64.getEncoder().encodeToString(baos.toByteArray());
             }
+        } catch (IOException | URISyntaxException e) {
+            logger.error(e.getMessage(), e);
+            throw new RuntimeException(e);
         }
-        return Base64.getEncoder().encodeToString(baos.toByteArray());
     }
 
 

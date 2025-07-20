@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class XxlJobDemo {
     @XxlJob("demoJobHandler")
-    public void demoJobHandler() throws Exception {
+    public void demoJobHandler() {
         XxlJobHelper.log("XXL-JOB, Hello World.");
     }
 

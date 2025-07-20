@@ -10,6 +10,8 @@ import org.apache.maven.plugin.logging.Log;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -47,7 +49,7 @@ public class GenHelper {
 
         try {
             String urlStr = getGenZipAddr(authCode, log);
-            URL url = new URL(urlStr);
+            URL url = new URI(urlStr).toURL();
             log.info("=======> download addr: " + url.getPath());
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -102,7 +104,7 @@ public class GenHelper {
 
             long end = System.currentTimeMillis();
             log.info("=======> 完成代码生成, 耗时 " + (end - start) + "ms <=========");
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             throw GenException.error(e.getMessage());
         }
         return true;
@@ -175,7 +177,7 @@ public class GenHelper {
         String str = null;
         try {
             String urlStr = getGenRule(authCode, log);
-            URL url = new URL(urlStr);
+            URL url = new URI(urlStr).toURL();
             log.info("=======> rule addr: " + url.getPath());
 
             HttpURLConnection roleConn = (HttpURLConnection) url.openConnection();
@@ -201,7 +203,7 @@ public class GenHelper {
                 }
                 str = buffer.toString();
             }
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             log.error(e.getMessage(), e);
             throw GenException.error("获取规则失败: " + e.getMessage());
         }

@@ -91,10 +91,8 @@ public class Sys implements ApplicationRunner {
     }
 
     private void initCache() {
-        ThreadUtil.execAsync(() -> {
-            ThreadUtil.sleep(1, TimeUnit.SECONDS);
-            // lzCache.cache2Local();
-        },false);
+        ThreadUtil.execAsync(() -> ThreadUtil.sleep(1, TimeUnit.SECONDS),false);
+        // lzCache.cache2Local();
         logger.info("run {} over", this.getClass());
     }
 

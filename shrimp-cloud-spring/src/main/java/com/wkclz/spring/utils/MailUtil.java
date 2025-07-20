@@ -203,7 +203,7 @@ public class MailUtil {
         }
     }
 
-    public static void mainFun(String[] args) throws Exception {
+    public static void mainFun() {
         MailUtil mu = new MailUtil();
         mu.setEmailHost("smtp.exmail.qq.com");
         mu.setEmailFrom("test@wkclz.com");
@@ -218,7 +218,7 @@ public class MailUtil {
         // test6(mu);
     }
 
-    public static void test1(MailUtil mu) throws Exception {
+    public static void test1(MailUtil mu) {
         String subject = "第一封，简单文本邮件";
         StringBuilder builder = new StringBuilder();
         builder.append("我相信天上不会掉馅饼");
@@ -230,7 +230,7 @@ public class MailUtil {
         mu.sendEmail();
     }
 
-    public static void test2(MailUtil mu) throws Exception {
+    public static void test2(MailUtil mu) {
         String subject = "第二封，HTML邮件";
         StringBuilder builder = new StringBuilder();
         builder.append("<html><body>老婆：<br />我是你的老公吗？<br />是的，是很久了。<br /></body></html>");
@@ -242,10 +242,10 @@ public class MailUtil {
         mu.sendEmail();
     }
 
-    public static void test3(MailUtil mu) throws Exception {
+    public static void test3(MailUtil mu) {
         String subject = "第三封，图片邮件";
 
-        Map<String, String> pictures = new HashMap<String, String>();
+        Map<String, String> pictures = new HashMap<>();
         pictures.put("d1", "D:/work/download/d1.jpg");
         pictures.put("d2", "D:/work/download/测试图片2.jpg");
         pictures.put("d3", "D:/work/download/d3.jpg");
@@ -266,9 +266,9 @@ public class MailUtil {
 
     }
 
-    public static void test4(MailUtil mu) throws Exception {
+    public static void test4(MailUtil mu) {
         String subject = "第四封，附件邮件";
-        Map<String, String> attachments = new HashMap<String, String>();
+        Map<String, String> attachments = new HashMap<>();
         attachments.put("d1.jar", "D:/work/download/activation.jar");
         attachments.put("d2.doc", "C:/Documents and Settings/Administrator/桌面/Java设计模式.doc");
         StringBuilder builder = new StringBuilder();
@@ -282,15 +282,15 @@ public class MailUtil {
         mu.sendEmail();
     }
 
-    public static void test5(MailUtil mu) throws Exception {
+    public static void test5(MailUtil mu) {
         String subject = "第五封，综合邮件";
 
-        Map<String, String> attachments = new HashMap<String, String>();
+        Map<String, String> attachments = new HashMap<>();
         attachments.put("d1.jar", "D:/work/download/activation.jar");
         attachments.put("d2.doc",
             "C:/Documents and Settings/Administrator/桌面/Java设计模式.doc");
 
-        Map<String, String> pictures = new HashMap<String, String>();
+        Map<String, String> pictures = new HashMap<>();
         pictures.put("d1", "D:/work/download/d1.jpg");
         pictures.put("d2", "D:/work/download/测试图片2.jpg");
         pictures.put("d3", "D:/work/download/d3.jpg");
@@ -312,15 +312,15 @@ public class MailUtil {
         mu.sendEmail();
     }
 
-    public static void test6(MailUtil mu) throws Exception {
+    public static void test6(MailUtil mu) {
         String subject = "第五封，群发邮件";
 
-        Map<String, String> attachments = new HashMap<String, String>();
+        Map<String, String> attachments = new HashMap<>();
         attachments.put("d1.jar", "D:/work/download/activation.jar");
         attachments.put("d2.doc",
             "C:/Documents and Settings/Administrator/桌面/Java设计模式.doc");
 
-        Map<String, String> pictures = new HashMap<String, String>();
+        Map<String, String> pictures = new HashMap<>();
         pictures.put("d1", "D:/work/download/d1.jpg");
         pictures.put("d2", "D:/work/download/测试图片2.jpg");
         pictures.put("d3", "D:/work/download/d3.jpg");

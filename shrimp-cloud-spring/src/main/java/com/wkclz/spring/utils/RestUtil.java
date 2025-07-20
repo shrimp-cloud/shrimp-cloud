@@ -44,7 +44,7 @@ public class RestUtil {
             mappings = getMapping(packagePath);
         }
         if (StringUtils.isNotBlank(filter)) {
-            mappings = mappings.stream().filter(t -> t.getApiUri().contains(filter)).collect(Collectors.toList());
+            mappings = mappings.stream().filter(t -> t.getApiUri().contains(filter)).toList();
         }
         mappings.forEach(t -> t.setAppCode(appCode));
         return mappings;

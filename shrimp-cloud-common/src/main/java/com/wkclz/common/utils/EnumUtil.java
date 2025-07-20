@@ -29,14 +29,10 @@ public class EnumUtil {
 
     public static void main(String[] args) {
         List<EnumTypeEntity> dictTypeEntitys = getEnumTypeEntitys("com.wkclz.core.enums");
-        dictTypeEntitys.forEach(dictTypeEntity -> {
-            System.out.println(dictTypeEntity.getEnumType() + "----->" + dictTypeEntity.getEnumTypeDesc());
-        });
+        dictTypeEntitys.forEach(dictTypeEntity -> System.out.println(dictTypeEntity.getEnumType() + "----->" + dictTypeEntity.getEnumTypeDesc()));
         System.out.println("----------------- ## -----------------");
         List<EnumEntity> education = getEnumEntitys("com.wkclz.core.enums", "EDUCATION");
-        education.forEach(enumEntity -> {
-            System.out.println(enumEntity.getEnumKey() + "----->" + enumEntity.getEnumValue());
-        });
+        education.forEach(enumEntity -> System.out.println(enumEntity.getEnumKey() + "----->" + enumEntity.getEnumValue()));
     }
 
     /**
