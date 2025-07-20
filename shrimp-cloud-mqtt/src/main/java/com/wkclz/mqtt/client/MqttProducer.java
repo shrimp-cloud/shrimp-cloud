@@ -15,6 +15,7 @@ import org.springframework.util.CollectionUtils;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author wangkaicun
@@ -55,19 +56,21 @@ public class MqttProducer {
             qos = Qos.QOS_1;
         }
         Qos finalQos = qos;
-        Integer finalDelay = delay;
-        ThreadUtil.newExecutor().execute(() -> {
-            for (String msg : msgs) {
-                try {
-                    Thread.sleep(finalDelay);
-                } catch (InterruptedException e) {
-                    //
+        int finalDelay = delay;
+        try (ThreadPoolExecutor executor = ThreadUtil.newExecutor()) {
+            executor.execute(() -> {
+                for (String msg : msgs) {
+                    try {
+                        Thread.sleep(finalDelay);
+                    } catch (InterruptedException e) {
+                        //
+                    }
+                    log.info("mqtt sent msg, topic:{}, message: {}", topic, msg);
+                    byte[] bytes = msg.getBytes(StandardCharsets.UTF_8);
+                    sendMsg(topic, bytes, finalQos);
                 }
-                log.info("mqtt sent msg, topic:{}, message: {}", topic, msg);
-                byte[] bytes = msg.getBytes(StandardCharsets.UTF_8);
-                sendMsg(topic, bytes, finalQos);
-            }
-        });
+            });
+        }
     }
 
     public void send(String topic, Object msg) {
