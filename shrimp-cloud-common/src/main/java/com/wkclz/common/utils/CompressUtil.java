@@ -83,7 +83,7 @@ public class CompressUtil {
             // 向zip输出流中添加一个zip实体，构造器中name为zip实体的文件的名字
             // copy文件到zip输出流中
             int len;
-            try (FileInputStream in = new FileInputStream(sourceFile);) {
+            try (FileInputStream in = new FileInputStream(sourceFile)) {
                 zos.putNextEntry(new ZipEntry(name));
 
                 while ((len = in.read(buf)) != -1) {
@@ -144,9 +144,7 @@ public class CompressUtil {
             throw new RuntimeException(srcFile.getPath() + "所指文件不存在");
         }
         // 开始解压
-        ZipFile zipFile = null;
-        try {
-            zipFile = new ZipFile(srcFile);
+        try (ZipFile zipFile = new ZipFile(srcFile)) {
             Enumeration<?> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = (ZipEntry) entries.nextElement();
@@ -168,30 +166,22 @@ public class CompressUtil {
                         throw BizException.error("创建文件失败");
                     }
                     // 将压缩文件内容写入到这个文件中
-                    InputStream is = zipFile.getInputStream(entry);
-                    FileOutputStream fos = new FileOutputStream(targetFile);
-                    int len;
-                    byte[] buf = new byte[BUFFER_SIZE];
-                    while ((len = is.read(buf)) != -1) {
-                        fos.write(buf, 0, len);
+                    try (
+                        InputStream is = zipFile.getInputStream(entry);
+                        FileOutputStream fos = new FileOutputStream(targetFile);
+                        ) {
+                        int len;
+                        byte[] buf = new byte[BUFFER_SIZE];
+                        while ((len = is.read(buf)) != -1) {
+                            fos.write(buf, 0, len);
+                        }
                     }
-                    // 关流顺序，先打开的后关闭
-                    fos.close();
-                    is.close();
                 }
             }
             long end = System.currentTimeMillis();
             logger.info("解压完成，耗时：{} ms", (end - start));
         } catch (Exception e) {
             throw new RuntimeException("unzip error from ZipUtils", e);
-        } finally {
-            if (zipFile != null) {
-                try {
-                    zipFile.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 

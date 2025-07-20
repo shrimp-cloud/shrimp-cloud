@@ -76,7 +76,7 @@ public class GenHelper {
             // 保存文件
             File file = new File(savePath);
 
-            try (FileOutputStream fos = new FileOutputStream(file);) {
+            try (FileOutputStream fos = new FileOutputStream(file)) {
                 fos.write(getData);
             }
 
@@ -171,9 +171,7 @@ public class GenHelper {
      * @return
      */
     private static List<GenTaskInfo> getRule(String authCode, Log log) {
-        InputStream is = null;
-        InputStreamReader isr = null;
-        BufferedReader br = null;
+
         String str = null;
         try {
             String urlStr = getGenRule(authCode, log);
@@ -192,38 +190,20 @@ public class GenHelper {
                 throw new RuntimeException("网络请求错误：" + roleConn.getResponseMessage());
             }
 
-            is = roleConn.getInputStream();
-            isr = new InputStreamReader(is, StandardCharsets.UTF_8);
-            br = new BufferedReader(isr);
-            StringBuilder buffer = new StringBuilder();
-            while ((str = br.readLine()) != null) {
-                buffer.append(str);
+            try (
+                InputStream is = roleConn.getInputStream();
+                InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
+                BufferedReader br = new BufferedReader(isr);
+            ) {
+                StringBuilder buffer = new StringBuilder();
+                while ((str = br.readLine()) != null) {
+                    buffer.append(str);
+                }
+                str = buffer.toString();
             }
-            str = buffer.toString();
         } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (isr != null) {
-                try {
-                    isr.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            log.error(e.getMessage(), e);
+            throw GenException.error("获取规则失败: " + e.getMessage());
         }
 
         GenResult result = JSON.parseObject(str, GenResult.class);

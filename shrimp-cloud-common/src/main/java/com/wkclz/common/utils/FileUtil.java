@@ -81,38 +81,23 @@ public class FileUtil {
      * @return
      */
     public static String readFile(File file) {
-        FileReader reader = null;
-        BufferedReader bReader = null;
         try {
             if (!file.isFile()) {
                 throw new RuntimeException("error file!");
             }
-            reader = new FileReader(file);
-            bReader = new BufferedReader(reader);
-            StringBuilder sb = new StringBuilder();
-            String s = "";
-            while ((s = bReader.readLine()) != null) {
-                sb.append(s + "\n");
+            try (
+                FileReader reader = new FileReader(file);
+                BufferedReader bReader = new BufferedReader(reader);
+            ) {
+                StringBuilder sb = new StringBuilder();
+                String s = "";
+                while ((s = bReader.readLine()) != null) {
+                    sb.append(s + "\n");
+                }
+                return sb.toString();
             }
-            bReader.close();
-            return sb.toString();
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    logger.error(e.getMessage(), e);
-                }
-            }
-            if (bReader != null) {
-                try {
-                    bReader.close();
-                } catch (IOException e) {
-                    logger.error(e.getMessage(), e);
-                }
-            }
         }
         return null;
     }
@@ -121,7 +106,7 @@ public class FileUtil {
         return writeFile(new File(filePath), context);
     }
     public static File writeFile(File file, String context) {
-        FileWriter writer = null;
+        ;
         try {
             if (file.exists()) {
                 throw BizException.error("文件已存在，无法覆盖： {}", file.getAbsolutePath());
@@ -130,28 +115,13 @@ public class FileUtil {
             if (!newFile) {
                 throw BizException.error("创建文件失败");
             }
-            writer = new FileWriter(file);
-            writer.write(context);
-            writer.flush();
-            writer.close();
+            try (FileWriter writer = new FileWriter(file)) {
+                writer.write(context);
+                writer.flush();
+            }
             return file;
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.flush();
-                } catch (IOException e) {
-
-                    // do nothing
-                }
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    logger.error("write {} and close error: {}", file.getAbsoluteFile(), e.getMessage());
-                    // do nothing
-                }
-            }
         }
     }
 

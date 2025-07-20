@@ -177,7 +177,7 @@ public class MyBatisHelper {
                 }
             }
 
-            try (FileWriter writer = new FileWriter(file);) {
+            try (FileWriter writer = new FileWriter(file)) {
                 writer.write("");
                 writer.write(xmlStr);
                 writer.flush();

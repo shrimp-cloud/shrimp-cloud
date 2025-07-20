@@ -1,5 +1,6 @@
 package com.wkclz.common.utils;
 
+import com.wkclz.common.exception.BizException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,23 +44,14 @@ public class PropertiesUtil {
     // 文件转 Properties
     public static Properties propFile2Prop(String fileStr) {
 
-        InputStream in = null;
         Properties prop = new Properties();
-        try {
-            in = new BufferedInputStream(new FileInputStream(new File(fileStr)));
+        try (InputStream in = new BufferedInputStream(new FileInputStream(fileStr));) {
             prop.load(in);
         } catch (FileNotFoundException e) {
             logger.error(e.getMessage(), e);
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    logger.error(e.getMessage(), e);
-                }
-            }
+            throw BizException.error("转换失败!");
         }
         return prop;
     }
@@ -86,24 +78,12 @@ public class PropertiesUtil {
         if (!file.exists()) {
             return null;
         }
-
-        InputStream in = null;
         Properties props = new Properties();
-        try {
-            in = new BufferedInputStream(new FileInputStream(file));
+        try (InputStream in = new BufferedInputStream(new FileInputStream(file))) {
             props.load(in);
-        } catch (FileNotFoundException e) {
-            logger.error(e.getMessage(), e);
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    logger.error(e.getMessage(), e);
-                }
-            }
+            throw BizException.error("转换失败!");
         }
         return props;
 
@@ -131,20 +111,10 @@ public class PropertiesUtil {
             }
         }
 
-        Writer fw = null;
-        try {
-            fw = new FileWriter(propertiesPath);
+        try (Writer fw = new FileWriter(propertiesPath)) {
             sortProp.store(fw, "此属性文件由程序自动管理，请不要手动编辑");
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
-        } finally {
-            if (fw != null) {
-                try {
-                    fw.close();
-                } catch (IOException e) {
-                    logger.error(e.getMessage(), e);
-                }
-            }
         }
     }
 
@@ -172,13 +142,7 @@ public class PropertiesUtil {
                 field.setAccessible(true);
                 field.set(obj, prop.get(field.getName()));
             }
-        } catch (InstantiationException e) {
-            logger.error(e.getMessage(), e);
-        } catch (IllegalAccessException e) {
-            logger.error(e.getMessage(), e);
-        } catch (NoSuchMethodException e) {
-            logger.error(e.getMessage(), e);
-        } catch (InvocationTargetException e) {
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             logger.error(e.getMessage(), e);
         }
         return obj;

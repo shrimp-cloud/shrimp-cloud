@@ -38,46 +38,34 @@ public class ResponseHelper {
         if (response == null || file == null) {
             throw BizException.error("response and file can not be null!");
         }
-        OutputStream fops = null;
-        InputStream in = null;
-        int len = 0;
-        byte[] bytes = new byte[1024];
+
+        String fileName = file.getName();
         try {
-            String fileName = file.getName();
-            String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
-            logger.info("the excel file is in {}", file.getPath());
+            fileName = new String(fileName.getBytes(StandardCharsets.UTF_8), "ISO8859-1");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
 
-            in = new FileInputStream(file);
+        String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
+        logger.info("the excel file is in {}", file.getPath());
 
-            response.setContentType("application/x-excel");
-            response.setCharacterEncoding("UTF-8");
-            response.setHeader("Content-Disposition", "attachment; filename=" + new String(fileName.getBytes(StandardCharsets.UTF_8), "ISO8859-1") + "." + suffix);
-            response.setHeader("Content-Length", String.valueOf(file.length()));
+        response.setContentType("application/x-excel");
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName + "." + suffix);
+        response.setHeader("Content-Length", String.valueOf(file.length()));
 
-            fops = response.getOutputStream();
+        try (
+            InputStream in = new FileInputStream(file);
+            OutputStream fops = response.getOutputStream();
+        ) {
+            byte[] bytes = new byte[1024];
+            int len;
             while ((len = in.read(bytes)) != -1) {
                 fops.write(bytes, 0, len);
             }
             fops.flush();
-            fops.close();
-
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-        } finally {
-            if (fops != null) {
-                try {
-                    fops.close();
-                } catch (IOException e) {
-                    logger.error(e.getMessage(), e);
-                }
-            }
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    logger.error(e.getMessage(), e);
-                }
-            }
         }
     }
 

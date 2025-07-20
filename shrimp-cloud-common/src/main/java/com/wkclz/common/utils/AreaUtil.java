@@ -11,7 +11,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -287,8 +289,6 @@ public class AreaUtil {
         }
         File file2Save = new File(savePath + urlStr.substring(urlStr.lastIndexOf("/")));
 
-        FileOutputStream fos = null;
-        OutputStreamWriter osw = null;
         try {
             Document doc;
 
@@ -308,11 +308,13 @@ public class AreaUtil {
                     throw BizException.error("请开启JavaScript并刷新该页: " +urlStr);
                 }
 
-                fos = new FileOutputStream(file2Save, false);
-                osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
-                osw.write(html);
-                osw.flush();
-
+                try (
+                    FileOutputStream fos = new FileOutputStream(file2Save, false);
+                    OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
+                    ) {
+                    osw.write(html);
+                    osw.flush();
+                }
                 doc = Jsoup.parse(file2Save, "UTF-8", urlStr);
             }
 
@@ -331,21 +333,6 @@ public class AreaUtil {
             }
             System.out.println("太惨了。。被限制了。。" + e.getMessage());
             System.exit(0);
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    System.err.println(e.getMessage());
-                }
-            }
-            if (osw != null) {
-                try {
-                    osw.close();
-                } catch (IOException e) {
-                    System.err.println(e.getMessage());
-                }
-            }
         }
         return null;
     }
