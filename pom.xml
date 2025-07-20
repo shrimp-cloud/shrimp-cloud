@@ -34,7 +34,7 @@
     </modules>
 
     <properties>
-        <sonar.host.url>http://10.0.1.97:9000</sonar.host.url>
+        <sonar.host.url>http://sonar.wkclz.com:9000</sonar.host.url>
         <sonar.projectKey>shrimp-cloud</sonar.projectKey>
         <sonar.login>sqp_8e09aac0eb4d9efae77bef2525df713d1ec8b0ee</sonar.login>
     </properties>
