@@ -1,6 +1,6 @@
 package com.wkclz.common.entity;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import com.wkclz.common.emuns.ResultStatus;
 import com.wkclz.common.exception.BizException;
 import lombok.Data;
@@ -52,13 +52,13 @@ public class Result<T> implements Serializable {
 
 
     public Result setError(CharSequence template, Object... params) {
-        this.msg = StrUtil.format(template, params);;
+        this.msg = CharSequenceUtil.format(template, params);
         this.code = -1;
         return this;
     }
 
     public Result setRemind(CharSequence template, Object... params) {
-        this.msg = StrUtil.format(template, params);;
+        this.msg = CharSequenceUtil.format(template, params);
         this.code = 0;
         return this;
     }
@@ -79,7 +79,7 @@ public class Result<T> implements Serializable {
 
     public static Result error(CharSequence template, Object... params) {
         Result result = new Result();
-        result.msg = StrUtil.format(template, params);
+        result.msg = CharSequenceUtil.format(template, params);
         result.code = -1;
         return result;
     }
@@ -100,13 +100,13 @@ public class Result<T> implements Serializable {
     public static Result error(Integer code, CharSequence template, Object... params) {
         Result result = new Result();
         result.code = code;
-        result.msg = StrUtil.format(template, params);
+        result.msg = CharSequenceUtil.format(template, params);
         return result;
     }
 
     public static Result remind(CharSequence template, Object... params) {
         Result result = new Result();
-        result.msg = StrUtil.format(template, params);
+        result.msg = CharSequenceUtil.format(template, params);
         result.code = 0;
         return result;
     }

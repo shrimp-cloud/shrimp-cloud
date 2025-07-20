@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 
 public class ResponseHelper {
 
-    private final static Logger logger = LoggerFactory.getLogger(ResponseHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(ResponseHelper.class);
 
     public static boolean responseError(HttpServletResponse rep, Result result) {
         try {

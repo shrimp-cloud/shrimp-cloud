@@ -22,8 +22,8 @@ import java.util.Properties;
 public class UpdateInterceptor implements Interceptor {
 
     private static final Logger logger = LoggerFactory.getLogger(UpdateInterceptor.class);
-    private final static String MDC_USER_CODE_KEY = "userCode";
-    private final static String DEFAULT_USER_CODE = "guest";
+    private static final String MDC_USER_CODE_KEY = "userCode";
+    private static final String DEFAULT_USER_CODE = "guest";
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
@@ -46,18 +46,16 @@ public class UpdateInterceptor implements Interceptor {
         boolean checkId = MDC.get(MybatisConfiguration.CHECK_ID) != null;
 
         // 参数为对象
-        if (parameter instanceof BaseEntity) {
-            checkEntity(parameter, commandType, userCode, chechVersion, checkId);
+        if (parameter instanceof BaseEntity baseEntity) {
+            checkEntity(baseEntity, commandType, userCode, chechVersion, checkId);
         }
 
         // 参数为 List 【在 Map 里面】
-        if (parameter instanceof Map){
-            Map parameterMap = (Map)parameter;
-            Collection values = parameterMap.values();
+        if (parameter instanceof Map map) {
+            Collection values = map.values();
             for (Object parameterObj : values) {
-                if (parameterObj instanceof Collection){
-                    Collection parameters = (Collection)parameterObj;
-                    for (Object p:parameters) {
+                if (parameterObj instanceof Collection collection) {
+                    for (Object p : collection) {
                         boolean isBaseEntity = checkEntity(p, commandType, userCode, chechVersion, checkId);
                         if (!isBaseEntity) {
                             break;
@@ -81,11 +79,10 @@ public class UpdateInterceptor implements Interceptor {
     public void setProperties(Properties properties) {
     }
 
-    private static boolean checkEntity(Object paramter, SqlCommandType commandType, String userCode, boolean chechVersion, boolean checkId){
-        if (!(paramter instanceof BaseEntity)) {
+    private static boolean checkEntity(Object paramter, SqlCommandType commandType, String userCode, boolean chechVersion, boolean checkId) {
+        if (!(paramter instanceof BaseEntity clearPatameter)) {
             return false;
         }
-        BaseEntity clearPatameter = (BaseEntity) paramter;
         // insert, upadte, delete 修改人/时间
         clearPatameter.setUpdateBy(userCode);
         if (clearPatameter.getUpdateTime() != null) {
@@ -96,7 +93,7 @@ public class UpdateInterceptor implements Interceptor {
             clearPatameter.setId(null);
             clearPatameter.setVersion(null);
             clearPatameter.setCreateBy(userCode);
-            if (clearPatameter.getSort() == null){
+            if (clearPatameter.getSort() == null) {
                 clearPatameter.setSort(0);
             }
         }

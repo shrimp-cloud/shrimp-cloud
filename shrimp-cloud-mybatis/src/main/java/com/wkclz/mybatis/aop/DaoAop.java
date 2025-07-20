@@ -68,9 +68,9 @@ public class DaoAop {
 
         SqlCommandType sqlCommandType = getSqlCommandType(point);
 
-        if (SqlCommandType.SELECT == sqlCommandType ){
+        if (SqlCommandType.SELECT == sqlCommandType) {
             Object[] args = point.getArgs();
-            if (args != null){
+            if (args != null) {
                 for (Object arg : args) {
                     check(arg);
                 }
@@ -86,15 +86,13 @@ public class DaoAop {
         }
     }
 
-    private static void check(Object arg){
-        if (arg == null){
+    private static void check(Object arg) {
+        if (arg == null) {
             return;
         }
-        if (!(arg instanceof BaseEntity)){
+        if (!(arg instanceof BaseEntity entity)) {
             return;
         }
-
-        BaseEntity entity = (BaseEntity) arg;
 
         BeanUtil.removeBlank(entity);
         String orderBy = entity.getOrderBy();
@@ -103,7 +101,7 @@ public class DaoAop {
             throw BizException.error("orderBy 有注入风险，请谨慎操作！");
         }
 
-        if (StringUtils.isBlank(orderBy)){
+        if (StringUtils.isBlank(orderBy)) {
             orderBy = BaseEntity.DEFAULE_ORDER_BY;
         }
         // 大小写处理
@@ -120,20 +118,19 @@ public class DaoAop {
     }
 
 
-    private SqlCommandType getSqlCommandType(ProceedingJoinPoint point){
+    private SqlCommandType getSqlCommandType(ProceedingJoinPoint point) {
         Signature signature = point.getSignature();
         String declaringTypeName = signature.getDeclaringTypeName();
         String name = signature.getName();
         String pointId = declaringTypeName + "." + name;
-        if (MAPPED_STATEMENTS == null){
+        if (MAPPED_STATEMENTS == null) {
             MAPPED_STATEMENTS = new HashMap<>();
 
             // 非父类
             Configuration configuration = sqlSession.getConfiguration();
             Collection mappedStatements = configuration.getMappedStatements();
             for (Object mappedStatementObj : mappedStatements) {
-                if (mappedStatementObj instanceof  MappedStatement){
-                    MappedStatement mappedStatement = (MappedStatement)mappedStatementObj;
+                if (mappedStatementObj instanceof MappedStatement mappedStatement) {
                     String id = mappedStatement.getId();
                     SqlCommandType sqlCommandType = mappedStatement.getSqlCommandType();
                     MAPPED_STATEMENTS.put(id, sqlCommandType);
@@ -167,7 +164,7 @@ public class DaoAop {
 
         }
         SqlCommandType sqlCommandType = MAPPED_STATEMENTS.get(pointId);
-        if (sqlCommandType != null){
+        if (sqlCommandType != null) {
             return sqlCommandType;
         }
 

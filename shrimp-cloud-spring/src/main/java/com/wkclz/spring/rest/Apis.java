@@ -1,6 +1,6 @@
 package com.wkclz.spring.rest;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import com.wkclz.common.entity.Result;
 import com.wkclz.common.exception.BizException;
 import com.wkclz.common.utils.StringUtil;
@@ -42,7 +42,7 @@ public class Apis {
 
             // 生成方法名
             String funName = getFunName(mapping.getApiUri());
-            String fun = StrUtil.format(funTemp, mapping.getApiName(), funName, router + mapping.getApiUri());
+            String fun = CharSequenceUtil.format(funTemp, mapping.getApiName(), funName, router + mapping.getApiUri());
             sb.append(fun).append(lineSeparator);
         }
         return Result.data(sb.toString());
@@ -64,7 +64,7 @@ public class Apis {
                 funTemp = "// {}\nexport const {} = (data: any) => request({ url: '{}', method: 'post', data })\n";
             }
             String funName = getFunName(mapping.getApiUri());
-            String fun = StrUtil.format(funTemp, mapping.getApiName(), funName, router + mapping.getApiUri());
+            String fun = CharSequenceUtil.format(funTemp, mapping.getApiName(), funName, router + mapping.getApiUri());
             sb.append(fun).append(lineSeparator);
         }
         return Result.data(sb.toString());
@@ -86,7 +86,7 @@ public class Apis {
                 funTemp = "// {}\nexport function {}(data) {\n  return request({ url: '{}', method: 'post', data });\n}";
             }
             String funName = getFunName(mapping.getApiUri());
-            String fun = StrUtil.format(funTemp, mapping.getApiName(), funName, router + mapping.getApiUri());
+            String fun = CharSequenceUtil.format(funTemp, mapping.getApiName(), funName, router + mapping.getApiUri());
             sb.append(fun).append(lineSeparator);
         }
         return Result.data(sb.toString());

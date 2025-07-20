@@ -1,8 +1,7 @@
 package com.wkclz.common.exception;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import com.wkclz.common.emuns.ResultStatus;
-import org.slf4j.MDC;
 
 public class BizException extends RuntimeException {
 
@@ -60,7 +59,7 @@ public class BizException extends RuntimeException {
         if (params == null || params.length == 0) {
             return msg;
         }
-        return StrUtil.format(msg, params);
+        return CharSequenceUtil.format(msg, params);
     }
 
 

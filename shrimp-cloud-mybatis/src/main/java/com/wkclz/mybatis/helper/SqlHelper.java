@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
 
 public class SqlHelper {
 
-    private final static Pattern OBJ_PATTERN = Pattern.compile("#\\{.*?}");
-    private final static  Pattern LIST_PATTERN = Pattern.compile("collection=([\"|']).*?[\"|']");
+    private static final Pattern OBJ_PATTERN = Pattern.compile("#\\{.*?}");
+    private static final  Pattern LIST_PATTERN = Pattern.compile("collection=([\"|']).*?[\"|']");
 
     /**
      * 从 sql 中提取参数集

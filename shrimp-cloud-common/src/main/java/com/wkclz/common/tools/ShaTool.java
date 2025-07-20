@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ShaTool {
 
-    private final static List<String> ALGORITHMS = Arrays.asList("SHA-1", "SHA-256", "SHA-384", "SHA-512");
+    private static final List<String> ALGORITHMS = Arrays.asList("SHA-1", "SHA-256", "SHA-384", "SHA-512");
 
     public static String sha1(String input) {
         return sha(input, "SHA-1");

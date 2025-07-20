@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class Sys implements ApplicationRunner {
 
-    private final static Logger logger = LoggerFactory.getLogger(Sys.class);
+    private static final Logger logger = LoggerFactory.getLogger(Sys.class);
 
 
     // default DEV 当前启动的系统环境【初始为 DEV】

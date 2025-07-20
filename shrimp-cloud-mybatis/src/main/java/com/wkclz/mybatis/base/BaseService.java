@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<Entity>> {
 
-    private final static int INSERT_SIZE = 1000;
+    private static final int INSERT_SIZE = 1000;
 
     @Resource
     protected Mapper mapper;

@@ -73,7 +73,7 @@ public class ErrorHandler {
 
 
     @ExceptionHandler(BizException.class)
-    public Result bizExceptionHandler(BizException e){
+    public Result bizExceptionHandler(BizException e) {
         logger.error(e.getMessage(), e);
         return Result.error(-1, e.getMessage());
     }
@@ -83,12 +83,12 @@ public class ErrorHandler {
         logger.error(e.getMessage(), e);
 
         BizException bizException = getBizException(e);
-        if (bizException != null){
+        if (bizException != null) {
             return Result.error(bizException);
         }
 
         String message = e.getMessage();
-        if (message == null || message.trim().isEmpty() || "null".equals(message)){
+        if (message == null || message.trim().isEmpty() || "null".equals(message)) {
             StringWriter out = new StringWriter();
             e.printStackTrace(new PrintWriter(out));
             message = out.toString();
@@ -99,29 +99,30 @@ public class ErrorHandler {
 
     /**
      * Throwable 找 BizException，找二级原因
+     *
      * @param throwable
      * @return
      */
-    private static BizException getBizException(Throwable throwable){
-        if (throwable == null){
+    private static BizException getBizException(Throwable throwable) {
+        if (throwable == null) {
             return null;
         }
-        if (throwable instanceof BizException){
-            return (BizException) throwable;
+        if (throwable instanceof BizException bizException) {
+            return bizException;
         }
         Throwable cause = throwable.getCause();
-        if (cause == null){
+        if (cause == null) {
             return null;
         }
-        if (cause instanceof BizException){
-            return (BizException) cause;
+        if (cause instanceof BizException bizException) {
+            return bizException;
         }
         cause = cause.getCause();
-        if (cause == null){
+        if (cause == null) {
             return null;
         }
-        if (cause instanceof BizException){
-            return (BizException) cause;
+        if (cause instanceof BizException bizException) {
+            return bizException;
         }
         return null;
     }

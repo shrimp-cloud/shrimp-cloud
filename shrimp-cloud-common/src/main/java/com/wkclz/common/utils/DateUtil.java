@@ -22,10 +22,10 @@ public class DateUtil {
     private static final String SDF_YYYY_MM_DD_HH_MM_SS_SSS = "yyyy-MM-dd HH:mm:ss.SSS";
 
 
-    private final static long DAY = 24 * 60 * 60 * 1000L;
-    private final static long HOUR = 60 * 60 * 1000L;
-    private final static long MIN = 60 * 1000L;
-    private final static long SEC = 1000L;
+    private static final long DAY = 24 * 60 * 60 * 1000L;
+    private static final long HOUR = 60 * 60 * 1000L;
+    private static final long MIN = 60 * 1000L;
+    private static final long SEC = 1000L;
 
 
     /**

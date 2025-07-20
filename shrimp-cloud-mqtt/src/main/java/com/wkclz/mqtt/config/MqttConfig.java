@@ -258,8 +258,8 @@ public class MqttConfig {
                 //得到单个IP
                 InetAddress inetAddress = inetAddresses.nextElement();
                 //确定要是 ipv4的地址
-                if (inetAddress instanceof Inet4Address) {
-                    String ip = inetAddress.getHostAddress();
+                if (inetAddress instanceof Inet4Address address) {
+                    String ip = address.getHostAddress();
                     if (!"127.0.0.1".equals(ip)){
                         ipList.add(ip);
                     }

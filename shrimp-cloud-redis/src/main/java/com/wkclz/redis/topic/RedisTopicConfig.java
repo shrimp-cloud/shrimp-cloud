@@ -13,7 +13,7 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 @Configuration
 public class RedisTopicConfig {
 
-    private final static String CACHE_CONFIG_TOPIC_SUB = "cache-config-topic";
+    private static final String CACHE_CONFIG_TOPIC_SUB = "cache-config-topic";
     private static String CACHE_CONFIG_TOPIC = null;
 
     @Resource

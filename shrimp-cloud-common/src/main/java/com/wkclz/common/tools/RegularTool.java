@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 public class RegularTool {
 
-    private final static Map<String, Pattern> PATTERN_MAP = new HashMap<>();
+    private static final Map<String, Pattern> PATTERN_MAP = new HashMap<>();
 
     private static final Pattern IS_POSITIVE_INTEGER = Pattern.compile("^[1-9]\\d*$");
     private static final Pattern IS_LETTER = Pattern.compile("^[A-Za-z]+$");

@@ -264,7 +264,7 @@ public class MapUtil {
         if (map == null || map.isEmpty()) {
             return null;
         }
-        Map<String, String> sortMap = new TreeMap<String, String>(new MapKeyComparator());
+        Map<String, String> sortMap = new TreeMap<>(new MapKeyComparator());
         sortMap.putAll(map);
         return sortMap;
     }

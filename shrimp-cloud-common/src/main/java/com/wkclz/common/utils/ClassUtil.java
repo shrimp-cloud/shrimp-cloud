@@ -200,7 +200,7 @@ public class ClassUtil {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static Set<Class<?>> getByInterface(Class clazz, Set<Class<?>> classesAll) {
-        Set<Class<?>> classes = new LinkedHashSet<Class<?>>();
+        Set<Class<?>> classes = new LinkedHashSet<>();
         // 获取指定接口的实现类
         if (!clazz.isInterface()) {
             try {

@@ -25,8 +25,8 @@ import java.util.*;
  */
 public class BeanUtil {
 
-    private final static Logger logger = LoggerFactory.getLogger(BeanUtil.class);
-    private final static Map<String, List<PropertyDescriptor>> PROPERTY_DESCRIPTORS = new HashMap<>();
+    private static final Logger logger = LoggerFactory.getLogger(BeanUtil.class);
+    private static final Map<String, List<PropertyDescriptor>> PROPERTY_DESCRIPTORS = new HashMap<>();
 
 
     // BaseEntity 字段缓存
@@ -213,7 +213,7 @@ public class BeanUtil {
         final BeanWrapper src = new BeanWrapperImpl(source);
         PropertyDescriptor[] pds = src.getPropertyDescriptors();
 
-        Set<String> emptyNames = new HashSet<String>();
+        Set<String> emptyNames = new HashSet<>();
         for (PropertyDescriptor pd : pds) {
             Object srcValue = src.getPropertyValue(pd.getName());
             if (srcValue == null) {

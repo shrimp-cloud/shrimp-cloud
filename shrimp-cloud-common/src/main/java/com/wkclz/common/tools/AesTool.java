@@ -10,9 +10,9 @@ import java.security.SecureRandom;
 
 public class AesTool {
 
-    public final static int KEY_128 = 128;
-    public final static int KEY_192 = 192;
-    public final static int KEY_256 = 256;
+    public static final int KEY_128 = 128;
+    public static final int KEY_192 = 192;
+    public static final int KEY_256 = 256;
 
 
     /**

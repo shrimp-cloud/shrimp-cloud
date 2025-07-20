@@ -20,10 +20,10 @@ import java.util.*;
  */
 public class RequestHelper {
 
-    private final static AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
+    private static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
 
 
-    private final static Logger logger = LoggerFactory.getLogger(RequestHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(RequestHelper.class);
 
 
     public static boolean match(String rule, String uri) {

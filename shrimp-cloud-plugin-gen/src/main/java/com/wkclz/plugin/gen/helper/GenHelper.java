@@ -279,8 +279,9 @@ public class GenHelper {
                 // 特例1. *Example.java 为特例，MBG 生产模型时自动生成，直接删除即可
                 if ((tagFile.exists() && deleteFlag) || genFile.getName().endsWith("Example.java")) {
                     log.info("=======> 正在删除文件: " + tagFile.getPath());
-                    boolean delete = tagFile.delete();
-                    if (!delete) {
+                    try {
+                        Files.delete(tagFile.toPath());
+                    } catch (IOException e) {
                         log.error("=======> 删除文件失败: " + tagFile.getPath());
                     }
                 }

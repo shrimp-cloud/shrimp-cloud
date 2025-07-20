@@ -67,8 +67,7 @@ public class SqlInjInterceptor implements Interceptor {
         Violation firstViolation = violations.get(0);
 
         // 指定类型错误
-        if (firstViolation instanceof SyntaxErrorViolation) {
-            SyntaxErrorViolation violation = (SyntaxErrorViolation) firstViolation;
+        if (firstViolation instanceof SyntaxErrorViolation violation) {
             throw new BizException("sql injection violation: " + violation.getMessage());
         }
 

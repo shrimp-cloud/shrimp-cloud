@@ -94,10 +94,10 @@ public abstract class AbstractShrimpRoutingDataSource extends AbstractRoutingDat
 
     @Override
     protected DataSource resolveSpecifiedDataSource(Object dataSource) throws IllegalArgumentException {
-        if (dataSource instanceof DataSource) {
-            return (DataSource) dataSource;
-        } else if (dataSource instanceof String) {
-            return this.dataSourceLookup.getDataSource((String) dataSource);
+        if (dataSource instanceof DataSource ds) {
+            return ds;
+        } else if (dataSource instanceof String str) {
+            return this.dataSourceLookup.getDataSource(str);
         } else {
             throw new IllegalArgumentException(
                 "Illegal data source value - only [javax.sql.DataSource] and String supported: " + dataSource);

@@ -22,8 +22,8 @@ import java.util.Properties;
 
 // 已在 MybatisConfiguration 配置不拦截,拦截了也没法在预编译前
 @Intercepts({
-    @Signature(type = Executor.class,method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}),
-    @Signature(type = Executor.class,method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class})
+    @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}),
+    @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class})
 })
 public class QueryInterceptor implements Interceptor {
 
@@ -36,18 +36,16 @@ public class QueryInterceptor implements Interceptor {
         Object parameter = args[1];
 
         // 参数为对象
-        if (parameter instanceof BaseEntity) {
-            checkEntity(parameter);
+        if (parameter instanceof BaseEntity baseEntity) {
+            checkEntity(baseEntity);
         }
 
         // 参数为 List 【在 Map 里面】
-        if (parameter instanceof Map){
-            Map parameterMap = (Map)parameter;
-            Collection values = parameterMap.values();
+        if (parameter instanceof Map map) {
+            Collection values = map.values();
             for (Object parameterObj : values) {
-                if (parameterObj instanceof Collection){
-                    Collection parameters = (Collection)parameterObj;
-                    for (Object p:parameters) {
+                if (parameterObj instanceof Collection collection) {
+                    for (Object p : collection) {
                         boolean isBaseEntity = checkEntity(p);
                         if (!isBaseEntity) {
                             break;
@@ -74,11 +72,10 @@ public class QueryInterceptor implements Interceptor {
     public void setProperties(Properties properties) {
     }
 
-    private static boolean checkEntity(Object paramter){
-        if (!(paramter instanceof BaseEntity)) {
+    private static boolean checkEntity(Object paramter) {
+        if (!(paramter instanceof BaseEntity entity)) {
             return false;
         }
-        BaseEntity entity = (BaseEntity) paramter;
         entity.init();
 
         BeanUtil.removeBlank(entity);

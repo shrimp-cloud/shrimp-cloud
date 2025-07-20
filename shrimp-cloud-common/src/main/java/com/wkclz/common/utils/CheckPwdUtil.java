@@ -155,7 +155,7 @@ public class CheckPwdUtil {
     private int repeatDex() {
         char[] c = this.psw.toLowerCase().toCharArray();
         HashMap<Character, Integer> hashMap =
-            new HashMap<Character, Integer>();
+            new HashMap<>();
         for (int i = 0; i < c.length; i++) {
             if (hashMap.containsKey(c[i])) {
                 hashMap.put(c[i], hashMap.get(c[i]) + 1);

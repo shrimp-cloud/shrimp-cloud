@@ -10,7 +10,7 @@ import java.security.SecureRandom;
 
 public class DesTool {
 
-    public final static int KEY_56 = 56;
+    public static final int KEY_56 = 56;
 
 
     /**

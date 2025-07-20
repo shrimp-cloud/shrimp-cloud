@@ -1,7 +1,7 @@
 package com.wkclz.spring.helper;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import com.wkclz.common.exception.BizException;
 import com.wkclz.common.utils.SecretUtil;
 import com.wkclz.spring.constant.LogTraceConstant;
@@ -16,7 +16,7 @@ import java.util.Date;
 public class DebugHelper {
 
     private static final Logger logger = LoggerFactory.getLogger(DebugHelper.class);
-    private final static ThreadLocal<DebugInfo> THREAD_LOCAL = new ThreadLocal();
+    private static final ThreadLocal<DebugInfo> THREAD_LOCAL = new ThreadLocal();
 
     public static void debug(){
         debug(null);
@@ -34,7 +34,7 @@ public class DebugHelper {
         long setpCost = debugInfo.getCurrentTime() - debugInfo.getUpperTime();
         long allCost = debugInfo.getCurrentTime() - debugInfo.getStartTime();
 
-        String baseInfo = StrUtil.format("debug {} process @ {} with {} \nstep {} cost {}ms, all in {} ms",
+        String baseInfo = CharSequenceUtil.format("debug {} process @ {} with {} \nstep {} cost {}ms, all in {} ms",
             debugInfo.getDebugId(),
             DateUtil.format(new Date(currentTimeMillis), "yyyy-MM-dd HH:mm:ss.SSS"),
             debugInfo.getInfo(),
@@ -44,7 +44,7 @@ public class DebugHelper {
         );
 
         if (StringUtils.isNotBlank(msg)){
-            String userInfo = StrUtil.format(msg, args);
+            String userInfo = CharSequenceUtil.format(msg, args);
             baseInfo = baseInfo + "\n" + userInfo;
         }
         logger.info(baseInfo);

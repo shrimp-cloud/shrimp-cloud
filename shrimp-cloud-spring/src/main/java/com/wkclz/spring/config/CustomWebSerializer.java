@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter;
 @Configuration
 public class CustomWebSerializer {
 
-    private final static String DEFAULT_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private static final String DEFAULT_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     @Value("${spring.jackson.date-format:}")
     private String dateFormat;

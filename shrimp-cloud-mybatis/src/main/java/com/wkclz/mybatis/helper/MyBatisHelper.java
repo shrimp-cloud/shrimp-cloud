@@ -24,12 +24,12 @@ import java.util.stream.Collectors;
 
 public class MyBatisHelper {
 
-    private final static Logger logger = LoggerFactory.getLogger(MyBatisHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(MyBatisHelper.class);
     private static final Set<String> STATEMENTS = new HashSet<>();
 
-    private final static String LT_TAG = "[__l_t__]";
-    private final static String GT_TAG = "[__g_t__]";
-    private final static List<String> XML_TAG = Arrays.asList(
+    private static final String LT_TAG = "[__l_t__]";
+    private static final String GT_TAG = "[__g_t__]";
+    private static final List<String> XML_TAG = Arrays.asList(
         "if",
         "set",
         "trim",
@@ -222,8 +222,7 @@ public class MyBatisHelper {
         logger.debug("清理Mybatis的namespace={}在mappedStatements、caches、resultMaps、parameterMaps、keyGenerators、sqlFragments中的缓存", nameSpace);
         Arrays.asList("mappedStatements", "caches", "resultMaps", "parameterMaps", "keyGenerators", "sqlFragments").forEach(fieldName -> {
             Object value = getFieldValue(configuration, fieldName);
-            if (value instanceof Map) {
-                Map<?, ?> map = (Map) value;
+            if (value instanceof Map<?, ?> map) {
                 List<Object> list = map.keySet().stream().filter(o -> o.toString().startsWith(nameSpace + ".")).collect(Collectors.toList());
                 logger.debug("需要清理的元素: {}", list);
                 list.forEach(k -> map.remove((Object) k));
@@ -237,8 +236,7 @@ public class MyBatisHelper {
     private static void clearSet(Configuration configuration, String resource) {
         logger.debug("清理mybatis的资源{}在容器中的缓存", resource);
         Object value = getFieldValue(configuration, "loadedResources");
-        if (value instanceof Set) {
-            Set<?> set = (Set) value;
+        if (value instanceof Set<?> set) {
             set.remove(resource);
             set.remove("namespace:" + resource);
         }

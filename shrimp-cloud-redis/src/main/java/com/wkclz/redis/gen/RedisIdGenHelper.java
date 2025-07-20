@@ -25,17 +25,17 @@ public class RedisIdGenHelper {
     private RedisTemplate redisTemplate;
 
     // redis key
-    private final static String REDIS_KEY = "redis:sequence";
+    private static final String REDIS_KEY = "redis:sequence";
     // 时间序列格式
-    private final static String DATE_FORMAT = "yyyyMMddHHmmss";
+    private static final String DATE_FORMAT = "yyyyMMddHHmmss";
     // 上一秒
     private static long lastSecond = 0L;
     // 允许时间回拨的毫秒量 ms
     private final long timeOffset = 100L;
     // 序列最大值
-    private final static int SEQUENCE_MASK = 10000;
+    private static final int SEQUENCE_MASK = 10000;
     // 序列长度
-    private final static int SEQUENCE_LENGTH = 4;
+    private static final int SEQUENCE_LENGTH = 4;
     // 计数器，单位时间内，计数不能超过10000，如果超过，需要等待到下一秒
     private static int TIME_UNIT_COUNT = 0;
 

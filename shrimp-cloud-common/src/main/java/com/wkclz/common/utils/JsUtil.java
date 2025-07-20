@@ -14,7 +14,7 @@ public class JsUtil {
     // 初始化标准对象（如 global, Function 等）
     private static Scriptable scope = null;
     // JavaScript 函数
-    private final static Map<String, Function> JS_FUNCTION = new HashMap<>();
+    private static final Map<String, Function> JS_FUNCTION = new HashMap<>();
 
     public static String exec(String script, String param) {
         Object[] params = { param };
