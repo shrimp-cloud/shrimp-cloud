@@ -84,7 +84,7 @@ public class BeanUtil {
     }
 
 
-    public static List<PropertyDescriptor> getPropertyDescriptors(Class clazz) {
+    public static List<PropertyDescriptor> getPropertyDescriptors(Class<?> clazz) {
         List<PropertyDescriptor> propertyDescriptors = PROPERTY_DESCRIPTORS.get(clazz.getName());
         if (propertyDescriptors != null) {
             return propertyDescriptors;
@@ -101,7 +101,7 @@ public class BeanUtil {
         } catch (IntrospectionException e) {
             logger.error(e.getMessage(), e);
         }
-        return null;
+        return Collections.emptyList();
     }
 
 
@@ -173,7 +173,7 @@ public class BeanUtil {
 
     public static <S> List<S> cp(List<S> source) {
         if (source == null) {
-            return null;
+            return Collections.emptyList();
         }
         if (source.isEmpty()) {
             return new ArrayList<>();
@@ -184,7 +184,7 @@ public class BeanUtil {
 
     public static <S> List<S> cp(List<S> source, Class<S> clazz) {
         if (source == null) {
-            return null;
+            return Collections.emptyList();
         }
         if (source.isEmpty()) {
             return new ArrayList<>();

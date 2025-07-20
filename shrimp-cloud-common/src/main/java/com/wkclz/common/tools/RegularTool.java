@@ -1,9 +1,6 @@
 package com.wkclz.common.tools;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -135,7 +132,7 @@ public class RegularTool {
 
     public static List<String> find(String str, String regex) {
         if (str == null || regex == null) {
-            return null;
+            return Collections.emptyList();
         }
         Pattern pattern = getPattern(regex);
 
@@ -154,7 +151,7 @@ public class RegularTool {
 
     public static String replaceAll(String str, String regex, String replacement) {
         if (str == null) {
-            return null;
+            return "";
         }
         if (regex == null) {
             return str;

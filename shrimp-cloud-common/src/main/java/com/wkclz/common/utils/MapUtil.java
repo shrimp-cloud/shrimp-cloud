@@ -89,7 +89,7 @@ public class MapUtil {
      */
     public static <M extends HashMap, T> List<T> map2ObjList(List<M> maps, Class<T> clazz) {
         if (maps == null || maps.isEmpty()) {
-            return null;
+            return Collections.emptyList();
         }
         List<T> list = new ArrayList<>();
         maps.forEach(map -> {
