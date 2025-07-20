@@ -4,10 +4,10 @@ import com.wkclz.mqtt.annotation.MqttController;
 import com.wkclz.mqtt.annotation.MqttTopicMapping;
 import com.wkclz.mqtt.exception.MqttBeansException;
 import com.wkclz.mqtt.handler.MqttHandlerFactory;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,7 +22,7 @@ public class MqttBeanPostProcessor implements BeanPostProcessor {
 
     private static final Logger logger = LoggerFactory.getLogger(MqttBeanPostProcessor.class);
 
-    @Autowired
+    @Resource
     private MqttConfig mqttConfig;
 
     @Override

@@ -4,7 +4,7 @@ import com.wkclz.mybatis.bean.ColumnQuery;
 import com.wkclz.mybatis.bean.TableInfo;
 import com.wkclz.mybatis.config.ShrimpMyBatisConfig;
 import com.wkclz.mybatis.dao.TableInfoMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,9 +15,9 @@ import java.util.List;
 @Service
 public class TableInfoService {
 
-    @Autowired
+    @Resource
     private ShrimpMyBatisConfig config;
-    @Autowired
+    @Resource
     private TableInfoMapper tableInfoMapper;
 
 

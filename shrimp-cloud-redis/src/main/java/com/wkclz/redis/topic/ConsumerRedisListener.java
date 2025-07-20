@@ -3,9 +3,9 @@ package com.wkclz.redis.topic;
 import com.alibaba.fastjson2.JSON;
 import com.wkclz.common.exception.BizException;
 import com.wkclz.redis.entity.RedisMsgBody;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -14,7 +14,7 @@ public class ConsumerRedisListener implements MessageListener {
 
     private static final Logger logger = LoggerFactory.getLogger(ConsumerRedisListener.class);
 
-    @Autowired
+    @Resource
     private StringRedisTemplate stringRedisTemplate;
     @Override
     public void onMessage(Message message, byte[] pattern) {

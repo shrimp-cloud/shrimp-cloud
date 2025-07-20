@@ -5,7 +5,7 @@ import com.wkclz.common.entity.Result;
 import com.wkclz.mybatis.bean.ColumnQuery;
 import com.wkclz.mybatis.bean.TableInfo;
 import com.wkclz.mybatis.service.TableInfoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +18,7 @@ import java.util.List;
 public class TableInfoRest {
 
 
-    @Autowired
+    @Resource
     private TableInfoService tableInfoService;
 
 

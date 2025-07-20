@@ -1,8 +1,8 @@
 package com.wkclz.mybatis.dynamicdb;
 
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +18,7 @@ public class DynamicDataSourceAutoConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(DynamicDataSourceAutoConfig.class);
 
-    @Autowired
+    @Resource
     private DataSource dataSource;
 
     @Bean

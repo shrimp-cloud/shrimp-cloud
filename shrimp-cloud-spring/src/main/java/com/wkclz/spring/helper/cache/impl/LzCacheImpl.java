@@ -40,7 +40,7 @@
 //
 //    @Autowired(required = false)
 //    private DiscoveryClient client;
-//    @Autowired
+//    @Resource
 //    private StringRedisTemplate stringRedisTemplate;
 //
 //

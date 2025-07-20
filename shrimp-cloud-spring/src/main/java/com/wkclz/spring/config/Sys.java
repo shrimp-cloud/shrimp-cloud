@@ -3,9 +3,9 @@ package com.wkclz.spring.config;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import com.wkclz.spring.enums.EnvType;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationContext;
@@ -37,13 +37,7 @@ public class Sys implements ApplicationRunner {
     // system start up success confirm 系统启动确认
     public static boolean SYSTEM_START_UP_CONFIRM = false;
 
-
-    /*
-    @Autowired
-    private LzCache lzCache;
-    */
-
-    @Autowired
+    @Resource
     private SystemConfig systemConfig;
 
 

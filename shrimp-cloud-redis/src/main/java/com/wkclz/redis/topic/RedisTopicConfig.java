@@ -1,6 +1,6 @@
 package com.wkclz.redis.topic;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -16,7 +16,7 @@ public class RedisTopicConfig {
     private final static String CACHE_CONFIG_TOPIC_SUB = "cache-config-topic";
     private static String CACHE_CONFIG_TOPIC = null;
 
-    @Autowired
+    @Resource
     private RedisConnectionFactory redisConnectionFactory;
 
     @Bean
