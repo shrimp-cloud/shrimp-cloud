@@ -123,7 +123,7 @@ public class MyBatisHelper {
     /**
      * 重新加载资源
      */
-    public synchronized static String reloadSql(String sql) {
+    public static synchronized String reloadSql(String sql) {
         String md5 = Md5Tool.md5(sql);
         String namespace = "namespace_" + md5;
         String selectId = "select_" + md5;

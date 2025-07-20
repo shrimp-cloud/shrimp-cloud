@@ -22,6 +22,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Base64;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -91,7 +92,7 @@ public class QrCodeUtil {
             throw BizException.error("no txt to create QR code");
         }
         try {
-            Map<EncodeHintType, Object> hints = new HashMap<>();
+            EnumMap<EncodeHintType, Object> hints = new EnumMap<>(EncodeHintType.class);
             hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
             // 设置白边为1，最小可设为0
             hints.put(EncodeHintType.MARGIN, 1);

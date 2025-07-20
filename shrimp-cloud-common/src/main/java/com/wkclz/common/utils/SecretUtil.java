@@ -67,7 +67,6 @@ public class SecretUtil {
         return encryptPassword;
     }
 
-    @Deprecated
     @Desc("请使用 getEncryptPassword(pwdStr, GENERAL_SALT)，自定义 salt")
     public static String getEncryptPassword(String pwdStr) {
         return getEncryptPassword(pwdStr, GENERAL_SALT);

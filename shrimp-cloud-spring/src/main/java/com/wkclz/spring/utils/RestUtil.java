@@ -152,7 +152,6 @@ public class RestUtil {
             if (Desc.class == annotation.annotationType()) {
                 Desc descAnnto = (Desc) annotation;
                 desc = descAnnto.value();
-                continue;
             }
         }
 

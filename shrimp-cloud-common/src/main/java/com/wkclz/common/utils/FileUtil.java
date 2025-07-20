@@ -93,7 +93,7 @@ public class FileUtil {
                 StringBuilder sb = new StringBuilder();
                 String s = "";
                 while ((s = bReader.readLine()) != null) {
-                    sb.append(s + "\n");
+                    sb.append(s).append("\n");
                 }
                 return sb.toString();
             }

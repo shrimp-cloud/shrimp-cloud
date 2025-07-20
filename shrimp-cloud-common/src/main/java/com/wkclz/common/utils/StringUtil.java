@@ -36,6 +36,7 @@ public class StringUtil {
             } else {
                 sb.append(c);
             }
+            i++;
         }
         return sb.toString();
     }

@@ -44,13 +44,12 @@ public class BeanUtil {
         }
         try {
             List<PropertyDescriptor> propertyDescriptors = getPropertyDescriptors(obj.getClass());
-            assert propertyDescriptors != null;
             for (PropertyDescriptor property : propertyDescriptors) {
                 Method getter = property.getReadMethod();
                 Object value = getter.invoke(obj);
                 if (value != null && value.toString().trim().isEmpty()) {
                     Method setter = property.getWriteMethod();
-                    setter.invoke(obj, new Object[]{null});
+                    setter.invoke(obj);
                 }
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
@@ -64,7 +63,6 @@ public class BeanUtil {
     public static <T> List<Method> getValuedList(T param) {
         List<PropertyDescriptor> propertyDescriptors = getPropertyDescriptors(param.getClass());
         List<Method> list = null;
-        assert propertyDescriptors != null;
         for (PropertyDescriptor property : propertyDescriptors) {
             Method getter = property.getReadMethod();
             Object value = null;
@@ -92,10 +90,7 @@ public class BeanUtil {
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
             PropertyDescriptor[] propertyDescriptorsArr = beanInfo.getPropertyDescriptors();
-            List<PropertyDescriptor> list = new ArrayList<>();
-            for (PropertyDescriptor propertyDescriptor : propertyDescriptorsArr) {
-                list.add(propertyDescriptor);
-            }
+            List<PropertyDescriptor> list = new ArrayList<>(Arrays.asList(propertyDescriptorsArr));
             PROPERTY_DESCRIPTORS.put(clazz.getName(), list);
             return list;
         } catch (IntrospectionException e) {

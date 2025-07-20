@@ -210,8 +210,6 @@ public class ClassUtil {
                         // 自身并不加进去
                         if (!clazz.equals(cls)) {
                             classes.add(cls);
-                        } else {
-
                         }
                     }
                 }

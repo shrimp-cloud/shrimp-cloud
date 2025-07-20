@@ -3,6 +3,9 @@ package com.wkclz.common.exception;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.wkclz.common.emuns.ResultStatus;
 
+/**
+ * @author shrimp
+ */
 public class BizException extends RuntimeException {
 
     private static final String DEFAULT_ERR_MSG = "System error, please turn to Administrator";
@@ -54,7 +57,7 @@ public class BizException extends RuntimeException {
     }
 
     private static String getMsg(String msg, Object... params) {
-        boolean isNull = msg == null || "".equals(msg.trim());
+        boolean isNull = msg == null || msg.trim().isEmpty();
         msg = isNull ? DEFAULT_ERR_MSG : msg;
         if (params == null || params.length == 0) {
             return msg;
