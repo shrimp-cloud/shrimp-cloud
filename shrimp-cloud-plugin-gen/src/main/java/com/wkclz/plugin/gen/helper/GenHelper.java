@@ -88,10 +88,7 @@ public class GenHelper {
             CompressUtil.unZip(file, saveDir);
 
             // 删除压缩文件
-            boolean delete = file.delete();
-            if (!delete) {
-                log.error("删除文件失败: " + savePath);
-            }
+            Files.delete(file.toPath());
 
             // 替换
             int lastPort = savePath.lastIndexOf(".");
@@ -204,7 +201,6 @@ public class GenHelper {
                 str = buffer.toString();
             }
         } catch (IOException | URISyntaxException e) {
-            log.error(e.getMessage(), e);
             throw GenException.error("获取规则失败: " + e.getMessage());
         }
 
@@ -236,11 +232,11 @@ public class GenHelper {
             projectBasePath = projectBasePath.replace("../", "parent/");
             String srcRelativePath = ""
                 + "/" + projectBasePath
-                + "/" + taskInfo.getPackagePath().replaceAll("\\.", "/");
+                + "/" + taskInfo.getPackagePath().replace("\\.", "/");
 
             String tagRelativePath = ""
                 + "/" + taskInfo.getProjectBasePath()
-                + "/" + taskInfo.getPackagePath().replaceAll("\\.", "/");
+                + "/" + taskInfo.getPackagePath().replace("\\.", "/");
 
             String genPath = genSrc + srcRelativePath;
             File genPathDirectory = new File(genPath);
@@ -316,10 +312,17 @@ public class GenHelper {
         }
         if (file.isDirectory()) {
             File[] files = file.listFiles();
-            for (File f : files) {
-                delFile(f);
+            if (files != null) {
+                for (File f : files) {
+                    delFile(f);
+                }
             }
         }
-        return file.delete();
+        try {
+            Files.delete(file.toPath());
+            return true;
+        } catch (IOException e) {
+            throw GenException.error(e.getMessage());
+        }
     }
 }

@@ -268,7 +268,6 @@ public class MyBatisHelper {
             XPathParser parser = new XPathParser(resource.getInputStream(), true, null, new XMLMapperEntityResolver());
             return parser.evalNode("/mapper").getStringAttribute("namespace");
         } catch (Exception e) {
-            logger.debug("ERROR: 解析xml中namespace失败", e);
             throw new RuntimeException("ERROR: 解析xml中namespace失败", e);
         }
     }

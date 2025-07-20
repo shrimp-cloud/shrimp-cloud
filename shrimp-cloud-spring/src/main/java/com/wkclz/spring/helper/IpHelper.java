@@ -87,10 +87,7 @@ public class IpHelper {
             if ("lo".equals(name)) {
                 return false;
             }
-            if (name.contains("docker")) {
-                return false;
-            }
-            return true;
+            return !name.contains("docker");
         }).toList();
         if (!CollectionUtils.isEmpty(usefullInterface)) {
             return usefullInterface.get(0).getHostAddress();

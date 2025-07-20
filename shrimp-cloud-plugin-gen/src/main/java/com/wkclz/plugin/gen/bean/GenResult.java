@@ -10,7 +10,7 @@ public class GenResult<T> {
 
     private String msg = "success";
 
-    private T data = (T)"error";
+    private T data = (T) "error";
 
     public GenResult() {
     }
@@ -48,11 +48,8 @@ public class GenResult<T> {
         this.data = data;
     }
 
-    public boolean isSuccess(){
-        if (this.code != null && this.code == 1){
-            return true;
-        }
-        return false;
+    public boolean isSuccess() {
+        return this.code != null && this.code == 1;
     }
 
 }

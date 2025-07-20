@@ -106,11 +106,8 @@ public class RegularTool {
      * 判断字符是否为双字节字符
      */
     public static boolean isDoubleByte(char c) {
-        if (c >= 0x4E00 && c <= 0x9FA5) {
-            // 有一个中文字符就返回
-            return true;
-        }
-        return false;
+        // 有一个中文字符就返回
+        return c >= 0x4E00 && c <= 0x9FA5;
     }
 
 

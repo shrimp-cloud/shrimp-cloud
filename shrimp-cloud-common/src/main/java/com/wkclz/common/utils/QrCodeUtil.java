@@ -80,7 +80,6 @@ public class QrCodeUtil {
                 return Base64.getEncoder().encodeToString(baos.toByteArray());
             }
         } catch (IOException | URISyntaxException e) {
-            logger.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }

@@ -195,7 +195,7 @@ public class RestUtil {
         // 方法名 【无意义，不再转换】
         /*
         String restName = uri.substring(1);
-        restName = restName.replaceAll("/", "_");
+        restName = restName.replace("/", "_");
         restName = StringUtil.underlineToCamel(restName);
         restInfo.setDesc(restName);
         */

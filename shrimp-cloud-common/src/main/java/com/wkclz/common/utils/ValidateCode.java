@@ -65,7 +65,7 @@ public class ValidateCode {
             return "";
         }
 
-        StringBuffer code = new StringBuffer();
+        StringBuilder code = new StringBuilder();
         int i = 0;
 
         switch (type) {
@@ -75,7 +75,7 @@ public class ValidateCode {
                 while (i < length) {
                     int t = random.nextInt(10);
                     // 排除特殊字符
-                    if (exChars == null || exChars.indexOf(t + "") < 0) {
+                    if (exChars == null || !exChars.contains(t + "")) {
                         code.append(t);
                         i++;
                     }

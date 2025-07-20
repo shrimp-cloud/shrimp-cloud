@@ -29,7 +29,6 @@ public class DataSourceInfo {
         try {
             return druidDataSource.getConnection();
         } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
             throw BizException.error("can not get conn from {}, err: {}", dataSourceInfo.getUrl(), e.getMessage());
         }
     }

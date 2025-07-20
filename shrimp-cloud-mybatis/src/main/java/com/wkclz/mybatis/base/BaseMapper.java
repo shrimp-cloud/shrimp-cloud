@@ -10,42 +10,43 @@ import java.util.List;
  * Description: common mapper
  * Created: wangkaicun @ 2019-01-17 14:43
  * Updadte: wangkaicun @ 2019-12-31 23:01:47
+ * @author shrimp
  */
 // 这个 Mapper 注解没啥子用，只是为方便 AOP
 @Mapper
-public interface BaseMapper<Entity> {
+public interface BaseMapper<E> {
 
     @Desc("统计")
-    Long count(Entity entity);
+    Long count(E e);
 
     @Desc("用ID查找")
-    Entity getById(@Param("id") Long id);
+    E getById(@Param("id") Long id);
 
     @Desc("用 Entity 查找")
-    Entity getByEntity(Entity entity);
+    E getByEntity(E e);
 
     @Desc("查询列表，不包含Blobs")
-    List<Entity> list(Entity entity);
+    List<E> list(E e);
 
     @Desc("(选择性)插入")
-    Long insert(Entity entity);
+    Long insert(E e);
 
     @Desc("全量批量插入")
-    Integer insertBatch(@Param("list") List<Entity> entitys);
+    Integer insertBatch(@Param("list") List<E> es);
 
     @Desc("更新(带乐观锁)")
-    Integer updateAll(Entity entity);
+    Integer updateAll(E e);
 
     @Desc("选择性更新(带乐观锁)")
-    Integer updateSelective(Entity entity);
+    Integer updateSelective(E e);
 
     @Desc("选择性更新(不带乐观锁)")
-    Integer updateSelectiveWithoutLock(Entity entity);
+    Integer updateSelectiveWithoutLock(E e);
 
     @Desc("批量更新(不带乐观锁)")
-    Integer updateBatch(@Param("list") List<Entity> entitys);
+    Integer updateBatch(@Param("list") List<E> es);
 
     @Desc("删除")
-    Integer delete(Entity entity);
+    Integer delete(E e);
 
 }

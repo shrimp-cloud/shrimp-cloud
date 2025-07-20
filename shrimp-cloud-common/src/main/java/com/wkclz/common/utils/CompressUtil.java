@@ -47,22 +47,13 @@ public class CompressUtil {
      */
     public static void zip(String srcDir, OutputStream out, boolean keepDirStructure) {
         long start = System.currentTimeMillis();
-        ZipOutputStream zos = null;
-        try {
-            zos = new ZipOutputStream(out);
+        try (ZipOutputStream zos = new ZipOutputStream(out)) {
             File sourceFile = new File(srcDir);
             zip(sourceFile, zos, sourceFile.getName(), keepDirStructure);
             long end = System.currentTimeMillis();
             logger.info("压缩完成，耗时：{} ms", (end - start));
-        } finally {
-            if (zos != null) {
-                try {
-                    // zos.flush();
-                    zos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+        } catch (IOException e) {
+            throw BizException.error(e.getMessage());
         }
     }
 

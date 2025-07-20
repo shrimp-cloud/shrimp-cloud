@@ -1,5 +1,7 @@
 package com.wkclz.common.utils;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * Twitter_Snowflake<br>
  * SnowFlake的结构如下(每部分用-分开):<br>
@@ -36,9 +38,9 @@ public class SnowflakeIdWorker {
     // 生成序列的掩码，这里为4095 (0b111111111111=0xfff=4095)
     private static final long sequenceMask = -1L ^ (-1L << sequenceBits);
     // 工作机器ID(0~31)
-    private static long workerId;
+    private static AtomicLong workerId = new AtomicLong();
     // 数据中心ID(0~31)
-    private static long datacenterId;
+    private static AtomicLong datacenterId = new AtomicLong();
     // 毫秒内序列(0~4095)
     private static long sequence = 0L;
     // 上次生成ID的时间截
@@ -60,8 +62,8 @@ public class SnowflakeIdWorker {
         if (datacenterId > maxDatacenterId || datacenterId < 0) {
             throw new IllegalArgumentException(String.format("datacenter Id can't be greater than %d or less than 0", maxDatacenterId));
         }
-        this.workerId = workerId;
-        this.datacenterId = datacenterId;
+        SnowflakeIdWorker.workerId.set(workerId);
+        SnowflakeIdWorker.datacenterId.set(datacenterId);
     }
 
     // ==============================Methods==========================================
@@ -99,8 +101,8 @@ public class SnowflakeIdWorker {
 
         //移位并通过或运算拼到一起组成64位的ID
         return ((timestamp - twepoch) << timestampLeftShift)
-            | (datacenterId << datacenterIdShift)
-            | (workerId << workerIdShift)
+            | (datacenterId.get() << datacenterIdShift)
+            | (workerId.get() << workerIdShift)
             | sequence;
     }
 

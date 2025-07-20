@@ -68,11 +68,11 @@ public class JsonUtil {
 
         int level = 0;
         //存放格式化的json字符串
-        StringBuffer jsonForMatStr = new StringBuffer();
+        StringBuilder jsonForMatStr = new StringBuilder();
 
         //将字符串中的字符逐个按行输出
         char quotationMark = '"';
-        Integer quotationMarks = 0;
+        int quotationMarks = 0;
         for (int index = 0; index < s.length(); index++) {
             // 获取s中的每个字符
             char c = s.charAt(index);
@@ -89,7 +89,7 @@ public class JsonUtil {
             switch (c) {
                 case '{':
                 case '[':
-                    jsonForMatStr.append(c + "\n");
+                    jsonForMatStr.append(c).append("\n");
                     level++;
                     break;
                 case ',':
@@ -121,10 +121,8 @@ public class JsonUtil {
      * @return
      */
     private static String getLevelStr(int level) {
-        StringBuffer levelStr = new StringBuffer();
-        for (int leveli = 0; leveli < level; leveli++) {
-            levelStr.append("\t");
-        }
+        StringBuilder levelStr = new StringBuilder();
+        levelStr.append("\t".repeat(Math.max(0, level)));
         return levelStr.toString();
     }
 

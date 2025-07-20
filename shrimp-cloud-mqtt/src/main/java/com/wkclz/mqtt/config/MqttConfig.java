@@ -1,5 +1,6 @@
 package com.wkclz.mqtt.config;
 
+import com.wkclz.mqtt.exception.MqttRemoteException;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.eclipse.paho.client.mqttv3.*;
@@ -120,7 +121,7 @@ public class MqttConfig {
             logger.error("loc " + me.getLocalizedMessage());
             logger.error("cause " + me.getCause());
             logger.error("excep " + me);
-            throw new RuntimeException(me.getMessage());
+            throw MqttRemoteException.error(me.getMessage());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

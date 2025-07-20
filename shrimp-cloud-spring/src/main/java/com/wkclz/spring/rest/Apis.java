@@ -117,7 +117,7 @@ public class Apis {
         }
         // 生成方法名
         String restName = uri.substring(1);
-        restName = restName.replaceAll("/", "_");
+        restName = restName.replace("/", "_");
         return StringUtil.underlineToCamel(restName);
     }
 

@@ -99,7 +99,7 @@ public class SecretUtil {
     public static String getJavaUuid() {
         UUID uuid = UUID.randomUUID();
         String s = uuid.toString();
-        return s.replaceAll("-", "").toLowerCase();
+        return s.replace("-", "").toLowerCase();
     }
 
     /**

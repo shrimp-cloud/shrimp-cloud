@@ -35,7 +35,7 @@ public class Result<T> implements Serializable {
     /**
      * 详情
      */
-    private T data = (T)"error";
+    private T data = (T) "error";
 
     public Result() {
     }
@@ -90,6 +90,7 @@ public class Result<T> implements Serializable {
         result.code = e.getCode();
         return result;
     }
+
     public static Result error(ResultStatus resultStatus) {
         Result result = new Result();
         result.msg = resultStatus.getMsg();
@@ -130,11 +131,8 @@ public class Result<T> implements Serializable {
         return Result.ok();
     }
 
-    public boolean isSuccess(){
-        if (this.code != null && this.code == 1){
-            return true;
-        }
-        return false;
+    public boolean isSuccess() {
+        return this.code != null && this.code == 1;
     }
 
     public Result setMoreError(ResultStatus status) {

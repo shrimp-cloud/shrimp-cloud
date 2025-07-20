@@ -28,7 +28,7 @@ public class Sys implements ApplicationRunner {
 
 
     // default DEV 当前启动的系统环境【初始为 DEV】
-    private static AtomicReference<EnvType> CURRENT_ENV = new AtomicReference<>(EnvType.DEV);
+    private static final AtomicReference<EnvType> CURRENT_ENV = new AtomicReference<>(EnvType.DEV);
     // Application GROUP 系统启动后会修改
     public static String APPLICATION_GROUP = "CLOUD";
     // Application Name 系统启动后会修改
@@ -86,6 +86,7 @@ public class Sys implements ApplicationRunner {
         APPLICATION_GROUP = group.toUpperCase().replace("-", "_");
 
         STARTUP_DATE = startupDate;
+        SYSTEM_START_UP_CONFIRM = true;
         String date = DateUtil.format(new Date(startupDate), "yyyy-MM-dd HH:mm:ss");
         logger.info("===================>  System is start up as {} @ {}", CURRENT_ENV.get(), date);
     }

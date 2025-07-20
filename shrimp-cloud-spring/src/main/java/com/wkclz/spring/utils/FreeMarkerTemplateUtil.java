@@ -1,5 +1,6 @@
 package com.wkclz.spring.utils;
 
+import com.wkclz.common.exception.BizException;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.NullCacheStorage;
 import freemarker.cache.StringTemplateLoader;
@@ -37,12 +38,12 @@ public class FreeMarkerTemplateUtil {
         CONFIGURATION.setCacheStorage(NullCacheStorage.INSTANCE);
     }
 
-    public static Template getTemplate(String templateName) throws IOException {
+    public static Template getTemplate(String templateName) {
         try {
             CONFIGURATION.setTemplateLoader(new ClassTemplateLoader(FreeMarkerTemplateUtil.class, "/templates"));
             return CONFIGURATION.getTemplate(templateName);
         } catch (IOException e) {
-            throw e;
+            throw BizException.error(e.getMessage());
         }
     }
 
@@ -54,14 +55,14 @@ public class FreeMarkerTemplateUtil {
      * @return
      * @throws IOException
      */
-    public static Template getTemplate(String templateName, String templatesDir) throws IOException {
-        if (StringUtils.isNotBlank(templatesDir)) {
-            CONFIGURATION.setDirectoryForTemplateLoading(new File(templatesDir));
-        }
+    public static Template getTemplate(String templateName, String templatesDir) {
         try {
+            if (StringUtils.isNotBlank(templatesDir)) {
+                CONFIGURATION.setDirectoryForTemplateLoading(new File(templatesDir));
+            }
             return CONFIGURATION.getTemplate(templateName);
         } catch (IOException e) {
-            throw e;
+            throw BizException.error(e.getMessage());
         }
     }
 

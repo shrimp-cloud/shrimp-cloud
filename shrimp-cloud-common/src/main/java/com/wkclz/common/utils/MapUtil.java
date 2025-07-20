@@ -141,14 +141,14 @@ public class MapUtil {
     /**
      * 驼峰转换
      */
-    public static <T> List<Map> toReplaceMapKeyLow(List<Map> maps) {
+    public static List<Map> toReplaceMapKeyLow(List<Map> maps) {
         List<Map> rts = new ArrayList<>();
         for (Map map : maps) {
             rts.add(toReplaceMapKeyLow(map));
         }
         return rts;
     }
-    public static <T> List<LinkedHashMap> toReplaceLinkedHashMapKeyLow(List<LinkedHashMap> maps) {
+    public static List<LinkedHashMap> toReplaceLinkedHashMapKeyLow(List<LinkedHashMap> maps) {
         List<LinkedHashMap> rts = new ArrayList<>();
         for (LinkedHashMap map : maps) {
             rts.add(toReplaceLinkedHashMapKeyLow(map));
@@ -164,7 +164,7 @@ public class MapUtil {
      */
     public static Map toReplaceMapKeyLow(Map map) {
         Map reRap = new HashMap();
-        if (reRap != null) {
+        if (map != null) {
             Iterator var2 = map.entrySet().iterator();
             while (var2.hasNext()) {
                 Map.Entry entry = (Map.Entry) var2.next();
@@ -175,9 +175,9 @@ public class MapUtil {
         }
         return reRap;
     }
-    public static <T> LinkedHashMap toReplaceLinkedHashMapKeyLow(LinkedHashMap map) {
+    public static LinkedHashMap toReplaceLinkedHashMapKeyLow(LinkedHashMap map) {
         LinkedHashMap reRap = new LinkedHashMap();
-        if (reRap != null) {
+        if (map != null) {
             Iterator var2 = map.entrySet().iterator();
             while (var2.hasNext()) {
                 Map.Entry entry = (Map.Entry) var2.next();
@@ -211,7 +211,7 @@ public class MapUtil {
     }
 
     public static <T> String map2UrlString(Map<String, T> map) {
-        StringBuffer str = new StringBuffer();
+        StringBuilder str = new StringBuilder();
         Set<String> keySet = map.keySet();
         for (String key : keySet) {
             str.append(key)

@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -135,11 +136,18 @@ public class FileUtil {
         }
         if (file.isDirectory()) {
             File[] files = file.listFiles();
-            for (File f : files) {
-                delFile(f);
+            if (files != null) {
+                for (File f : files) {
+                    delFile(f);
+                }
             }
         }
-        return file.delete();
+        try {
+            Files.delete(file.toPath());
+            return true;
+        } catch (IOException e) {
+            throw BizException.error(e.getMessage());
+        }
     }
 
 

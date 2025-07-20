@@ -17,7 +17,7 @@ import java.util.List;
  * Created: wangkaicun @ 2019-01-17 15:22:38
  * Updadte: wangkaicun @ 2019-12-31 23:39:46
  */
-public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<Entity>> {
+public class BaseService<E extends BaseEntity, Mapper extends BaseMapper<E>> {
 
     private static final int INSERT_SIZE = 1000;
 
@@ -25,85 +25,85 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
     protected Mapper mapper;
 
     @Desc("统计")
-    public Long count(Entity entity){
-        checkEntity(entity);
-        return mapper.count(entity);
+    public Long count(E e){
+        checkEntity(e);
+        return mapper.count(e);
     }
 
     @Desc("用ID查找")
-    public Entity get(Long id){
+    public E get(Long id){
         checkId(id);
         return mapper.getById(id);
     }
 
     @Desc("用ID查找, 若不存在则报错")
-    public Entity getWithCheck(Long id){
+    public E getWithCheck(Long id){
         checkId(id);
-        Entity entity = mapper.getById(id);
-        if (entity == null) {
+        E e = mapper.getById(id);
+        if (e == null) {
             throw BizException.error(ResultStatus.RECORD_NOT_EXIST);
         }
-        return entity;
+        return e;
     }
 
     @Desc("用 Entity 查找")
-    public Entity get(Entity entity){
-        checkEntity(entity);
-        return mapper.getByEntity(entity);
+    public E get(E e){
+        checkEntity(e);
+        return mapper.getByEntity(e);
     }
 
     @Desc("用 Entity 查找, 若不存在则报错")
-    public Entity getWithCheck(Entity entity){
-        checkEntity(entity);
-        entity = mapper.getByEntity(entity);
-        if (entity == null) {
+    public E getWithCheck(E e){
+        checkEntity(e);
+        e = mapper.getByEntity(e);
+        if (e == null) {
             throw BizException.error(ResultStatus.RECORD_NOT_EXIST);
         }
-        return entity;
+        return e;
     }
 
     @Desc("查询列表，不包含Blobs")
-    public List<Entity> list(Entity entity){
-        checkEntity(entity);
-        return mapper.list(entity);
+    public List<E> list(E e){
+        checkEntity(e);
+        return mapper.list(e);
     }
 
     @Desc("查询列分页，不包含Blobs")
-    public PageData<Entity> page(Entity entity){
-        checkEntity(entity);
-        entity.init();
-        Long count = mapper.count(entity);
-        List<Entity> list = null;
+    public PageData<E> page(E e){
+        checkEntity(e);
+        e.init();
+        Long count = mapper.count(e);
+        List<E> list = null;
         if (count > 0){
-            list = mapper.list(entity);
+            list = mapper.list(e);
         }
         if (list == null){
             list = new ArrayList<>();
         }
-        PageData<Entity> pageData = new PageData<>(entity.getCurrent(), entity.getSize(), count, list);
+        PageData<E> pageData = new PageData<>(e.getCurrent(), e.getSize(), count, list);
         return pageData;
     }
 
     @Desc("(选择性)插入")
-    public Long insert(Entity entity){
-        checkEntity(entity);
-        mapper.insert(entity);
-        return entity.getId();
+    public Long insert(E e){
+        checkEntity(e);
+        mapper.insert(e);
+        return e.getId();
     }
 
     @Desc("全量批量插入")
     @Transactional(rollbackFor = Exception.class)
-    public Integer insert(List<Entity> entitys){
-        if (CollectionUtils.isEmpty(entitys)) {
+    public Integer insert(List<E> es){
+        if (CollectionUtils.isEmpty(es)) {
             return 0;
         }
-        int size = entitys.size();
+        int size = es.size();
         int counter = 0;
         int success = 0;
-        List<Entity> tmpList = new ArrayList<>();
-        for (Entity entity : entitys) {
+        List<E> tmpList = new ArrayList<>();
+        for (E e : es) {
             counter++;
-            tmpList.add(entity);
+            tmpList.add(e);
             if (counter % INSERT_SIZE == 0 || counter == size) {
                 success += mapper.insertBatch(tmpList);
                 tmpList = new ArrayList<>();
@@ -113,10 +113,10 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
     }
 
     @Desc("更新(带乐观锁)")
-    public Integer updateAll(Entity entity){
-        checkEntity(entity);
-        checkId(entity.getId());
-        Integer update = mapper.updateAll(entity);
+    public Integer updateAll(E e){
+        checkEntity(e);
+        checkId(e.getId());
+        Integer update = mapper.updateAll(e);
         if (update == 0){
             throw BizException.error(ResultStatus.RECORD_NOT_EXIST_OR_OUT_OF_DATE);
         }
@@ -124,10 +124,10 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
     }
 
     @Desc("选择性更新(带乐观锁)")
-    public Integer updateSelective(Entity entity){
-        checkEntity(entity);
-        checkId(entity.getId());
-        Integer update = mapper.updateSelective(entity);
+    public Integer updateSelective(E e){
+        checkEntity(e);
+        checkId(e.getId());
+        Integer update = mapper.updateSelective(e);
         if (update == 0){
             throw BizException.error(ResultStatus.RECORD_NOT_EXIST_OR_OUT_OF_DATE);
         }
@@ -135,10 +135,10 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
     }
 
     @Desc("选择性更新(不带乐观锁)")
-    public Integer updateSelectiveWithoutLock(Entity entity){
-        checkEntity(entity);
-        checkId(entity.getId());
-        Integer update = mapper.updateSelectiveWithoutLock(entity);
+    public Integer updateSelectiveWithoutLock(E e){
+        checkEntity(e);
+        checkId(e.getId());
+        Integer update = mapper.updateSelectiveWithoutLock(e);
         if (update == 0){
             throw BizException.error(ResultStatus.RECORD_NOT_EXIST);
         }
@@ -146,38 +146,38 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
     }
 
     @Desc("批量更新(不带乐观锁)")
-    public Integer update(List<Entity> entitys){
-        if (CollectionUtils.isEmpty(entitys)){
+    public Integer update(List<E> es){
+        if (CollectionUtils.isEmpty(es)){
             throw BizException.error("entitys can not be null");
         }
-        return mapper.updateBatch(entitys);
+        return mapper.updateBatch(es);
     }
 
     @Desc("保存，无id则新增，有id则修改，带乐观锁, 选择性更新")
-    public Entity saveWithCheck(Entity entity) {
-        checkEntity(entity);
-        if (entity.getId() == null) {
-            mapper.insert(entity);
-            return entity;
+    public E saveWithCheck(E e) {
+        checkEntity(e);
+        if (e.getId() == null) {
+            mapper.insert(e);
+            return e;
         } else {
-            AssertUtil.notNull(entity.getVersion(), "请求错误！参数[version]不能为空");
-            Entity oldEntity = get(entity.getId());
-            if (oldEntity == null) {
+            AssertUtil.notNull(e.getVersion(), "请求错误！参数[version]不能为空");
+            E oldE = get(e.getId());
+            if (oldE == null) {
                 throw BizException.error(ResultStatus.RECORD_NOT_EXIST);
             }
-            Entity.copyIfNotNull(entity, oldEntity);
-            updateSelective(oldEntity);
-            return oldEntity;
+            E.copyIfNotNull(e, oldE);
+            updateSelective(oldE);
+            return oldE;
         }
     }
 
     @Desc("批量删除")
-    public Integer deleteByEntitys(List<Entity> entitys){
-        if (CollectionUtils.isEmpty(entitys)){
+    public Integer deleteByEntitys(List<E> es){
+        if (CollectionUtils.isEmpty(es)){
             throw BizException.error("entitys can not be null");
         }
         List<Long> ids = new ArrayList<>();
-        entitys.forEach(entity -> ids.addAll(getIds(entity)));
+        es.forEach(e -> ids.addAll(getIds(e)));
         if (ids.isEmpty()) {
             throw BizException.error(ResultStatus.PARAM_NULL);
         }
@@ -193,16 +193,16 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
     }
 
     @Desc("删除，若成功，返回删除前的对象")
-    public Entity deleteWithCheck(Long id){
+    public E deleteWithCheck(Long id){
         checkId(id);
-        Entity entity = get(id);
-        if (entity == null) {
+        E e = get(id);
+        if (e == null) {
             throw BizException.error(ResultStatus.RECORD_NOT_EXIST);
         }
         BaseEntity baseEntity = new BaseEntity();
         baseEntity.setId(id);
         deleteByBaseEntity(baseEntity);
-        return entity;
+        return e;
     }
 
     @Desc("删除")
@@ -216,9 +216,9 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
     }
 
     @Desc("批量删除")
-    public Integer delete(Entity entity){
-        checkEntity(entity);
-        List<Long> ids = getIds(entity);
+    public Integer delete(E e){
+        checkEntity(e);
+        List<Long> ids = getIds(e);
         BaseEntity baseEntity = new BaseEntity();
         baseEntity.setIds(ids);
         return deleteByBaseEntity(baseEntity);
@@ -231,21 +231,21 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
         if (baseEntity.getId() == null && (baseEntity.getIds() == null || baseEntity.getIds().isEmpty())) {
             throw BizException.error("id or ids can not be null at the same time");
         }
-        Entity entity = (Entity) baseEntity;
-         Integer delete = mapper.delete(entity);
+        E e = (E) baseEntity;
+         Integer delete = mapper.delete(e);
         if (delete == 0){
             throw BizException.error(ResultStatus.RECORD_NOT_EXIST);
         }
         return delete;
     }
 
-    public static <Entity extends BaseEntity> List<Long> getIds(Entity entity) {
+    public static <E extends BaseEntity> List<Long> getIds(E e) {
         List<Long> ids = new ArrayList<>();
-        Long tmpId = entity.getId();
+        Long tmpId = e.getId();
         if (tmpId != null){
             ids.add(tmpId);
         }
-        List<Long> tmpIds = entity.getIds();
+        List<Long> tmpIds = e.getIds();
         if (CollectionUtils.isNotEmpty(tmpIds)){
             ids.addAll(tmpIds);
         }
@@ -255,8 +255,8 @@ public class BaseService<Entity extends BaseEntity, Mapper extends BaseMapper<En
         return ids;
     }
 
-    private void checkEntity(Entity entity) {
-        if (entity == null) {
+    private void checkEntity(E e) {
+        if (e == null) {
             throw BizException.error(ResultStatus.PARAM_NULL);
         }
     }
