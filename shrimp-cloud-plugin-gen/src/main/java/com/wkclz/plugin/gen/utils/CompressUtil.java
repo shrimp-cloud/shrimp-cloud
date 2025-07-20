@@ -1,9 +1,10 @@
 package com.wkclz.plugin.gen.utils;
 
 
+import com.wkclz.plugin.gen.exception.GenException;
+
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
@@ -36,9 +37,7 @@ public class CompressUtil {
             throw new RuntimeException(srcFile.getPath() + "所指文件不存在");
         }
         // 开始解压
-        ZipFile zipFile = null;
-        try {
-            zipFile = new ZipFile(srcFile);
+        try (ZipFile zipFile = new ZipFile(srcFile)) {
             Enumeration<?> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = (ZipEntry) entries.nextElement();
@@ -55,7 +54,10 @@ public class CompressUtil {
                     if (!targetFile.getParentFile().exists()) {
                         targetFile.getParentFile().mkdirs();
                     }
-                    targetFile.createNewFile();
+                    boolean newFile = targetFile.createNewFile();
+                    if (!newFile) {
+                        throw GenException.error("创建文件失败");
+                    }
                     // 将压缩文件内容写入到这个文件中
                     InputStream is = zipFile.getInputStream(entry);
                     FileOutputStream fos = new FileOutputStream(targetFile);
@@ -73,14 +75,6 @@ public class CompressUtil {
             System.out.println("解压完成，耗时："+(end - start)+" ms");
         } catch (Exception e) {
             throw new RuntimeException("unzip error from ZipUtils", e);
-        } finally {
-            if (zipFile != null) {
-                try {
-                    zipFile.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 

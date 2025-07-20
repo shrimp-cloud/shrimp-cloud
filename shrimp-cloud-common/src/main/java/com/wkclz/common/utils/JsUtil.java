@@ -53,29 +53,24 @@ public class JsUtil {
         return js.substring(9, js.indexOf("("));
     }
 
-    private static Function getFunction(String script, String funName, Context context) {
+    private static synchronized Function getFunction(String script, String funName, Context context) {
         String hash = Md5Tool.md5(script);
         Function function = JS_FUNCTION.get(hash);
 
         if (function != null) {
             return function;
         }
-        synchronized (hash.intern()) {
-            function = JS_FUNCTION.get(hash);
-            if (function != null) {
-                return function;
-            }
-            if (SCOPE == null) {
-                SCOPE = context.initStandardObjects();
-            }
-
-            // 初始化函数
-            context.evaluateString(SCOPE, script, funName, 1, null);
-            // 获取 JavaScript 函数
-            function = (Function) SCOPE.get(funName, SCOPE);
-            JS_FUNCTION.put(hash, function);
+        if (SCOPE == null) {
+            SCOPE = context.initStandardObjects();
         }
-        return JS_FUNCTION.get(hash);
+
+        // 初始化函数
+        context.evaluateString(SCOPE, script, funName, 1, null);
+        // 获取 JavaScript 函数
+        function = (Function) SCOPE.get(funName, SCOPE);
+        JS_FUNCTION.put(hash, function);
+
+        return function;
     }
 
     private static Context getContext() {

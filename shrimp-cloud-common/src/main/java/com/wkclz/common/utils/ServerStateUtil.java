@@ -44,12 +44,12 @@ public class ServerStateUtil {
         operatingSystem.setArch(operatingSystemMXBean.getArch());
         operatingSystem.setAvailableProcessors(operatingSystemMXBean.getAvailableProcessors());
         double systemLoadAverage = operatingSystemMXBean.getSystemLoadAverage();
-        operatingSystem.setSystemLoadAverage(new BigDecimal(systemLoadAverage).setScale(2, RoundingMode.UP));
+        operatingSystem.setSystemLoadAverage(BigDecimal.valueOf(systemLoadAverage).setScale(2, RoundingMode.UP));
         operatingSystem.setVersion(operatingSystemMXBean.getVersion());
 
         operatingSystem.setCommittedVirtualMemorySize(operatingSystemMXBean.getCommittedVirtualMemorySize());
         double processCpuLoad = operatingSystemMXBean.getProcessCpuLoad();
-        operatingSystem.setProcessCpuLoad(new BigDecimal(processCpuLoad).setScale(2, RoundingMode.UP));
+        operatingSystem.setProcessCpuLoad(BigDecimal.valueOf(processCpuLoad).setScale(2, RoundingMode.UP));
         operatingSystem.setProcessCpuTime(operatingSystemMXBean.getProcessCpuTime());
         operatingSystem.setTotalSwapSpaceSize(operatingSystemMXBean.getTotalSwapSpaceSize());
         operatingSystem.setFreeSwapSpaceSize(operatingSystemMXBean.getFreeSwapSpaceSize());

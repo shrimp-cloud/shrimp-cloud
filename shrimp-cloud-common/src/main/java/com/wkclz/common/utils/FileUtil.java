@@ -126,7 +126,10 @@ public class FileUtil {
             if (file.exists()) {
                 throw BizException.error("文件已存在，无法覆盖： {}", file.getAbsolutePath());
             }
-            file.createNewFile();
+            boolean newFile = file.createNewFile();
+            if (!newFile) {
+                throw BizException.error("创建文件失败");
+            }
             writer = new FileWriter(file);
             writer.write(context);
             writer.flush();

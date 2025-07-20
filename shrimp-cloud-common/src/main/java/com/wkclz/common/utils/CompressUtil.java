@@ -163,7 +163,10 @@ public class CompressUtil {
                     if (!targetFile.getParentFile().exists()) {
                         targetFile.getParentFile().mkdirs();
                     }
-                    targetFile.createNewFile();
+                    boolean newFile = targetFile.createNewFile();
+                    if (!newFile) {
+                        throw BizException.error("创建文件失败");
+                    }
                     // 将压缩文件内容写入到这个文件中
                     InputStream is = zipFile.getInputStream(entry);
                     FileOutputStream fos = new FileOutputStream(targetFile);

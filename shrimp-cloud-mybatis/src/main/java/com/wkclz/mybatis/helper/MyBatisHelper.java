@@ -3,6 +3,7 @@ package com.wkclz.mybatis.helper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.wkclz.common.entity.BaseEntity;
+import com.wkclz.common.exception.BizException;
 import com.wkclz.common.tools.Md5Tool;
 import com.wkclz.common.utils.MapUtil;
 import com.wkclz.mybatis.base.PageData;
@@ -170,7 +171,10 @@ public class MyBatisHelper {
 
             File file = new File(filePath);
             if (!file.exists()) {
-                file.createNewFile();
+                boolean newFile = file.createNewFile();
+                if (!newFile) {
+                    throw BizException.error("创建文件失败");
+                }
             }
 
             try (FileWriter writer = new FileWriter(file);) {

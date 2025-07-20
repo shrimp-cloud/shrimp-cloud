@@ -86,7 +86,8 @@ public class RedisLockHelper {
             throw BizException.error("key can not be null");
         }
         key = getKey(key);
-        return redisTemplate.delete(key);
+        Boolean delete = redisTemplate.delete(key);
+        return Boolean.TRUE.equals(delete);
     }
 
 

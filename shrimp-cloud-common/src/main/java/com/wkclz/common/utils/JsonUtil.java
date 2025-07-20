@@ -15,7 +15,7 @@ public class JsonUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(JsonUtil.class);
 
-    private static final Pattern PATTERN = Pattern.compile("\\s*|\t|\r|\n");
+    private static final Pattern PATTERN = Pattern.compile("\\s*");
 
 
     /**

@@ -51,22 +51,27 @@ public abstract class AbstractShrimpRoutingDataSource extends AbstractRoutingDat
         return resolvedDataSources.get(lookupKey);
     }
 
+    @Override
     public void setTargetDataSources(Map<Object, Object> targetDataSources) {
         this.targetDataSources = targetDataSources;
     }
 
+    @Override
     public void setDefaultTargetDataSource(Object defaultTargetDataSource) {
         this.defaultTargetDataSource = defaultTargetDataSource;
     }
 
+    @Override
     public void setLenientFallback(boolean lenientFallback) {
         this.lenientFallback = lenientFallback;
     }
 
+    @Override
     public void setDataSourceLookup(@Nullable DataSourceLookup dataSourceLookup) {
         this.dataSourceLookup = (dataSourceLookup != null ? dataSourceLookup : new JndiDataSourceLookup());
     }
 
+    @Override
     public void afterPropertiesSet() {
         if (this.targetDataSources == null) {
             throw new IllegalArgumentException("Property 'targetDataSources' is required");
@@ -82,10 +87,12 @@ public abstract class AbstractShrimpRoutingDataSource extends AbstractRoutingDat
         }
     }
 
+    @Override
     protected Object resolveSpecifiedLookupKey(Object lookupKey) {
         return lookupKey;
     }
 
+    @Override
     protected DataSource resolveSpecifiedDataSource(Object dataSource) throws IllegalArgumentException {
         if (dataSource instanceof DataSource) {
             return (DataSource) dataSource;
@@ -97,24 +104,29 @@ public abstract class AbstractShrimpRoutingDataSource extends AbstractRoutingDat
         }
     }
 
+    @Override
     public Map<Object, DataSource> getResolvedDataSources() {
         Assert.state(this.resolvedDataSources != null, "DataSources not resolved yet - call afterPropertiesSet");
         return Collections.unmodifiableMap(this.resolvedDataSources);
     }
 
     @Nullable
+    @Override
     public DataSource getResolvedDefaultDataSource() {
         return this.resolvedDefaultDataSource;
     }
 
+    @Override
     public Connection getConnection() throws SQLException {
         return determineTargetDataSource().getConnection();
     }
 
+    @Override
     public Connection getConnection(String username, String password) throws SQLException {
         return determineTargetDataSource().getConnection(username, password);
     }
 
+    @Override
     public <T> T unwrap(Class<T> iface) throws SQLException {
         if (iface.isInstance(this)) {
             return (T) this;
@@ -122,10 +134,12 @@ public abstract class AbstractShrimpRoutingDataSource extends AbstractRoutingDat
         return determineTargetDataSource().unwrap(iface);
     }
 
+    @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return (iface.isInstance(this) || determineTargetDataSource().isWrapperFor(iface));
     }
 
+    @Override
     protected DataSource determineTargetDataSource() {
         Assert.notNull(this.resolvedDataSources, "DataSource router not initialized");
         Object lookupKey = determineCurrentLookupKey();
@@ -139,6 +153,7 @@ public abstract class AbstractShrimpRoutingDataSource extends AbstractRoutingDat
         return dataSource;
     }
 
+    @Override
     protected abstract Object determineCurrentLookupKey();
 
 }
