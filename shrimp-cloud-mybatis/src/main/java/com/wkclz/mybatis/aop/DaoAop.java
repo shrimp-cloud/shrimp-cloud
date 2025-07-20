@@ -38,7 +38,7 @@ public class DaoAop {
 
     @Autowired(required = false)
     private SqlSession sqlSession;
-    private static Map<String, SqlCommandType> MAPPED_STATEMENTS = null;
+    private static Map<String, SqlCommandType> MAPPED_STATEMENTS = new HashMap<>();
 
     /**
      * : @Around环绕通知
@@ -118,21 +118,21 @@ public class DaoAop {
     }
 
 
-    private SqlCommandType getSqlCommandType(ProceedingJoinPoint point) {
+    private synchronized SqlCommandType getSqlCommandType(ProceedingJoinPoint point) {
         Signature signature = point.getSignature();
         String declaringTypeName = signature.getDeclaringTypeName();
         String name = signature.getName();
         String pointId = declaringTypeName + "." + name;
-        if (MAPPED_STATEMENTS == null) {
-            MAPPED_STATEMENTS = new HashMap<>();
 
+        SqlCommandType sqlCommandType = MAPPED_STATEMENTS.get(pointId);
+        if (sqlCommandType == null) {
             // 非父类
             Configuration configuration = sqlSession.getConfiguration();
             Collection mappedStatements = configuration.getMappedStatements();
             for (Object mappedStatementObj : mappedStatements) {
                 if (mappedStatementObj instanceof MappedStatement mappedStatement) {
                     String id = mappedStatement.getId();
-                    SqlCommandType sqlCommandType = mappedStatement.getSqlCommandType();
+                    sqlCommandType = mappedStatement.getSqlCommandType();
                     MAPPED_STATEMENTS.put(id, sqlCommandType);
                 }
             }
@@ -163,11 +163,10 @@ public class DaoAop {
             }
 
         }
-        SqlCommandType sqlCommandType = MAPPED_STATEMENTS.get(pointId);
+        sqlCommandType = MAPPED_STATEMENTS.get(pointId);
         if (sqlCommandType != null) {
             return sqlCommandType;
         }
-
         throw BizException.error("unknown dao operation: {}, please check the config: mybatis.mapper-locations", pointId);
     }
 

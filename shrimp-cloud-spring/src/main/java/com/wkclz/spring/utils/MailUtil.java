@@ -152,7 +152,7 @@ public class MailUtil {
             });
 
             // 开发环境，开启调试
-            session.setDebug(Sys.CURRENT_ENV == EnvType.DEV);
+            session.setDebug(Sys.getCurrentEnv() == EnvType.DEV);
             MimeMessage mimeMessage = new MimeMessage(session);
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
             // 设置发件人用户名

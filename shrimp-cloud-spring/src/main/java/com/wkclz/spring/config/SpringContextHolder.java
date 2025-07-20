@@ -41,7 +41,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
      */
     @Override
     public void setApplicationContext(ApplicationContext appContext) {
-        applicationContext = appContext;
+        SpringContextHolder.applicationContext = appContext;
     }
 
     /**

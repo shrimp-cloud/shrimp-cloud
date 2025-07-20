@@ -106,7 +106,6 @@ public class FileUtil {
         return writeFile(new File(filePath), context);
     }
     public static File writeFile(File file, String context) {
-        ;
         try {
             if (file.exists()) {
                 throw BizException.error("文件已存在，无法覆盖： {}", file.getAbsolutePath());

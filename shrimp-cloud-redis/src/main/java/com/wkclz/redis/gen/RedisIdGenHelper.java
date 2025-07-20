@@ -8,6 +8,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.support.atomic.RedisAtomicLong;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * 获取序列号【原始原子生成工具，依赖于 redis】
  * @date 2020-03-09 20:52:26
@@ -29,15 +32,15 @@ public class RedisIdGenHelper {
     // 时间序列格式
     private static final String DATE_FORMAT = "yyyyMMddHHmmss";
     // 上一秒
-    private static long lastSecond = 0L;
+    private static final AtomicLong LAST_SECOND = new AtomicLong(0L);
     // 允许时间回拨的毫秒量 ms
-    private final long timeOffset = 100L;
+    private  static final long TIME_OFFSET = 100L;
     // 序列最大值
     private static final int SEQUENCE_MASK = 10000;
     // 序列长度
     private static final int SEQUENCE_LENGTH = 4;
     // 计数器，单位时间内，计数不能超过10000，如果超过，需要等待到下一秒
-    private static int TIME_UNIT_COUNT = 0;
+    private static final AtomicInteger TIME_UNIT_COUNT = new AtomicInteger(0);
 
     private RedisAtomicLong entityIdCounter = null;
 
@@ -57,11 +60,11 @@ public class RedisIdGenHelper {
     public String nextId() {
         long currentSecond = this.timeGen();
         // 闰秒：如果当前时间小于上一次ID生成的时间戳，说明系统时钟回退过，这个时候应当抛出异常
-        if (currentSecond < lastSecond) {
+        if (currentSecond < LAST_SECOND.get()) {
             synchronized (this){
                 // 校验时间偏移回拨量
-                long offset = lastSecond - currentSecond;
-                if (offset > timeOffset) {
+                long offset = LAST_SECOND.get() - currentSecond;
+                if (offset > TIME_OFFSET) {
                     throw new RuntimeException("Clock moved backwards, refusing to generate id for [" + offset + "ms]");
                 }
                 try {
@@ -74,7 +77,7 @@ public class RedisIdGenHelper {
                 // 再次获取
                 currentSecond = this.timeGen();
                 // 再次校验
-                if (currentSecond < lastSecond) {
+                if (currentSecond < LAST_SECOND.get()) {
                     throw BizException.error("Clock moved backwards, refusing to generate id for [" + offset + "ms]");
                 }
             }
@@ -84,25 +87,25 @@ public class RedisIdGenHelper {
         if (entityIdCounter == null){
             entityIdCounter = new RedisAtomicLong(REDIS_KEY, redisTemplate.getConnectionFactory());
         }
-        Long increment = entityIdCounter.getAndIncrement();
+        long increment = entityIdCounter.getAndIncrement();
         long sequence = increment % SEQUENCE_MASK;
 
         // 控制每秒产生数量不能超过最大值。同一秒内，计数器累加，不同秒，重置为0.
-        if (lastSecond == currentSecond) {
-            TIME_UNIT_COUNT ++;
+        if (LAST_SECOND.get() == currentSecond) {
+            int count = TIME_UNIT_COUNT.incrementAndGet();
             // 单位时间内超过限制，等待到下一秒才能生成
-            if (TIME_UNIT_COUNT >= SEQUENCE_MASK){
+            if (count >= SEQUENCE_MASK){
                 currentSecond = tilNextSecond(currentSecond);
             }
         } else {
-            TIME_UNIT_COUNT = 0;
+            TIME_UNIT_COUNT.set(0);
         }
-        lastSecond = currentSecond;
+        LAST_SECOND.set(currentSecond);
 
         DateTime dateTime = new DateTime(currentSecond * 1000);
         String currentTime = dateTime.toString(DATE_FORMAT);
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(currentTime);
 
         for (int i = 0; i < SEQUENCE_LENGTH-getLength(sequence); i++) {

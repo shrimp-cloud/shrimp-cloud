@@ -46,7 +46,7 @@ public class SnowflakeHelper {
     }
 
     private static long getDatacenterId() {
-        return Sys.CURRENT_ENV.hashCode();
+        return Sys.getCurrentEnv().hashCode();
     }
 
     /*

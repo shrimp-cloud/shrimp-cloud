@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 系统启动后执行一次
@@ -27,7 +28,7 @@ public class Sys implements ApplicationRunner {
 
 
     // default DEV 当前启动的系统环境【初始为 DEV】
-    public static EnvType CURRENT_ENV = EnvType.DEV;
+    private static AtomicReference<EnvType> CURRENT_ENV = new AtomicReference<>(EnvType.DEV);
     // Application GROUP 系统启动后会修改
     public static String APPLICATION_GROUP = "CLOUD";
     // Application Name 系统启动后会修改
@@ -72,21 +73,21 @@ public class Sys implements ApplicationRunner {
                 envType = EnvType.DEV;
             }
 
-            CURRENT_ENV = envType;
+            CURRENT_ENV.set(envType);
         }
 
         // set startupDate for the whole system
-        Long startupDate = applicationContext.getStartupDate();
+        long startupDate = applicationContext.getStartupDate();
 
         // 初始化信息，需要应用名做前缀
         APPLICATION_NAME = systemConfig.getApplicationName();
         String group = systemConfig.getApplicationGroup();
-        group = (group == null || "".equals(group)) ? APPLICATION_NAME : group;
+        group = (group == null || group.isEmpty()) ? APPLICATION_NAME : group;
         APPLICATION_GROUP = group.toUpperCase().replace("-", "_");
 
         STARTUP_DATE = startupDate;
         String date = DateUtil.format(new Date(startupDate), "yyyy-MM-dd HH:mm:ss");
-        logger.info("===================>  System is start up as {} @ {}", CURRENT_ENV, date);
+        logger.info("===================>  System is start up as {} @ {}", CURRENT_ENV.get(), date);
     }
 
     private void initCache() {
@@ -97,6 +98,9 @@ public class Sys implements ApplicationRunner {
         logger.info("run {} over", this.getClass());
     }
 
+    public static EnvType getCurrentEnv() {
+        return CURRENT_ENV.get();
+    }
 
 
 }

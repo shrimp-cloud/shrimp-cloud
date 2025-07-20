@@ -40,11 +40,7 @@ public class ResponseHelper {
         }
 
         String fileName = file.getName();
-        try {
-            fileName = new String(fileName.getBytes(StandardCharsets.UTF_8), "ISO8859-1");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        fileName = new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
 
         String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
         logger.info("the excel file is in {}", file.getPath());
