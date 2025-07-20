@@ -34,10 +34,6 @@
         <shrimp-opencv.version>4.9.0-SNAPSHOT</shrimp-opencv.version>
         <shrimp-cloud-swagger-starter.version>4.0.0-SNAPSHOT</shrimp-cloud-swagger-starter.version>
         <shrimp-cloud-plugin-gen.version>4.0.0-SNAPSHOT</shrimp-cloud-plugin-gen.version>
-
-        <!--
-        <spring-boot-admin.version>2.6.7</spring-boot-admin.version>
-        -->
     </properties>
 
     <dependencyManagement>
@@ -108,14 +104,6 @@
 
     <build>
         <plugins>
-            <!--
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.2</version>
-            </plugin>
-            -->
-
             <!-- springboot3 开始，parent 中默认附带了 spring-boot-maven-plugin， 需要全局关闭，按需打开 -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>

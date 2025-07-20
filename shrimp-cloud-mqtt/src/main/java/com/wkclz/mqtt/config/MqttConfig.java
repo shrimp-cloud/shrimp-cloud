@@ -78,15 +78,15 @@ public class MqttConfig {
             return null;
         }
 
-        String clientIdPrefix = getClientIdPrefix();
-        if (StringUtils.isBlank(clientIdPrefix)) {
-            clientIdPrefix = "server";
+        String prefix = getClientIdPrefix();
+        if (StringUtils.isBlank(prefix)) {
+            prefix = "server";
         }
         if (keepAliveInterval == null || keepAliveInterval < 0) {
             keepAliveInterval = 60;
         }
 
-        String clientId = clientIdPrefix + "@" + getServerIp();
+        String clientId = prefix + "@" + getServerIp();
         MemoryPersistence persistence = new MemoryPersistence();
         try {
             mqttClient = new MqttAsyncClient(getEndPoint(), clientId, persistence);
@@ -116,12 +116,9 @@ public class MqttConfig {
 
             logger.info("Connected");
         } catch (MqttException me) {
-            logger.error("reason " + me.getReasonCode());
-            logger.error("msg " + me.getMessage());
-            logger.error("loc " + me.getLocalizedMessage());
-            logger.error("cause " + me.getCause());
-            logger.error("excep " + me);
-            throw MqttRemoteException.error(me.getMessage());
+            String msg = String.format("reason: %s, msg: %s, loc: %s, cause: %s",
+                me.getReasonCode(), me.getMessage(), me.getLocalizedMessage(), me.getCause());
+            throw MqttRemoteException.error(msg);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -23,8 +23,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Base64;
 import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 生成二维码帮助类

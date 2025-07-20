@@ -254,7 +254,6 @@ public class MyBatisHelper {
             }
             return field.get(obj);
         } catch (Exception e) {
-            logger.debug("ERROR: 加载对象中[{}]", fieldName, e);
             throw new RuntimeException("ERROR: 加载对象失败[" + fieldName + "]", e);
         }
     }
