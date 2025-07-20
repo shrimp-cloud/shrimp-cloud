@@ -58,6 +58,9 @@ public class RedisIdGenHelper {
      * yyyyMMddHHmmssiiii
      */
     public String nextId() {
+        if (redisTemplate == null) {
+            throw BizException.error("no redis support");
+        }
         long currentSecond = this.timeGen();
         // 闰秒：如果当前时间小于上一次ID生成的时间戳，说明系统时钟回退过，这个时候应当抛出异常
         if (currentSecond < LAST_SECOND.get()) {
@@ -107,10 +110,7 @@ public class RedisIdGenHelper {
 
         StringBuilder sb = new StringBuilder();
         sb.append(currentTime);
-
-        for (int i = 0; i < SEQUENCE_LENGTH-getLength(sequence); i++) {
-            sb.append("0");
-        }
+        sb.append("0".repeat(Math.max(0, SEQUENCE_LENGTH - getLength(sequence))));
         sb.append(sequence);
         return sb.toString();
     }
