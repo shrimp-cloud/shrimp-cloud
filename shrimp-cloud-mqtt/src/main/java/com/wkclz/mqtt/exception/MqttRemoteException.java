@@ -13,4 +13,9 @@ public class MqttRemoteException extends Exception {
     public MqttRemoteException(String message) {
         super(message);
     }
+
+    public static MqttRemoteException error(String msg) {
+        return new MqttRemoteException(msg);
+    }
+
 }

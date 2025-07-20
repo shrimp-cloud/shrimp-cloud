@@ -323,6 +323,7 @@ public class AreaUtil {
                 try {
                     Thread.sleep(RETRY_TIMES * 10000L);
                 } catch (InterruptedException e2) {
+                    Thread.currentThread().interrupt();
                     System.err.println(e2.getMessage());
                 }
                 System.out.println("休息"+(RETRY_TIMES * 5)+"秒，失败尝试次数：" + RETRY_TIMES + ", 异常为： " + e.getMessage());

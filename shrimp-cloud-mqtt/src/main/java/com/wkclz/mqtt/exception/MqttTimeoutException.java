@@ -13,4 +13,9 @@ public class MqttTimeoutException extends MqttRemoteException {
     public MqttTimeoutException(String message) {
         super(message);
     }
+
+    public static MqttTimeoutException error(String msg) {
+        return new MqttTimeoutException(msg);
+    }
+
 }

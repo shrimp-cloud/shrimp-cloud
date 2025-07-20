@@ -86,7 +86,10 @@ public class GenHelper {
             CompressUtil.unZip(file, saveDir);
 
             // 删除压缩文件
-            file.delete();
+            boolean delete = file.delete();
+            if (!delete) {
+                log.error("删除文件失败: " + savePath);
+            }
 
             // 替换
             int lastPort = savePath.lastIndexOf(".");
@@ -276,7 +279,10 @@ public class GenHelper {
                 // 特例1. *Example.java 为特例，MBG 生产模型时自动生成，直接删除即可
                 if ((tagFile.exists() && deleteFlag) || genFile.getName().endsWith("Example.java")) {
                     log.info("=======> 正在删除文件: " + tagFile.getPath());
-                    tagFile.delete();
+                    boolean delete = tagFile.delete();
+                    if (!delete) {
+                        log.error("=======> 删除文件失败: " + tagFile.getPath());
+                    }
                 }
                 // 若不存在（或者存在并已删除），都创建
                 if (!tagFile.exists()) {

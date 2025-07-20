@@ -99,7 +99,8 @@ public class DynamicDataSource extends AbstractShrimpRoutingDataSource {
             try {
                 countDownLatch.await();
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                Thread.currentThread().interrupt();
+                throw BizException.error(e.getMessage());
             }
             return key;
         }

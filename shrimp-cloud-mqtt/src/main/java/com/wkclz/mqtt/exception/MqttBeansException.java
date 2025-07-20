@@ -15,4 +15,9 @@ public class MqttBeansException extends BeansException {
     public MqttBeansException(String msg, Throwable cause) {
         super(msg, cause);
     }
+
+    public static MqttBeansException error(String msg) {
+        return new MqttBeansException(msg);
+    }
+
 }

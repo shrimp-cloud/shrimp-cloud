@@ -228,7 +228,7 @@ public class BeanUtil {
     /**
      * 从业务实体中，获取业务字段的 getter 方法
      */
-    public static <T extends BaseEntity> Map<String, FieldInfo> getGetters(Class<T> clazz) {
+    public static synchronized <T extends BaseEntity> Map<String, FieldInfo> getGetters(Class<T> clazz) {
         if (clazz == null) {
             throw BizException.error("getBizFields clazz can not be null");
         }
@@ -238,48 +238,46 @@ public class BeanUtil {
             return cachedMethods;
         }
 
-        synchronized (clazz) {
-            cachedMethods = CLASS_METHOD_CACHE.get(clazz);
-            if (cachedMethods != null) {
-                return cachedMethods;
-            }
-
-            Class<? super T> superclass = clazz.getSuperclass();
-            Field[] superFields = superclass.getDeclaredFields();
-            Method[] superMethods = superclass.getDeclaredMethods();
-
-            Field[] declaredFields = clazz.getDeclaredFields();
-            Method[] declaredMethods = clazz.getDeclaredMethods();
-
-            List<Field> fields = new ArrayList<>();
-            fields.addAll(Arrays.asList(superFields));
-            fields.addAll(Arrays.asList(declaredFields));
-
-            List<Method> methods = new ArrayList<>();
-            methods.addAll(Arrays.asList(superMethods));
-            methods.addAll(Arrays.asList(declaredMethods));
-
-            List<String> baseEntityField = getBaseEntityField();
-            Map<String, FieldInfo> getters = new HashMap<>();
-            for (Field field : fields) {
-                String name = field.getName();
-                if (baseEntityField.contains(field.getName())) {
-                    continue;
-                }
-                String getter = "get" + name.substring(0, 1).toUpperCase() + name.substring(1);
-                for (Method method : methods) {
-                    if (getter.equals(method.getName())) {
-                        FieldInfo info = new FieldInfo();
-                        info.setFileName(name);
-                        info.setGetter(method);
-                        info.setFileClass(field.getType());
-                        getters.put(name, info);
-                    }
-                }
-            }
-            CLASS_METHOD_CACHE.put(clazz, getters);
-            return getters;
+        cachedMethods = CLASS_METHOD_CACHE.get(clazz);
+        if (cachedMethods != null) {
+            return cachedMethods;
         }
+
+        Class<? super T> superclass = clazz.getSuperclass();
+        Field[] superFields = superclass.getDeclaredFields();
+        Method[] superMethods = superclass.getDeclaredMethods();
+
+        Field[] declaredFields = clazz.getDeclaredFields();
+        Method[] declaredMethods = clazz.getDeclaredMethods();
+
+        List<Field> fields = new ArrayList<>();
+        fields.addAll(Arrays.asList(superFields));
+        fields.addAll(Arrays.asList(declaredFields));
+
+        List<Method> methods = new ArrayList<>();
+        methods.addAll(Arrays.asList(superMethods));
+        methods.addAll(Arrays.asList(declaredMethods));
+
+        List<String> baseEntityField = getBaseEntityField();
+        Map<String, FieldInfo> getters = new HashMap<>();
+        for (Field field : fields) {
+            String name = field.getName();
+            if (baseEntityField.contains(field.getName())) {
+                continue;
+            }
+            String getter = "get" + name.substring(0, 1).toUpperCase() + name.substring(1);
+            for (Method method : methods) {
+                if (getter.equals(method.getName())) {
+                    FieldInfo info = new FieldInfo();
+                    info.setFileName(name);
+                    info.setGetter(method);
+                    info.setFileClass(field.getType());
+                    getters.put(name, info);
+                }
+            }
+        }
+        CLASS_METHOD_CACHE.put(clazz, getters);
+        return getters;
     }
 
 

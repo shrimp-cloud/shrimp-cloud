@@ -11,10 +11,8 @@ import java.util.Map;
 
 public class JsUtil {
 
-    // 保存 Context 上下文
-    private static final ThreadLocal<Context> CONTEXT_HOLDER = new ThreadLocal<>();
     // 初始化标准对象（如 global, Function 等）
-    private static Scriptable SCOPE = null;
+    private static Scriptable scope = null;
     // JavaScript 函数
     private final static Map<String, Function> JS_FUNCTION = new HashMap<>();
 
@@ -32,14 +30,18 @@ public class JsUtil {
     }
     private static String exec(String script, Object[] params) {
         String funName = getFunName(script);
-        Context context = getContext();
-        Function function = getFunction(script, funName, context);
-        Object result = function.call(context, SCOPE, SCOPE, params);
-        // 处理返回值
-        if (result == null || result instanceof Undefined) {
-            return null;
+        try {
+            Context context = ContextFactory.getGlobal().enterContext();
+            Function function = getFunction(script, funName, context);
+            Object result = function.call(context, scope, scope, params);
+            // 处理返回值
+            if (result == null || result instanceof Undefined) {
+                return null;
+            }
+            return result.toString();
+        } catch (Exception e) {
+            throw BizException.error(e.getMessage());
         }
-        return result.toString();
     }
 
     private static String getFunName(String js) {
@@ -60,26 +62,17 @@ public class JsUtil {
         if (function != null) {
             return function;
         }
-        if (SCOPE == null) {
-            SCOPE = context.initStandardObjects();
+        if (scope == null) {
+            scope = context.initStandardObjects();
         }
 
         // 初始化函数
-        context.evaluateString(SCOPE, script, funName, 1, null);
+        context.evaluateString(scope, script, funName, 1, null);
         // 获取 JavaScript 函数
-        function = (Function) SCOPE.get(funName, SCOPE);
+        function = (Function) scope.get(funName, scope);
         JS_FUNCTION.put(hash, function);
 
         return function;
-    }
-
-    private static Context getContext() {
-        Context context = CONTEXT_HOLDER.get();
-        if (context == null) {
-            context = ContextFactory.getGlobal().enterContext();
-            CONTEXT_HOLDER.set(context);
-        }
-        return context;
     }
 
     private static String getJsScript() {

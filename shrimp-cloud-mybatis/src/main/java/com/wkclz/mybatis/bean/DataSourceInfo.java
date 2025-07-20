@@ -59,7 +59,7 @@ public class DataSourceInfo {
             return ds;
         }
 
-        synchronized (DataSourceInfo.class.getName()) {
+        synchronized (DataSourceInfo.class) {
             ds = DS_MAP.get(key);
             if (ds != null) {
                 return ds;

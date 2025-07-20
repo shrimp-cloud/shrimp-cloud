@@ -1,6 +1,7 @@
 package com.wkclz.redis.gen;
 
 import cn.hutool.core.date.DateTime;
+import com.wkclz.common.exception.BizException;
 import com.wkclz.common.utils.SecretUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -66,14 +67,15 @@ public class RedisIdGenHelper {
                 try {
                     // 时间回退timeOffset毫秒内，则允许等待2倍的偏移量后重新获取，解决小范围的时间回拨问题
                     this.wait(offset << 1);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw BizException.error(e.getMessage());
                 }
                 // 再次获取
                 currentSecond = this.timeGen();
                 // 再次校验
                 if (currentSecond < lastSecond) {
-                    throw new RuntimeException("Clock moved backwards, refusing to generate id for [" + offset + "ms]");
+                    throw BizException.error("Clock moved backwards, refusing to generate id for [" + offset + "ms]");
                 }
             }
         }

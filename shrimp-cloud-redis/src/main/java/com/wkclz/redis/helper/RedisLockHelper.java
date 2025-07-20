@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -58,15 +59,19 @@ public class RedisLockHelper {
         }
         long currentTimeMillis = System.currentTimeMillis();
         key = getKey(key);
-        boolean boo = redisTemplate.opsForValue().setIfAbsent(key, currentTimeMillis + "", second, TimeUnit.SECONDS);
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        Boolean boo = valueOperations.setIfAbsent(key, currentTimeMillis + "", second, TimeUnit.SECONDS);
+        if (boo == null) {
+            throw BizException.error("found lock {}, but can not found value!", key);
+        }
         if (!boo) {
-            Object o = redisTemplate.opsForValue().get(key);
+            Object o = valueOperations.get(key);
             if (o == null) {
                 throw BizException.error("found lock {}, but can not found value!", key);
             }
             long aLong = Long.parseLong(o.toString());
             Date date = new Date(aLong);
-            logger.warn("lock {} faild, it has rocked @ {}", key, DateUtil.format(date, "yyyy-M-dd HH:mm:ss"));
+            logger.warn("lock {} faild, it has rocked @ {}", key, DateUtil.format(date, "yyyy-MM-dd HH:mm:ss"));
         }
         return boo;
     }

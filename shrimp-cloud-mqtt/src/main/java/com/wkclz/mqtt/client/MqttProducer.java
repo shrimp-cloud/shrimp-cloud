@@ -4,6 +4,7 @@ import cn.hutool.core.thread.ThreadUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.wkclz.mqtt.enums.Qos;
 import com.wkclz.mqtt.exception.MqttBeansException;
+import com.wkclz.mqtt.exception.MqttSendException;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -63,7 +64,8 @@ public class MqttProducer {
                     try {
                         Thread.sleep(finalDelay);
                     } catch (InterruptedException e) {
-                        //
+                        Thread.currentThread().interrupt();
+                        throw MqttSendException.error(e.getMessage());
                     }
                     log.info("mqtt sent msg, topic:{}, message: {}", topic, msg);
                     byte[] bytes = msg.getBytes(StandardCharsets.UTF_8);
