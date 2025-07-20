@@ -1,7 +1,5 @@
 package org.opencv.calib3d;
 
-import org.opencv.calib3d.StereoBM;
-import org.opencv.calib3d.StereoMatcher;
 import org.opencv.core.Rect;
 
 // C++: class StereoBM

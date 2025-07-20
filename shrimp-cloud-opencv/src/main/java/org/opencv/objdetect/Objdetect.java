@@ -3,14 +3,13 @@
 //
 package org.opencv.objdetect;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Scalar;
-import org.opencv.objdetect.Dictionary;
 import org.opencv.utils.Converters;
+
+import java.util.List;
 
 // C++: class Objdetect
 

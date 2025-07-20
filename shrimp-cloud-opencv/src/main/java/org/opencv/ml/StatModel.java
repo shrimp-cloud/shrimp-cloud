@@ -2,7 +2,6 @@ package org.opencv.ml;
 
 import org.opencv.core.Algorithm;
 import org.opencv.core.Mat;
-import org.opencv.ml.TrainData;
 
 // C++: class StatModel
 /**

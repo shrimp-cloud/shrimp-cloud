@@ -1,13 +1,12 @@
 package org.opencv.dnn;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfFloat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfRotatedRect;
-import org.opencv.dnn.Model;
 import org.opencv.utils.Converters;
+
+import java.util.List;
 
 // C++: class TextDetectionModel
 /**

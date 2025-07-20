@@ -1,7 +1,5 @@
 package org.opencv.photo;
 
-import org.opencv.photo.Tonemap;
-
 // C++: class TonemapDrago
 /**
  * Adaptive logarithmic mapping is a fast global tonemapping algorithm that scales the image in

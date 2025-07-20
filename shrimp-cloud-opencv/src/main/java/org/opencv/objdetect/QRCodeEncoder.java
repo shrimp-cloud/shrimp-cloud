@@ -3,12 +3,10 @@
 //
 package org.opencv.objdetect;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.opencv.core.Mat;
-import org.opencv.objdetect.QRCodeEncoder;
-import org.opencv.objdetect.QRCodeEncoder_Params;
 import org.opencv.utils.Converters;
+
+import java.util.List;
 
 // C++: class QRCodeEncoder
 /**

@@ -2,8 +2,6 @@ package org.opencv.ml;
 
 import org.opencv.core.Mat;
 import org.opencv.core.TermCriteria;
-import org.opencv.ml.SVMSGD;
-import org.opencv.ml.StatModel;
 
 // C++: class SVMSGD
 /**

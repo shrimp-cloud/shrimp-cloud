@@ -3,14 +3,12 @@
 //
 package org.opencv.features2d;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfRect;
-import org.opencv.features2d.Feature2D;
-import org.opencv.features2d.MSER;
 import org.opencv.utils.Converters;
+
+import java.util.List;
 
 // C++: class MSER
 /**

@@ -1,17 +1,9 @@
 package org.opencv.dnn;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
-import org.opencv.core.MatOfDouble;
-import org.opencv.core.MatOfFloat;
-import org.opencv.core.MatOfInt;
-import org.opencv.core.Scalar;
-import org.opencv.dnn.DictValue;
-import org.opencv.dnn.Layer;
-import org.opencv.dnn.Net;
+import org.opencv.core.*;
 import org.opencv.utils.Converters;
+
+import java.util.List;
 
 // C++: class Net
 /**

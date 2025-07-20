@@ -2,8 +2,6 @@ package org.opencv.ml;
 
 import org.opencv.core.Mat;
 import org.opencv.core.TermCriteria;
-import org.opencv.ml.ANN_MLP;
-import org.opencv.ml.StatModel;
 
 // C++: class ANN_MLP
 /**

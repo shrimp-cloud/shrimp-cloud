@@ -1,9 +1,5 @@
 package org.opencv.video;
 
-import org.opencv.video.Tracker;
-import org.opencv.video.TrackerNano;
-import org.opencv.video.TrackerNano_Params;
-
 // C++: class TrackerNano
 /**
  * the Nano tracker is a super lightweight dnn-based general object tracking.

@@ -1,13 +1,8 @@
 package org.opencv.objdetect;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint3f;
 import org.opencv.core.Size;
-import org.opencv.objdetect.Board;
-import org.opencv.objdetect.Dictionary;
-import org.opencv.utils.Converters;
 
 // C++: class CharucoBoard
 /**

@@ -1,9 +1,5 @@
 package org.opencv.video;
 
-import org.opencv.video.Tracker;
-import org.opencv.video.TrackerDaSiamRPN;
-import org.opencv.video.TrackerDaSiamRPN_Params;
-
 // C++: class TrackerDaSiamRPN
 
 public class TrackerDaSiamRPN extends Tracker {

@@ -1,8 +1,5 @@
 package org.opencv.calib3d;
 
-import org.opencv.calib3d.StereoMatcher;
-import org.opencv.calib3d.StereoSGBM;
-
 // C++: class StereoSGBM
 /**
  * The class implements the modified H. Hirschmuller algorithm CITE: HH08 that differs from the original

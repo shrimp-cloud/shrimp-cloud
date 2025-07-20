@@ -1,7 +1,5 @@
 package org.opencv.video;
 
-import org.opencv.video.BackgroundSubtractor;
-
 // C++: class BackgroundSubtractorKNN
 /**
  * K-nearest neighbours - based Background/Foreground Segmentation Algorithm.

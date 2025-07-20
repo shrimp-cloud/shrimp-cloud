@@ -1,9 +1,5 @@
 package org.opencv.video;
 
-import org.opencv.video.Tracker;
-import org.opencv.video.TrackerGOTURN;
-import org.opencv.video.TrackerGOTURN_Params;
-
 // C++: class TrackerGOTURN
 /**
  * the GOTURN (Generic Object Tracking Using Regression Networks) tracker

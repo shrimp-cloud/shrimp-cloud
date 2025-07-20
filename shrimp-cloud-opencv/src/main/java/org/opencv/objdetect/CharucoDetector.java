@@ -1,14 +1,10 @@
 package org.opencv.objdetect;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.opencv.core.Algorithm;
 import org.opencv.core.Mat;
-import org.opencv.objdetect.CharucoBoard;
-import org.opencv.objdetect.CharucoParameters;
-import org.opencv.objdetect.DetectorParameters;
-import org.opencv.objdetect.RefineParameters;
 import org.opencv.utils.Converters;
+
+import java.util.List;
 
 // C++: class CharucoDetector
 

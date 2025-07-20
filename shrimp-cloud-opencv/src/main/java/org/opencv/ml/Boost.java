@@ -1,8 +1,5 @@
 package org.opencv.ml;
 
-import org.opencv.ml.Boost;
-import org.opencv.ml.DTrees;
-
 // C++: class Boost
 /**
  * Boosted tree classifier derived from DTrees

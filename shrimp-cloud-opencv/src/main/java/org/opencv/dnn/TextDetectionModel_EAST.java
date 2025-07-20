@@ -1,9 +1,5 @@
 package org.opencv.dnn;
 
-import org.opencv.dnn.Net;
-import org.opencv.dnn.TextDetectionModel;
-import org.opencv.dnn.TextDetectionModel_EAST;
-
 // C++: class TextDetectionModel_EAST
 /**
  * This class represents high-level API for text detection DL networks compatible with EAST model.

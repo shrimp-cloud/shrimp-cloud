@@ -1,8 +1,5 @@
 package org.opencv.video;
 
-import org.opencv.video.DISOpticalFlow;
-import org.opencv.video.DenseOpticalFlow;
-
 // C++: class DISOpticalFlow
 /**
  * DIS optical flow algorithm.

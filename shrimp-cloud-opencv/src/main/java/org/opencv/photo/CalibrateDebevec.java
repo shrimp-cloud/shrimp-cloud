@@ -1,7 +1,5 @@
 package org.opencv.photo;
 
-import org.opencv.photo.CalibrateCRF;
-
 // C++: class CalibrateDebevec
 /**
  * Inverse camera response function is extracted for each brightness value by minimizing an objective

@@ -5,8 +5,6 @@ package org.opencv.objdetect;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
-import org.opencv.objdetect.Board;
-import org.opencv.objdetect.Dictionary;
 
 // C++: class GridBoard
 /**

@@ -3,9 +3,6 @@
 //
 package org.opencv.objdetect;
 
-import org.opencv.objdetect.QRCodeDetectorAruco;
-import org.opencv.objdetect.QRCodeDetectorAruco_Params;
-
 // C++: class QRCodeDetectorAruco
 
 public class QRCodeDetectorAruco extends GraphicalCodeDetector {

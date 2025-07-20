@@ -1,9 +1,5 @@
 package org.opencv.video;
 
-import org.opencv.video.Tracker;
-import org.opencv.video.TrackerVit;
-import org.opencv.video.TrackerVit_Params;
-
 // C++: class TrackerVit
 /**
  * the VIT tracker is a super lightweight dnn-based general object tracking.

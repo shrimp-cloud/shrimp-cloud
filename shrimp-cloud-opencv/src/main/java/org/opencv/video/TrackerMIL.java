@@ -1,9 +1,5 @@
 package org.opencv.video;
 
-import org.opencv.video.Tracker;
-import org.opencv.video.TrackerMIL;
-import org.opencv.video.TrackerMIL_Params;
-
 // C++: class TrackerMIL
 /**
  * The MIL algorithm trains a classifier in an online manner to separate the object from the

@@ -1,14 +1,10 @@
 package org.opencv.objdetect;
 
+import org.opencv.core.*;
+import org.opencv.utils.Converters;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfInt;
-import org.opencv.core.MatOfPoint3f;
-import org.opencv.core.Point3;
-import org.opencv.core.Size;
-import org.opencv.objdetect.Dictionary;
-import org.opencv.utils.Converters;
 
 // C++: class Board
 /**
