@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -48,6 +47,9 @@ public class RedisLockHelper {
      * @return true, 加锁成功，可以继续， false, 加锁失败，需要等待
      */
     public boolean lock(String key, Integer second) {
+        if (redisTemplate == null) {
+            throw BizException.error("no redis support");
+        }
         if (StringUtils.isBlank(key)) {
             throw BizException.error("key can not be null");
         }
@@ -62,7 +64,7 @@ public class RedisLockHelper {
             if (o == null) {
                 throw BizException.error("found lock {}, but can not found value!", key);
             }
-            Long aLong = Long.valueOf(o.toString());
+            long aLong = Long.parseLong(o.toString());
             Date date = new Date(aLong);
             logger.warn("lock {} faild, it has rocked @ {}", key, DateUtil.format(date, "yyyy-M-dd HH:mm:ss"));
         }
@@ -77,12 +79,14 @@ public class RedisLockHelper {
      * @return
      */
     public boolean unlock(String key) {
+        if (redisTemplate == null) {
+            throw BizException.error("no redis support");
+        }
         if (StringUtils.isBlank(key)) {
             throw BizException.error("key can not be null");
         }
         key = getKey(key);
-        boolean boo = redisTemplate.delete(key);
-        return boo;
+        return redisTemplate.delete(key);
     }
 
 

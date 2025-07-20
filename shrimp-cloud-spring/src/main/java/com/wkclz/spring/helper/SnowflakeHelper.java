@@ -1,5 +1,6 @@
 package com.wkclz.spring.helper;
 
+import com.wkclz.common.exception.BizException;
 import com.wkclz.common.utils.SnowflakeIdWorker;
 import com.wkclz.spring.config.Sys;
 
@@ -7,6 +8,9 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
+/**
+ * @author shrimp
+ */
 public class SnowflakeHelper {
 
     private static SnowflakeIdWorker SFIW = null;
@@ -31,7 +35,7 @@ public class SnowflakeHelper {
         try {
             e = NetworkInterface.getNetworkInterfaces();
         } catch (SocketException e1) {
-            e1.printStackTrace();
+            throw BizException.error("获取机器编码失败");
         }
         while (e.hasMoreElements()) {
             NetworkInterface ni = e.nextElement();
@@ -42,8 +46,7 @@ public class SnowflakeHelper {
     }
 
     private static long getDatacenterId() {
-        int hashCode = Sys.CURRENT_ENV.hashCode();
-        return hashCode;
+        return Sys.CURRENT_ENV.hashCode();
     }
 
     /*
