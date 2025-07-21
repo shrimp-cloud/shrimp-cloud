@@ -230,13 +230,11 @@ public class GenHelper {
             String projectBasePath = taskInfo.getProjectBasePath();
             // 父路径会逃逸。暂时替换成 parent/, 后续再重新找回路径
             projectBasePath = projectBasePath.replace("../", "parent/");
-            String srcRelativePath = ""
-                + "/" + projectBasePath
-                + "/" + taskInfo.getPackagePath().replace("\\.", "/");
+            String srcRelativePath = "/" + projectBasePath
+                + "/" + taskInfo.getPackagePath().replaceAll("\\.", "/");
 
-            String tagRelativePath = ""
-                + "/" + taskInfo.getProjectBasePath()
-                + "/" + taskInfo.getPackagePath().replace("\\.", "/");
+            String tagRelativePath = "/" + taskInfo.getProjectBasePath()
+                + "/" + taskInfo.getPackagePath().replaceAll("\\.", "/");
 
             String genPath = genSrc + srcRelativePath;
             File genPathDirectory = new File(genPath);
