@@ -58,7 +58,8 @@ public class MqttProducer {
         }
         Qos finalQos = qos;
         int finalDelay = delay;
-        try (ThreadPoolExecutor executor = ThreadUtil.newExecutor()) {
+        try {
+            ThreadPoolExecutor executor = ThreadUtil.newExecutor();
             executor.execute(() -> {
                 for (String msg : msgs) {
                     try {
@@ -72,6 +73,8 @@ public class MqttProducer {
                     sendMsg(topic, bytes, finalQos);
                 }
             });
+        } catch (Exception e) {
+            //
         }
     }
 

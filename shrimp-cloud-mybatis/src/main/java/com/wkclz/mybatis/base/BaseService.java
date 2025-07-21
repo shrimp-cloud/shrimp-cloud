@@ -5,8 +5,8 @@ import com.wkclz.common.emuns.ResultStatus;
 import com.wkclz.common.entity.BaseEntity;
 import com.wkclz.common.exception.BizException;
 import com.wkclz.common.utils.AssertUtil;
-import jakarta.annotation.Resource;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class BaseService<E extends BaseEntity, Mapper extends BaseMapper<E>> {
 
     private static final int INSERT_SIZE = 1000;
 
-    @Resource
+    @Autowired
     protected Mapper mapper;
 
     @Desc("统计")
