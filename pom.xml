@@ -12,6 +12,7 @@
     <modules>
         <!-- 依赖管理 -->
         <module>shrimp-cloud-bom</module>
+        <module>shrimp-cloud-camunda</module>
         <module>shrimp-cloud-parent</module>
         <!-- 基础模块，或基础强关联中间件 -->
         <module>shrimp-cloud-common</module>
