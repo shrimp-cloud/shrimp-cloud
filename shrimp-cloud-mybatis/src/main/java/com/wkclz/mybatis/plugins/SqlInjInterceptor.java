@@ -14,22 +14,19 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Properties;
-import java.util.regex.Pattern;
 
+/**
+ * @author shrimp
+ */
 @Intercepts({
     @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}),
     @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class})
 })
 public class SqlInjInterceptor implements Interceptor {
 
-    private static final Logger logger = LoggerFactory.getLogger(SqlInjInterceptor.class);
-
-    private static final Pattern PATTERN = Pattern.compile("[\t\r\n]");
     private static final WallProvider PROVIDER = new MySqlWallProvider(new WallConfig("META-INF/druid/wall/mysql"));
 
     @Override
