@@ -5,13 +5,13 @@
     <select id="getTables" parameterType="com.wkclz.mybatis.bean.TableInfo" resultType="com.wkclz.mybatis.bean.TableInfo">
         SELECT
             table_name,
-            table_comment comment
+            table_comment
         FROM
             information_schema.TABLES
         WHERE
             table_schema = #{tableSchema}
             <if test="tableName != null">AND table_name LIKE CONCAT('%', #{tableName}, '%') </if>
-            <if test="comment != null">AND table_comment LIKE CONCAT('%', #{comment}, '%') </if>
+            <if test="tableComment != null">AND table_comment LIKE CONCAT('%', #{tableComment}, '%') </if>
         ORDER BY
             table_name
     </select>
@@ -20,7 +20,7 @@
         SELECT
             column_name,
             data_type,
-            column_comment comment,
+            column_comment,
             count(*) count
         FROM
             information_schema.COLUMNS

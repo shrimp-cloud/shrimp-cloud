@@ -10,7 +10,7 @@ public class TableInfo {
     private String tableSchema;
 
     private String tableName;
-    private String comment;
+    private String tableComment;
     private String dbType;
 
     private String engine;

@@ -32,7 +32,7 @@ public class MySqlUtil {
         // 备注信息
         SQLExpr sqlExpr = tableStatement.getComment();
         if (sqlExpr instanceof SQLCharExpr sqlCharExpr) {
-            tableInfo.setComment(sqlCharExpr.getText());
+            tableInfo.setTableComment(sqlCharExpr.getText());
         }
         // 表 options 信息
         List<SQLAssignItem> tableOptions = tableStatement.getTableOptions();
@@ -79,7 +79,7 @@ public class MySqlUtil {
                 column.setColumnName(e.getColumnName().trim().replace("`", ""));
                 SQLExpr comment = e.getComment();
                 if (comment instanceof SQLCharExpr sqlCharExpr) {
-                    column.setComment(sqlCharExpr.getText());
+                    column.setColumnComment(sqlCharExpr.getText());
                 }
 
                 if (e.getDefaultExpr() != null) {
