@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.BadSqlGrammarException;
+import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -62,6 +63,15 @@ public class ErrorHandler {
         printErrorLog(request, response, status, "BadSqlGrammarException");
         return Result.error(status.value(), status.getReasonPhrase());
     }
+
+    @ExceptionHandler(UncategorizedSQLException.class)
+    public Result httpUncategorizedSQLException(UncategorizedSQLException e, HttpServletRequest request, HttpServletResponse response) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        logger.error("UncategorizedSQLException: {}", e.getMessage());
+        printErrorLog(request, response, status, "UncategorizedSQLException");
+        return Result.error(status.value(), status.getReasonPhrase());
+    }
+
 
     @ExceptionHandler(MysqlDataTruncation.class)
     public Result httpMysqlDataTruncation(MysqlDataTruncation e, HttpServletRequest request, HttpServletResponse response) {

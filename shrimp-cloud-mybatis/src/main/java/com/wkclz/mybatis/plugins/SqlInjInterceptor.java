@@ -27,7 +27,8 @@ import java.util.Properties;
 })
 public class SqlInjInterceptor implements Interceptor {
 
-    private static final WallProvider PROVIDER = new MySqlWallProvider(new WallConfig("META-INF/druid/wall/mysql"));
+    private static WallProvider provider = null;
+
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
@@ -55,8 +56,12 @@ public class SqlInjInterceptor implements Interceptor {
     }
 
     private void sqlInjCheck(String sql) {
+        if (provider == null) {
+            provider = new MySqlWallProvider(new WallConfig("META-INF/druid/wall/mysql"));
+            provider.getConfig().setCommentAllow(true);
+        }
 
-        WallCheckResult checkResult = PROVIDER.check(sql);
+        WallCheckResult checkResult = provider.check(sql);
         List<Violation> violations = checkResult.getViolations();
         if (violations.isEmpty()) {
             return;
