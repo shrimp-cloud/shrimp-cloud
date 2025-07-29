@@ -6,6 +6,7 @@ import com.wkclz.camunda.entity.repository.DefinitionEntity;
 import com.wkclz.camunda.entity.repository.DefinitionQueryParams;
 import com.wkclz.camunda.entity.repository.DefinitionXmlEntity;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,7 +23,7 @@ public interface CamundaRepositoryFeign {
      * 获取流程定义列表
      */
     @GetMapping("/process-definition")
-    List<DefinitionEntity> processDefinitionList(@RequestParam DefinitionQueryParams params);
+    List<DefinitionEntity> processDefinitionList(@SpringQueryMap DefinitionQueryParams params);
 
     /**
      * 获取流程定义详情
