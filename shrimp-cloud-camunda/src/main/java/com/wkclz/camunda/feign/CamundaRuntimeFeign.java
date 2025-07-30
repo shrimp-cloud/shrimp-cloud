@@ -19,12 +19,12 @@ public interface CamundaRuntimeFeign {
      * 启动流程实例
      */
     @PostMapping("/process-definition/{id}/start")
-    ProcessInstanceEntity startProcessInsById(@PathVariable("id") String id, @RequestBody ProcessStartRequest request);
+    ProcessInstanceEntity startProcessInstanceById(@PathVariable("id") String id, @RequestBody ProcessStartRequest request);
 
     /**
      * 获取流程实例信息
      */
     @PostMapping("/process-instance/{processInstanceId}")
-    ProcessInstanceEntity getProcessIns(@PathVariable("processInstanceId") String processInstanceId);
+    ProcessInstanceEntity getProcessInstance(@PathVariable("processInstanceId") String processInstanceId);
 
 }

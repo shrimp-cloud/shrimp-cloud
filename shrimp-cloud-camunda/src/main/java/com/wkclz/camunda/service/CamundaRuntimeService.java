@@ -50,7 +50,12 @@ public class CamundaRuntimeService {
             }
         }
         // 发起流程
-        return camundaRuntimeFeign.startProcessInsById(definitionId, request);
+        return camundaRuntimeFeign.startProcessInstanceById(definitionId, request);
+    }
+
+    public ProcessInstanceEntity getProcessInstance(String processInstanceId) {
+        ProcessInstanceEntity processInstance = camundaRuntimeFeign.getProcessInstance(processInstanceId);
+        return processInstance;
     }
 
 }
