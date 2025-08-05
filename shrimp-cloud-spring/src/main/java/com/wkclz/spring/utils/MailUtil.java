@@ -133,7 +133,7 @@ public class MailUtil {
             }
 
             // 收件人邮箱
-            String[] toEmailArray = toEmails.split(";");
+            String[] toEmailArray = toEmails.split("[,，;；|]");
             if (toEmailArray.length < 1) {
                 throw new RuntimeException("收件人不能为空！");
             }
@@ -152,7 +152,7 @@ public class MailUtil {
             });
 
             // 开发环境，开启调试
-            session.setDebug(Sys.getCurrentEnv() == EnvType.DEV);
+            // session.setDebug(Sys.getCurrentEnv() == EnvType.DEV);
             MimeMessage mimeMessage = new MimeMessage(session);
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
             // 设置发件人用户名

@@ -1,5 +1,6 @@
 package com.wkclz.spring.config;
 
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
@@ -8,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
  * wangkc @ 2019-07-21 23:46:08
  */
 
+@Data
 @Configuration
 public class SystemConfig {
 
@@ -21,29 +23,19 @@ public class SystemConfig {
     private String profiles;
 
 
-    public String getApplicationName() {
-        return applicationName;
-    }
+    // 告警邮件发送
 
-    public void setApplicationName(String applicationName) {
-        this.applicationName = applicationName;
-    }
+    @Value("${alarm.email.enabled:false}")
+    private boolean alarmEmailEnabled;
+    @Value("${alarm.email.host:smtp.exmail.qq.com}")
+    private String alarmEmailHost;
+    @Value("${alarm.email.from:alarm@wkclz.com}")
+    private String alarmEmailFrom;
+    @Value("${alarm.email.password:your_password}")
+    private String alarmEmailPassword;
+    @Value("${alarm.email.to:admin@wkclz.com}")
+    private String alarmEmailTo;
 
-    public String getApplicationGroup() {
-        return applicationGroup;
-    }
-
-    public void setApplicationGroup(String applicationGroup) {
-        this.applicationGroup = applicationGroup;
-    }
-
-    public String getProfiles() {
-        return profiles;
-    }
-
-    public void setProfiles(String profiles) {
-        this.profiles = profiles;
-    }
 
     public boolean isCloud(){
         return !"null".equals(this.defaultZone);
