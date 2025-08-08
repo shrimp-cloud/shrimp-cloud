@@ -1,6 +1,6 @@
 package com.wkclz.common.tools;
 
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.SysException;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -27,10 +27,10 @@ public class ShaTool {
 
     public static String sha(String input, String algorithm) {
         if (algorithm == null) {
-            throw BizException.error("algorithm can nnot be null");
+            throw SysException.error("algorithm can nnot be null");
         }
         if (!ALGORITHMS.contains(algorithm)) {
-            throw BizException.error("algorithm is error");
+            throw SysException.error("algorithm is error");
         }
         try {
             // 创建MessageDigest实例，指定SHA-256算法

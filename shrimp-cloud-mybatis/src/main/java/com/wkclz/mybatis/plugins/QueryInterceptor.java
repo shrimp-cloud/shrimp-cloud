@@ -1,7 +1,7 @@
 package com.wkclz.mybatis.plugins;
 
 import com.wkclz.common.entity.BaseEntity;
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.DataException;
 import com.wkclz.common.utils.BeanUtil;
 import com.wkclz.common.utils.StringUtil;
 import com.wkclz.mybatis.util.JdbcUtil;
@@ -82,7 +82,7 @@ public class QueryInterceptor implements Interceptor {
         String orderBy = entity.getOrderBy();
         // 注入风险检测
         if (orderBy != null && !orderBy.equals(BaseEntity.DEFAULE_ORDER_BY) && JdbcUtil.sqlInj(orderBy)) {
-            throw BizException.error("orderBy 有注入风险，请谨慎操作！");
+            throw DataException.error("orderBy 有注入风险，请谨慎操作！");
         }
 
         // 大小写处理

@@ -9,7 +9,7 @@ import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.mysql.ast.MySqlKey;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateTableStatement;
 import com.alibaba.fastjson2.JSONObject;
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.SysException;
 import com.wkclz.mybatis.bean.ColumnInfo;
 import com.wkclz.mybatis.bean.KeyInfo;
 import com.wkclz.mybatis.bean.TableInfo;
@@ -166,14 +166,14 @@ public class MySqlUtil {
 
     private static MySqlCreateTableStatement getTableByCreateTableDdl(String ddl) {
         if (StringUtils.isBlank(ddl)) {
-            throw BizException.error("table create ddl can not be null");
+            throw SysException.error("table create ddl can not be null");
         }
         List<SQLStatement> statements = SQLUtils.parseStatements(ddl, "mysql");
         if (CollectionUtils.isEmpty(statements)) {
-            throw BizException.error("table create ddl can not be null");
+            throw SysException.error("table create ddl can not be null");
         }
         if (statements.size() > 1) {
-            throw BizException.error("table create ddl contant more than one table");
+            throw SysException.error("table create ddl contant more than one table");
         }
 
         SQLStatement sqlStatement = statements.get(0);
@@ -181,7 +181,7 @@ public class MySqlUtil {
             return createTableStatement;
         }
 
-        throw BizException.error("table create ddl is not a create table ddl!");
+        throw SysException.error("table create ddl is not a create table ddl!");
     }
 
 

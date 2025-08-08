@@ -2,7 +2,7 @@ package com.wkclz.mybatis.bean;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidPooledConnection;
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.SysException;
 import com.wkclz.common.tools.Md5Tool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ public class DataSourceInfo {
         try {
             return druidDataSource.getConnection();
         } catch (SQLException e) {
-            throw BizException.error("can not get conn from {}, err: {}", dataSourceInfo.getUrl(), e.getMessage());
+            throw SysException.error("can not get conn from {}, err: {}", dataSourceInfo.getUrl(), e.getMessage());
         }
     }
 

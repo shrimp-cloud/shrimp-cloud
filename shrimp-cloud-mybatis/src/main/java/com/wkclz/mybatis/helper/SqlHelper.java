@@ -1,6 +1,7 @@
 package com.wkclz.mybatis.helper;
 
 import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.SysException;
 import com.wkclz.spring.config.SpringContextHolder;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.expression.Alias;
@@ -90,7 +91,7 @@ public class SqlHelper {
         try {
             statement = CCJSqlParserUtil.parse(boundSql.getSql());
         } catch (JSQLParserException e) {
-            throw BizException.error("sql 解析异常: " + e.getMessage());
+            throw SysException.error("sql 解析异常: " + e.getMessage());
         }
 
         if (!(statement instanceof PlainSelect plainSelect)) {

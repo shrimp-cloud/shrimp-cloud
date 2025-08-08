@@ -7,7 +7,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.SysException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,7 +87,7 @@ public class QrCodeUtil {
     // 文本转 二维码
     public static BufferedImage createQrCode(String txt, BarcodeFormat format, int width, int height) {
         if (StringUtils.isBlank(txt)) {
-            throw BizException.error("no txt to create QR code");
+            throw SysException.error("no txt to create QR code");
         }
         try {
             EnumMap<EncodeHintType, Object> hints = new EnumMap<>(EncodeHintType.class);

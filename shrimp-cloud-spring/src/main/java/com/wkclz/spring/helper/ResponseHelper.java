@@ -2,7 +2,7 @@ package com.wkclz.spring.helper;
 
 import com.alibaba.fastjson2.JSON;
 import com.wkclz.common.entity.Result;
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.SysException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +36,7 @@ public class ResponseHelper {
     }
     public static void resopnseExcel(HttpServletResponse response, File file) {
         if (response == null || file == null) {
-            throw BizException.error("response and file can not be null!");
+            throw SysException.error("response and file can not be null!");
         }
 
         String fileName = file.getName();

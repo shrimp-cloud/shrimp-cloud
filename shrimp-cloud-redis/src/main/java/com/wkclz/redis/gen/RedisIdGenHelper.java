@@ -1,7 +1,7 @@
 package com.wkclz.redis.gen;
 
 import cn.hutool.core.date.DateTime;
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.SysException;
 import com.wkclz.common.utils.SecretUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -59,7 +59,7 @@ public class RedisIdGenHelper {
      */
     public String nextId() {
         if (redisTemplate == null) {
-            throw BizException.error("no redis support");
+            throw SysException.error("no redis support");
         }
         long currentSecond = this.timeGen();
         // 闰秒：如果当前时间小于上一次ID生成的时间戳，说明系统时钟回退过，这个时候应当抛出异常
@@ -77,7 +77,7 @@ public class RedisIdGenHelper {
                         this.wait(offset << 1);
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
-                        throw BizException.error(e.getMessage());
+                        throw SysException.error(e.getMessage());
                     }
                     // 再次获取当前时间戳
                     currentSecond = this.timeGen();

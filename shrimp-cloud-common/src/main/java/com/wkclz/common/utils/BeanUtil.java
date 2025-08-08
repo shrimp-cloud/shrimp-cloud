@@ -2,7 +2,7 @@ package com.wkclz.common.utils;
 
 import com.wkclz.common.entity.BaseEntity;
 import com.wkclz.common.entity.FieldInfo;
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.SysException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -225,7 +225,7 @@ public class BeanUtil {
      */
     public static synchronized <T extends BaseEntity> Map<String, FieldInfo> getGetters(Class<T> clazz) {
         if (clazz == null) {
-            throw BizException.error("getBizFields clazz can not be null");
+            throw SysException.error("getBizFields clazz can not be null");
         }
 
         Map<String, FieldInfo> cachedMethods = CLASS_METHOD_CACHE.get(clazz);

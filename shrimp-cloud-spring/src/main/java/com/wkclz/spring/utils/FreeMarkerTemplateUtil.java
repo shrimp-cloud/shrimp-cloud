@@ -1,6 +1,6 @@
 package com.wkclz.spring.utils;
 
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.SysException;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.NullCacheStorage;
 import freemarker.cache.StringTemplateLoader;
@@ -43,7 +43,7 @@ public class FreeMarkerTemplateUtil {
             CONFIGURATION.setTemplateLoader(new ClassTemplateLoader(FreeMarkerTemplateUtil.class, "/templates"));
             return CONFIGURATION.getTemplate(templateName);
         } catch (IOException e) {
-            throw BizException.error(e.getMessage());
+            throw SysException.error(e.getMessage());
         }
     }
 
@@ -62,7 +62,7 @@ public class FreeMarkerTemplateUtil {
             }
             return CONFIGURATION.getTemplate(templateName);
         } catch (IOException e) {
-            throw BizException.error(e.getMessage());
+            throw SysException.error(e.getMessage());
         }
     }
 

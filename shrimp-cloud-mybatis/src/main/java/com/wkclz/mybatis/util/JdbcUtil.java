@@ -6,7 +6,7 @@ import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.dialect.mysql.visitor.MySqlSchemaStatVisitor;
 import com.alibaba.druid.stat.TableStat;
 import com.alibaba.druid.util.JdbcConstants;
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.SysException;
 import com.wkclz.common.utils.MapUtil;
 import com.wkclz.mybatis.bean.DataSourceInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -51,10 +51,10 @@ public class JdbcUtil {
             stmtList = SQLUtils.parseStatements(sql, dbType);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            throw BizException.error("can not parse sql: {}", sql);
+            throw SysException.error("can not parse sql: {}", sql);
         }
         if (stmtList.size() > 1) {
-            throw BizException.error("can only excute 1 sql at once");
+            throw SysException.error("can only excute 1 sql at once");
         }
         SQLStatement stmt = stmtList.get(0);
         // 使用visitor来访问AST
@@ -94,7 +94,7 @@ public class JdbcUtil {
             return maps;
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
-            throw BizException.error("sql error: {}", sql);
+            throw SysException.error("sql error: {}", sql);
         }
     }
 
@@ -107,22 +107,22 @@ public class JdbcUtil {
             return update;
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
-            throw BizException.error("sql error: {}", sql);
+            throw SysException.error("sql error: {}", sql);
         }
     }
 
     private static DruidPooledConnection getConn(DataSourceInfo dataSourceInfo) {
         if (StringUtils.isBlank(dataSourceInfo.getUrl())) {
-            throw BizException.error("get conn, url can not be null");
+            throw SysException.error("get conn, url can not be null");
         }
         if (StringUtils.isBlank(dataSourceInfo.getDriverClassName())) {
-            throw BizException.error("get conn, driverClass can not be null");
+            throw SysException.error("get conn, driverClass can not be null");
         }
         if (StringUtils.isBlank(dataSourceInfo.getUsername())) {
-            throw BizException.error("get username, url can not be null");
+            throw SysException.error("get username, url can not be null");
         }
         if (StringUtils.isBlank(dataSourceInfo.getPassword())) {
-            throw BizException.error("get password, url can not be null");
+            throw SysException.error("get password, url can not be null");
         }
         return DataSourceInfo.getConnect(dataSourceInfo);
 

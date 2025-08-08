@@ -2,7 +2,7 @@ package com.wkclz.redis.helper;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.SysException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,25 +49,25 @@ public class RedisLockHelper {
      */
     public boolean lock(String key, Integer second) {
         if (redisTemplate == null) {
-            throw BizException.error("no redis support");
+            throw SysException.error("no redis support");
         }
         if (StringUtils.isBlank(key)) {
-            throw BizException.error("key can not be null");
+            throw SysException.error("key can not be null");
         }
         if (second == null) {
-            throw BizException.error("second can not be null");
+            throw SysException.error("second can not be null");
         }
         long currentTimeMillis = System.currentTimeMillis();
         key = getKey(key);
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         Boolean boo = valueOperations.setIfAbsent(key, currentTimeMillis + "", second, TimeUnit.SECONDS);
         if (boo == null) {
-            throw BizException.error("found lock {}, but can not found value!", key);
+            throw SysException.error("found lock {}, but can not found value!", key);
         }
         if (!boo) {
             Object o = valueOperations.get(key);
             if (o == null) {
-                throw BizException.error("found lock {}, but can not found value!", key);
+                throw SysException.error("found lock {}, but can not found value!", key);
             }
             long aLong = Long.parseLong(o.toString());
             Date date = new Date(aLong);
@@ -85,10 +85,10 @@ public class RedisLockHelper {
      */
     public boolean unlock(String key) {
         if (redisTemplate == null) {
-            throw BizException.error("no redis support");
+            throw SysException.error("no redis support");
         }
         if (StringUtils.isBlank(key)) {
-            throw BizException.error("key can not be null");
+            throw SysException.error("key can not be null");
         }
         key = getKey(key);
         Boolean delete = redisTemplate.delete(key);

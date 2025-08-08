@@ -1,6 +1,6 @@
 package com.wkclz.common.utils;
 
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.SysException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +51,7 @@ public class PropertiesUtil {
             logger.error(e.getMessage(), e);
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
-            throw BizException.error("转换失败!");
+            throw SysException.error("转换失败!");
         }
         return prop;
     }
@@ -83,7 +83,7 @@ public class PropertiesUtil {
             props.load(in);
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
-            throw BizException.error("转换失败!");
+            throw SysException.error("转换失败!");
         }
         return props;
 

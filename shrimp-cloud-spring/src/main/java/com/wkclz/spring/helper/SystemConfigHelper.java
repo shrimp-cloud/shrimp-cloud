@@ -1,7 +1,7 @@
 package com.wkclz.spring.helper;
 
 import com.alibaba.fastjson2.JSON;
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.SysException;
 import com.wkclz.redis.entity.RedisMsgBody;
 import com.wkclz.redis.topic.RedisTopicConfig;
 import com.wkclz.spring.config.SpringContextHolder;
@@ -31,7 +31,7 @@ public class SystemConfigHelper {
     }
     public static void reflash(Map<String, String> systemConfigs) {
         if (CollectionUtils.isEmpty(systemConfigs)) {
-            throw BizException.error("systemConfigs can not be null or empty!");
+            throw SysException.error("systemConfigs can not be null or empty!");
         }
 
         if (!SpringContextHolder.getBean(SystemConfig.class).isCloud()){
@@ -50,14 +50,14 @@ public class SystemConfigHelper {
 
     public static boolean setLocal(Object msg) {
         if (msg == null) {
-            throw BizException.error("systemConfigs can not be null or empty!");
+            throw SysException.error("systemConfigs can not be null or empty!");
         }
         Map<String, String> systemConfigs = JSON.parseObject(JSON.toJSONString(msg), Map.class);
         return setLocal(systemConfigs);
     }
     public static boolean setLocal(Map<String, String> systemConfigs) {
         if (CollectionUtils.isEmpty(systemConfigs)) {
-            throw BizException.error("systemConfigs can not be null or empty!");
+            throw SysException.error("systemConfigs can not be null or empty!");
         }
         SYSTEM_CONFIG = systemConfigs;
         return true;
@@ -69,11 +69,11 @@ public class SystemConfigHelper {
 
     public static String getSystemConfig(String key) {
         if (key == null || key.trim().isEmpty()) {
-            throw BizException.error("key must not be null ot empty!");
+            throw SysException.error("key must not be null ot empty!");
         }
         Map<String, String> systemConfigs = getLocal();
         if (systemConfigs == null || systemConfigs.isEmpty()) {
-            throw BizException.error("systemConfigs must be init after system start up!");
+            throw SysException.error("systemConfigs must be init after system start up!");
         }
         String value = systemConfigs.get(key);
         return value;

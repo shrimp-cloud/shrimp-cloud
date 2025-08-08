@@ -1,7 +1,7 @@
 package com.wkclz.common.utils;
 
 
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.SysException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +53,7 @@ public class CompressUtil {
             long end = System.currentTimeMillis();
             logger.info("压缩完成，耗时：{} ms", (end - start));
         } catch (IOException e) {
-            throw BizException.error(e.getMessage());
+            throw SysException.error(e.getMessage());
         }
     }
 
@@ -81,14 +81,14 @@ public class CompressUtil {
                     zos.write(buf, 0, len);
                 }
             } catch (IOException e) {
-                throw BizException.error(e.getMessage());
+                throw SysException.error(e.getMessage());
             }
 
             // Complete the entry
             try {
                 zos.closeEntry();
             } catch (IOException e) {
-                throw BizException.error(e.getMessage());
+                throw SysException.error(e.getMessage());
             }
             return;
         }
@@ -103,7 +103,7 @@ public class CompressUtil {
                     // 没有文件，不需要文件的copy
                     zos.closeEntry();
                 } catch (IOException e) {
-                    throw BizException.error(e.getMessage());
+                    throw SysException.error(e.getMessage());
                 }
             }
             return;
@@ -154,7 +154,7 @@ public class CompressUtil {
                     }
                     boolean newFile = targetFile.createNewFile();
                     if (!newFile) {
-                        throw BizException.error("创建文件失败");
+                        throw SysException.error("创建文件失败");
                     }
                     // 将压缩文件内容写入到这个文件中
                     try (

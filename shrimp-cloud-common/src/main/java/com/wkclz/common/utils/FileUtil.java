@@ -1,6 +1,6 @@
 package com.wkclz.common.utils;
 
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.SysException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,11 +109,11 @@ public class FileUtil {
     public static File writeFile(File file, String context) {
         try {
             if (file.exists()) {
-                throw BizException.error("文件已存在，无法覆盖： {}", file.getAbsolutePath());
+                throw SysException.error("文件已存在，无法覆盖： {}", file.getAbsolutePath());
             }
             boolean newFile = file.createNewFile();
             if (!newFile) {
-                throw BizException.error("创建文件失败");
+                throw SysException.error("创建文件失败");
             }
             try (FileWriter writer = new FileWriter(file)) {
                 writer.write(context);
@@ -146,7 +146,7 @@ public class FileUtil {
             Files.delete(file.toPath());
             return true;
         } catch (IOException e) {
-            throw BizException.error(e.getMessage());
+            throw SysException.error(e.getMessage());
         }
     }
 

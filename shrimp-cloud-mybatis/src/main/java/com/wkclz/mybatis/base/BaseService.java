@@ -3,7 +3,7 @@ package com.wkclz.mybatis.base;
 import com.wkclz.common.annotation.Desc;
 import com.wkclz.common.emuns.ResultStatus;
 import com.wkclz.common.entity.BaseEntity;
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.DataException;
 import com.wkclz.common.utils.AssertUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class BaseService<E extends BaseEntity, Mapper extends BaseMapper<E>> {
         checkId(id);
         E e = mapper.getById(id);
         if (e == null) {
-            throw BizException.error(ResultStatus.RECORD_NOT_EXIST);
+            throw DataException.error(ResultStatus.RECORD_NOT_EXIST);
         }
         return e;
     }
@@ -57,7 +57,7 @@ public class BaseService<E extends BaseEntity, Mapper extends BaseMapper<E>> {
         checkEntity(e);
         e = mapper.getByEntity(e);
         if (e == null) {
-            throw BizException.error(ResultStatus.RECORD_NOT_EXIST);
+            throw DataException.error(ResultStatus.RECORD_NOT_EXIST);
         }
         return e;
     }
@@ -118,7 +118,7 @@ public class BaseService<E extends BaseEntity, Mapper extends BaseMapper<E>> {
         checkId(e.getId());
         Integer update = mapper.updateAll(e);
         if (update == 0){
-            throw BizException.error(ResultStatus.RECORD_NOT_EXIST_OR_OUT_OF_DATE);
+            throw DataException.error(ResultStatus.RECORD_NOT_EXIST_OR_OUT_OF_DATE);
         }
         return update;
     }
@@ -129,7 +129,7 @@ public class BaseService<E extends BaseEntity, Mapper extends BaseMapper<E>> {
         checkId(e.getId());
         Integer update = mapper.updateSelective(e);
         if (update == 0){
-            throw BizException.error(ResultStatus.RECORD_NOT_EXIST_OR_OUT_OF_DATE);
+            throw DataException.error(ResultStatus.RECORD_NOT_EXIST_OR_OUT_OF_DATE);
         }
         return update;
     }
@@ -140,7 +140,7 @@ public class BaseService<E extends BaseEntity, Mapper extends BaseMapper<E>> {
         checkId(e.getId());
         Integer update = mapper.updateSelectiveWithoutLock(e);
         if (update == 0){
-            throw BizException.error(ResultStatus.RECORD_NOT_EXIST);
+            throw DataException.error(ResultStatus.RECORD_NOT_EXIST);
         }
         return update;
     }
@@ -148,7 +148,7 @@ public class BaseService<E extends BaseEntity, Mapper extends BaseMapper<E>> {
     @Desc("批量更新(不带乐观锁)")
     public Integer update(List<E> es){
         if (CollectionUtils.isEmpty(es)){
-            throw BizException.error("entitys can not be null");
+            throw DataException.error("entitys can not be null");
         }
         return mapper.updateBatch(es);
     }
@@ -163,7 +163,7 @@ public class BaseService<E extends BaseEntity, Mapper extends BaseMapper<E>> {
             AssertUtil.notNull(e.getVersion(), "请求错误！参数[version]不能为空");
             E oldE = get(e.getId());
             if (oldE == null) {
-                throw BizException.error(ResultStatus.RECORD_NOT_EXIST);
+                throw DataException.error(ResultStatus.RECORD_NOT_EXIST);
             }
             E.copyIfNotNull(e, oldE);
             updateSelective(oldE);
@@ -174,12 +174,12 @@ public class BaseService<E extends BaseEntity, Mapper extends BaseMapper<E>> {
     @Desc("批量删除")
     public Integer deleteByEntitys(List<E> es){
         if (CollectionUtils.isEmpty(es)){
-            throw BizException.error("entitys can not be null");
+            throw DataException.error("entitys can not be null");
         }
         List<Long> ids = new ArrayList<>();
         es.forEach(e -> ids.addAll(getIds(e)));
         if (ids.isEmpty()) {
-            throw BizException.error(ResultStatus.PARAM_NULL);
+            throw DataException.error(ResultStatus.PARAM_NULL);
         }
         return delete(ids);
     }
@@ -197,7 +197,7 @@ public class BaseService<E extends BaseEntity, Mapper extends BaseMapper<E>> {
         checkId(id);
         E e = get(id);
         if (e == null) {
-            throw BizException.error(ResultStatus.RECORD_NOT_EXIST);
+            throw DataException.error(ResultStatus.RECORD_NOT_EXIST);
         }
         BaseEntity baseEntity = new BaseEntity();
         baseEntity.setId(id);
@@ -208,7 +208,7 @@ public class BaseService<E extends BaseEntity, Mapper extends BaseMapper<E>> {
     @Desc("删除")
     public Integer delete(List<Long> ids){
         if (ids == null || ids.isEmpty()) {
-            throw BizException.error(ResultStatus.PARAM_NULL);
+            throw DataException.error(ResultStatus.PARAM_NULL);
         }
         BaseEntity baseEntity = new BaseEntity();
         baseEntity.setIds(ids);
@@ -226,15 +226,15 @@ public class BaseService<E extends BaseEntity, Mapper extends BaseMapper<E>> {
 
     private Integer deleteByBaseEntity(BaseEntity baseEntity){
         if (baseEntity == null) {
-            throw BizException.error(ResultStatus.PARAM_NULL);
+            throw DataException.error(ResultStatus.PARAM_NULL);
         }
         if (baseEntity.getId() == null && (baseEntity.getIds() == null || baseEntity.getIds().isEmpty())) {
-            throw BizException.error("id or ids can not be null at the same time");
+            throw DataException.error("id or ids can not be null at the same time");
         }
         E e = (E) baseEntity;
          Integer delete = mapper.delete(e);
         if (delete == 0){
-            throw BizException.error(ResultStatus.RECORD_NOT_EXIST);
+            throw DataException.error(ResultStatus.RECORD_NOT_EXIST);
         }
         return delete;
     }
@@ -250,20 +250,20 @@ public class BaseService<E extends BaseEntity, Mapper extends BaseMapper<E>> {
             ids.addAll(tmpIds);
         }
         if (CollectionUtils.isEmpty(ids)){
-            throw BizException.error("id or ids can not be null at the same time");
+            throw DataException.error("id or ids can not be null at the same time");
         }
         return ids;
     }
 
     private void checkEntity(E e) {
         if (e == null) {
-            throw BizException.error(ResultStatus.PARAM_NULL);
+            throw DataException.error(ResultStatus.PARAM_NULL);
         }
     }
 
     private void checkId(Long id) {
         if (id == null) {
-            throw BizException.error(ResultStatus.PARAM_NO_ID);
+            throw DataException.error(ResultStatus.PARAM_NO_ID);
         }
     }
 }

@@ -2,7 +2,7 @@ package com.wkclz.spring.helper;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.text.CharSequenceUtil;
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.SysException;
 import com.wkclz.common.utils.SecretUtil;
 import com.wkclz.spring.constant.LogTraceConstant;
 import com.wkclz.spring.entity.DebugInfo;
@@ -26,7 +26,7 @@ public class DebugHelper {
 
         long currentTimeMillis = System.currentTimeMillis();
         if (debugInfo == null){
-            throw BizException.error("found any debug info!");
+            throw SysException.error("found any debug info!");
         }
         debugInfo.setUpperTime(debugInfo.getCurrentTime());
         debugInfo.setCurrentTime(currentTimeMillis);

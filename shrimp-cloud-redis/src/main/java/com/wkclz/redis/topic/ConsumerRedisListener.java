@@ -1,7 +1,7 @@
 package com.wkclz.redis.topic;
 
 import com.alibaba.fastjson2.JSON;
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.SysException;
 import com.wkclz.redis.entity.RedisMsgBody;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
@@ -29,7 +29,7 @@ public class ConsumerRedisListener implements MessageListener {
     public void doBusiness(Message message) {
         Object value = stringRedisTemplate.getValueSerializer().deserialize(message.getBody());
         if (value == null){
-            throw BizException.error("topic body is null: {}", message);
+            throw SysException.error("topic body is null: {}", message);
         }
         logger.info("consumer message: {}", value);
         

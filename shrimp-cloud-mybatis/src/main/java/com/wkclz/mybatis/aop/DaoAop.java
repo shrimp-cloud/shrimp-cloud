@@ -3,6 +3,7 @@ package com.wkclz.mybatis.aop;
 
 import com.wkclz.common.entity.BaseEntity;
 import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.SysException;
 import com.wkclz.common.utils.BeanUtil;
 import com.wkclz.common.utils.StringUtil;
 import com.wkclz.mybatis.base.BaseMapper;
@@ -164,7 +165,7 @@ public class DaoAop {
         if (sqlCommandType != null) {
             return sqlCommandType;
         }
-        throw BizException.error("unknown dao operation: {}, please check the config: mybatis.mapper-locations", pointId);
+        throw SysException.error("unknown dao operation: {}, please check the config: mybatis.mapper-locations", pointId);
     }
 
 

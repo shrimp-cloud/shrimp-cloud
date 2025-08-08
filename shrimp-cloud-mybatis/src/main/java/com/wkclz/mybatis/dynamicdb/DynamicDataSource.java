@@ -3,7 +3,7 @@ package com.wkclz.mybatis.dynamicdb;
 import cn.hutool.core.thread.ThreadUtil;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.SysException;
 import com.wkclz.common.utils.MapUtil;
 import com.wkclz.mybatis.bean.DataSourceInfo;
 import com.wkclz.mybatis.config.DefaultDataSourceConfig;
@@ -64,7 +64,7 @@ public class DynamicDataSource extends AbstractShrimpRoutingDataSource {
                 // 只返回基础数据
                 DataSourceInfo ds = dynamicDataSourceFactory.createDataSource(key);
                 if (ds == null) {
-                    throw BizException.error("can not find dataSource by key: {}", key);
+                    throw SysException.error("can not find dataSource by key: {}", key);
                 }
 
                 // 使用当前数据库连接池参数，仅是换了地址，用户名，密码的方案
@@ -93,7 +93,7 @@ public class DynamicDataSource extends AbstractShrimpRoutingDataSource {
                 countDownLatch.await();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                throw BizException.error(e.getMessage());
+                throw SysException.error(e.getMessage());
             }
             return key;
         }

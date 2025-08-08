@@ -6,7 +6,7 @@ import com.alibaba.druid.wall.WallConfig;
 import com.alibaba.druid.wall.WallProvider;
 import com.alibaba.druid.wall.spi.MySqlWallProvider;
 import com.alibaba.druid.wall.violation.SyntaxErrorViolation;
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.SysException;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
@@ -70,11 +70,11 @@ public class SqlInjInterceptor implements Interceptor {
 
         // 指定类型错误
         if (firstViolation instanceof SyntaxErrorViolation violation) {
-            throw new BizException("sql injection violation: " + violation.getMessage());
+            throw SysException.error("sql injection violation: " + violation.getMessage());
         }
 
         // 兜底的错误
-        throw new BizException("sql injection violation: " + firstViolation.getMessage());
+        throw SysException.error("sql injection violation: " + firstViolation.getMessage());
     }
 
 }

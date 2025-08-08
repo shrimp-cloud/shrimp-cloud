@@ -1,7 +1,7 @@
 package com.wkclz.common.utils;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.SysException;
 import com.wkclz.common.tools.Md5Tool;
 import org.apache.commons.lang3.StringUtils;
 import org.mozilla.javascript.*;
@@ -40,17 +40,17 @@ public class JsUtil {
             }
             return result.toString();
         } catch (Exception e) {
-            throw BizException.error(e.getMessage());
+            throw SysException.error(e.getMessage());
         }
     }
 
     private static String getFunName(String js) {
         if (StringUtils.isBlank(js)) {
-            throw BizException.error("js is empty!");
+            throw SysException.error("js is empty!");
         }
         js = js.replaceAll("\\s+", " ").trim();
         if (!js.startsWith("function ") || !js.contains("(")) {
-            throw BizException.error("error js: " + js);
+            throw SysException.error("error js: " + js);
         }
         return js.substring(9, js.indexOf("("));
     }

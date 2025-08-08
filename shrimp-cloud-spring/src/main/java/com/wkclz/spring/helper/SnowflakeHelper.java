@@ -1,6 +1,6 @@
 package com.wkclz.spring.helper;
 
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.SysException;
 import com.wkclz.common.utils.SnowflakeIdWorker;
 import com.wkclz.spring.config.Sys;
 
@@ -35,7 +35,7 @@ public class SnowflakeHelper {
         try {
             e = NetworkInterface.getNetworkInterfaces();
         } catch (SocketException e1) {
-            throw BizException.error("获取机器编码失败");
+            throw SysException.error("获取机器编码失败");
         }
         while (e.hasMoreElements()) {
             NetworkInterface ni = e.nextElement();
