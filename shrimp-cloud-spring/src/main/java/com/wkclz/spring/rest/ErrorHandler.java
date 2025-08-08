@@ -162,11 +162,11 @@ public class ErrorHandler {
         String uri = request.getRequestURI();
 
         if (e instanceof BizException) {
-            logger.error("error request: {} {}, {}", method, uri, e.getMessage());
+            logger.error("biz error: {} {}, {}", method, uri, e.getMessage());
             return;
         }
 
-        logger.error("error request: {} {}, {}", method, uri, e.getMessage(), e);
+        logger.error("sys request: {} {}, {}", method, uri, e.getMessage(), e);
 
         // 发送邮件消息
         SystemConfig bean = SpringContextHolder.getBean(SystemConfig.class);
