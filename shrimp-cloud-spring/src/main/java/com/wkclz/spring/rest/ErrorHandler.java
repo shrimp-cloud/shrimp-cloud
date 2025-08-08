@@ -4,6 +4,9 @@ import cn.hutool.core.date.DateUtil;
 import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import com.wkclz.common.entity.Result;
 import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.CommonException;
+import com.wkclz.common.exception.DataException;
+import com.wkclz.common.exception.SysException;
 import com.wkclz.spring.config.SpringContextHolder;
 import com.wkclz.spring.config.SystemConfig;
 import com.wkclz.spring.utils.MailUtil;
@@ -83,7 +86,18 @@ public class ErrorHandler {
         return Result.error(status.value(), status.getReasonPhrase());
     }
 
-
+    @ExceptionHandler(SysException.class)
+    public Result sysExceptionHandler(BizException e, HttpServletRequest request, HttpServletResponse response) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        printErrorLog(request, response, status, e);
+        return Result.error(-1, e.getMessage());
+    }
+    @ExceptionHandler(DataException.class)
+    public Result dataExceptionHandler(DataException e, HttpServletRequest request, HttpServletResponse response) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        printErrorLog(request, response, status, e);
+        return Result.error(-1, e.getMessage());
+    }
     @ExceptionHandler(BizException.class)
     public Result bizExceptionHandler(BizException e, HttpServletRequest request, HttpServletResponse response) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -95,10 +109,10 @@ public class ErrorHandler {
     public Result errorHandler(Exception e, HttpServletRequest request, HttpServletResponse response) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 
-        BizException bizException = getBizException(e);
-        if (bizException != null) {
+        CommonException commonException = getCommonException(e);
+        if (commonException != null) {
             printErrorLog(request, response, status, e);
-            return Result.error(bizException);
+            return Result.error(commonException);
         }
 
         String message = e.getMessage();
@@ -113,31 +127,26 @@ public class ErrorHandler {
 
 
     /**
-     * Throwable 找 BizException，找二级原因
-     *
-     * @param throwable
-     * @return
+     * Throwable 找 CommonException，找二级原因
      */
-    private static BizException getBizException(Throwable throwable) {
-        if (throwable == null) {
-            return null;
-        }
-        if (throwable instanceof BizException bizException) {
-            return bizException;
-        }
-        Throwable cause = throwable.getCause();
-        if (cause == null) {
-            return null;
-        }
-        if (cause instanceof BizException bizException) {
-            return bizException;
-        }
-        cause = cause.getCause();
-        if (cause == null) {
-            return null;
-        }
-        if (cause instanceof BizException bizException) {
-            return bizException;
+    private static CommonException getCommonException(Throwable throwable) {
+        for (int i = 0; i < 3; i++) {
+            if (throwable == null) {
+                return null;
+            }
+            if (throwable instanceof SysException sysException) {
+                return sysException;
+            }
+            if (throwable instanceof DataException dataException) {
+                return dataException;
+            }
+            if (throwable instanceof BizException bizException) {
+                return bizException;
+            }
+            if (throwable instanceof CommonException commonException) {
+                return commonException;
+            }
+            throwable = throwable.getCause();
         }
         return null;
     }
@@ -148,10 +157,14 @@ public class ErrorHandler {
             HttpStatus status,
             Exception e) {
 
+        response.setStatus(status.value());
         String method = request.getMethod();
         String uri = request.getRequestURI();
-        logger.error("error request: {} {}, {}", method, uri, e.getMessage());
-        response.setStatus(status.value());
+        logger.error("error request: {} {}, {}", method, uri, e.getMessage(), e);
+
+        if (e instanceof BizException) {
+            return;
+        }
 
         // 发送邮件消息
         SystemConfig bean = SpringContextHolder.getBean(SystemConfig.class);

@@ -2,7 +2,7 @@ package com.wkclz.common.entity;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import com.wkclz.common.emuns.ResultStatus;
-import com.wkclz.common.exception.BizException;
+import com.wkclz.common.exception.CommonException;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -84,7 +84,7 @@ public class Result<T> implements Serializable {
         return result;
     }
 
-    public static Result error(BizException e) {
+    public static Result error(CommonException e) {
         Result result = new Result();
         result.msg = e.getMessage();
         result.code = e.getCode();
