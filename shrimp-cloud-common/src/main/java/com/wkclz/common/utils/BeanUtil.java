@@ -49,7 +49,7 @@ public class BeanUtil {
                 Object value = getter.invoke(obj);
                 if (value != null && value.toString().trim().isEmpty()) {
                     Method setter = property.getWriteMethod();
-                    setter.invoke(obj);
+                    setter.invoke(obj, (Object) null);
                 }
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
