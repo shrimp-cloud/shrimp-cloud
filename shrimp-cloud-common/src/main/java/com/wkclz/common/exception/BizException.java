@@ -3,7 +3,7 @@ package com.wkclz.common.exception;
 import com.wkclz.common.emuns.ResultStatus;
 
 /**
- * 业务异常，一般用户可自行调整数据及操作可修复。开发者夫需关心
+ * 业务异常，需从业务逻辑角度分析问题再进一步解决
  * @author shrimp
  */
 public class BizException extends CommonException {

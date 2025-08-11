@@ -3,10 +3,7 @@ package com.wkclz.spring.rest;
 import cn.hutool.core.date.DateUtil;
 import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import com.wkclz.common.entity.Result;
-import com.wkclz.common.exception.BizException;
-import com.wkclz.common.exception.CommonException;
-import com.wkclz.common.exception.DataException;
-import com.wkclz.common.exception.SysException;
+import com.wkclz.common.exception.*;
 import com.wkclz.spring.config.SpringContextHolder;
 import com.wkclz.spring.config.SystemConfig;
 import com.wkclz.spring.utils.MailUtil;
@@ -143,6 +140,9 @@ public class ErrorHandler {
             if (throwable instanceof BizException bizException) {
                 return bizException;
             }
+            if (throwable instanceof UserException userException) {
+                return userException;
+            }
             if (throwable instanceof CommonException commonException) {
                 return commonException;
             }
@@ -161,7 +161,7 @@ public class ErrorHandler {
         String method = request.getMethod();
         String uri = request.getRequestURI();
 
-        if (e instanceof BizException) {
+        if (e instanceof UserException) {
             logger.error("biz error: {} {}, {}", method, uri, e.getMessage());
             return;
         }
