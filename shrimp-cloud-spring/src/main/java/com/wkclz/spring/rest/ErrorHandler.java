@@ -1,6 +1,7 @@
 package com.wkclz.spring.rest;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.json.JSONUtil;
 import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import com.wkclz.common.entity.Result;
 import com.wkclz.common.exception.*;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.UncategorizedSQLException;
@@ -175,6 +177,9 @@ public class ErrorHandler {
             return;
         }
 
+        // 请求拦截器可能记录了请求信息，若存在，则打印出来
+        String requestLog = MDC.get("MDC:REQUET_LOG");
+
         try {
             MailUtil mu = new MailUtil();
             mu.setEmailHost(bean.getAlarmEmailHost());
@@ -192,7 +197,9 @@ public class ErrorHandler {
                     <div>系统: ${applicationName}</div>
                     <div>时间: ${now}</div>
                     <div>URL: ${url}</div>
-                    <div>内容: </div>
+                    <div>请求详情: </div>
+                    <pre>${requestLog}</pre>
+                    <div>异常内容: </div>
                     <pre>${stackTrace}</pre>
                 </body>
             </html>
@@ -200,6 +207,7 @@ public class ErrorHandler {
             html = html.replace("${applicationName}", applicationName);
             html = html.replace("${now}", now);
             html = html.replace("${url}", method + ":" + uri);
+            html = html.replace("${requestLog}", requestLog == null ? "无请求详情" : JSONUtil.toJsonPrettyStr(requestLog));
             html = html.replace("${stackTrace}", ExceptionUtils.getStackTrace(e));
 
             mu.setSubject(subject);
