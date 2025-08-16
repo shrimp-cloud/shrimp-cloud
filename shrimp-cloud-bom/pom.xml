@@ -23,43 +23,43 @@
         <maven.compiler.target>21</maven.compiler.target>
 
         <!-- Spring 依赖(非spring-cloud-dependencies定义的依赖)  -->
-        <okhttp.version>4.12.0</okhttp.version>
+        <okhttp.version>5.1.0</okhttp.version>
         <feign-okhttp.version>13.6</feign-okhttp.version>
-        <dom4j.version>2.1.4</dom4j.version>
-        <druid-spring-boot-3-starter.version>1.2.25</druid-spring-boot-3-starter.version>
-        <mybatis-spring-boot-starter.version>3.0.4</mybatis-spring-boot-starter.version>
-        <pagehelper-spring-boot-starter.version>2.1.0</pagehelper-spring-boot-starter.version>
-        <jsqlparser.version>5.1</jsqlparser.version>
+        <dom4j.version>2.2.0</dom4j.version>
+        <druid-spring-boot-3-starter.version>1.2.27</druid-spring-boot-3-starter.version>
+        <mybatis-spring-boot-starter.version>3.0.5</mybatis-spring-boot-starter.version>
+        <pagehelper-spring-boot-starter.version>2.1.1</pagehelper-spring-boot-starter.version>
+        <jsqlparser.version>5.3</jsqlparser.version>
 
         <!-- 三方静态依赖 -->
-        <mysql.version>9.2.0</mysql.version>
-        <commons-lang3.version>3.17.0</commons-lang3.version>
-        <commons-beanutils.version>1.10.1</commons-beanutils.version>
-        <commons-collections4.version>4.4</commons-collections4.version>
-        <commons-compress.version>1.27.1</commons-compress.version>
-        <bcpkix-jdk18on.version>1.80</bcpkix-jdk18on.version>
-        <bcprov-jdk18on.version>1.80</bcprov-jdk18on.version>
-        <fastjson2.version>2.0.57</fastjson2.version>
-        <hutool.version>5.8.38</hutool.version>
+        <mysql.version>9.4.0</mysql.version>
+        <commons-lang3.version>3.18.0</commons-lang3.version>
+        <commons-beanutils.version>1.11.0</commons-beanutils.version>
+        <commons-collections4.version>4.5.0</commons-collections4.version>
+        <commons-compress.version>1.28.0</commons-compress.version>
+        <bcpkix-jdk18on.version>1.81</bcpkix-jdk18on.version>
+        <bcprov-jdk18on.version>1.81</bcprov-jdk18on.version>
+        <fastjson2.version>2.0.58</fastjson2.version>
+        <hutool.version>5.8.39</hutool.version>
         <guava.version>33.4.8-jre</guava.version>
-        <jsoup.version>1.19.1</jsoup.version>
+        <jsoup.version>1.21.1</jsoup.version>
         <zxing.version>3.5.3</zxing.version>
         <easyexcel.version>4.0.3</easyexcel.version>
         <jasypt-spring-boot.version>3.0.5</jasypt-spring-boot.version>
-        <aliyun-sdk-oss.version>3.18.1</aliyun-sdk-oss.version>
-        <s3.version>2.31.23</s3.version>
+        <aliyun-sdk-oss.version>3.18.3</aliyun-sdk-oss.version>
+        <s3.version>2.32.24</s3.version>
         <dysmsapi20170525.version>3.1.3</dysmsapi20170525.version>
         <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
         <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
-        <alipay-sdk-java.version>4.40.133.ALL</alipay-sdk-java.version>
-        <weixin-java.version>4.7.6.B</weixin-java.version>
-        <client-java.version>23.0.0</client-java.version>
-        <sensitive-word.version>0.25.0</sensitive-word.version>
+        <alipay-sdk-java.version>4.40.393.ALL</alipay-sdk-java.version>
+        <weixin-java.version>4.7.7.B</weixin-java.version>
+        <client-java.version>24.0.0</client-java.version>
+        <sensitive-word.version>0.27.1</sensitive-word.version>
         <rhino.version>1.8.0</rhino.version>
-        <xxl-job.version>3.0.0</xxl-job.version>
+        <xxl-job.version>3.1.1</xxl-job.version>
 
-        <jjwt.version>0.12.6</jjwt.version>
-        <jjwt-api.version>0.12.6</jjwt-api.version>
+        <jjwt.version>0.12.7</jjwt.version>
+        <jjwt-api.version>0.12.7</jjwt-api.version>
         <kaptcha.version>2.3.2</kaptcha.version>
         <lombok.version>1.18.38</lombok.version>
     </properties>
