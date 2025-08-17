@@ -23,7 +23,7 @@
         <maven.compiler.target>21</maven.compiler.target>
 
         <!-- Spring 依赖(非spring-cloud-dependencies定义的依赖)  -->
-        <okhttp.version>5.1.0</okhttp.version>
+        <okhttp.version>4.12.0</okhttp.version> <!-- 5版本不可用 -->
         <feign-okhttp.version>13.6</feign-okhttp.version>
         <dom4j.version>2.2.0</dom4j.version>
         <druid-spring-boot-3-starter.version>1.2.27</druid-spring-boot-3-starter.version>
