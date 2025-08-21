@@ -67,9 +67,9 @@ public class RequestHelper {
         return params;
     }
 
-    public static String getRequestUrl(){
+    public static String getRequestUrl() {
         HttpServletRequest request = getRequest();
-        if (request == null){
+        if (request == null) {
             return "unknown";
         }
         return request.getRequestURL().toString();
@@ -77,15 +77,16 @@ public class RequestHelper {
 
     /**
      * 获取当前请求
+     *
      * @return
      */
-    public static HttpServletRequest getRequest(){
+    public static HttpServletRequest getRequest() {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        if (requestAttributes == null){
-            return null;
+        if (requestAttributes != null) {
+            ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) requestAttributes;
+            return servletRequestAttributes.getRequest();
         }
-        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) requestAttributes;
-        return servletRequestAttributes.getRequest();
+        return LocalThreadHelper.get(HttpServletRequest.class.getName());
     }
 
 
@@ -140,7 +141,7 @@ public class RequestHelper {
         try {
             URL url1 = new URI(url).toURL();
             int port = url1.getPort();
-            if (port < 1){
+            if (port < 1) {
                 return null;
             }
             return port;
@@ -155,7 +156,7 @@ public class RequestHelper {
         Integer port = getFrontPort(req);
         String protocol = req.getProtocol();
         String portalDomainPort = protocol + "://" + domain;
-        if (port != null && !("http".equalsIgnoreCase(protocol) && port == 80) && !("https".equalsIgnoreCase(protocol) && port == 443)){
+        if (port != null && !("http".equalsIgnoreCase(protocol) && port == 80) && !("https".equalsIgnoreCase(protocol) && port == 443)) {
             portalDomainPort += ":" + port;
         }
         return portalDomainPort;
