@@ -188,7 +188,7 @@ public class ErrorHandler {
         }
 
         // 请求 Filter 拦截器可能记录了请求信息，若存在，则打印出来
-        String requestLog = LocalThreadHelper.get(REQUEST_LOG);
+        Object requestLog = LocalThreadHelper.get(REQUEST_LOG);
 
         try {
             MailUtil mu = new MailUtil();
