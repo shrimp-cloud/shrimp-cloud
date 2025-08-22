@@ -7,13 +7,13 @@ import com.wkclz.common.entity.Result;
 import com.wkclz.common.exception.*;
 import com.wkclz.spring.config.SpringContextHolder;
 import com.wkclz.spring.config.SystemConfig;
+import com.wkclz.spring.helper.LocalThreadHelper;
 import com.wkclz.spring.utils.MailUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.UncategorizedSQLException;
@@ -28,12 +28,18 @@ import java.io.StringWriter;
 import java.sql.SQLSyntaxErrorException;
 import java.util.Date;
 
-//全局异常捕捉处理
+/**
+ * 全局异常捕捉处理
+ * @author shrimp
+ */
 @RestControllerAdvice
 public class ErrorHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
 
+    // 记录请求信息，方便在异常时获取并提示
+    public static final String REQUEST_LOG = "HTTP:REQUET_LOG";
+    public static final String REQUEST_ERROR = "HTTP:REQUET_ERROR";
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public Result httpHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e, HttpServletRequest request, HttpServletResponse response) {
@@ -162,13 +168,17 @@ public class ErrorHandler {
         response.setStatus(status.value());
         String method = request.getMethod();
         String uri = request.getRequestURI();
+        String errorMsg = e.getMessage();
+
+        // 异常信息通过 MDC (ThreadLocal 返回给 Filter 使用)
+        LocalThreadHelper.set(REQUEST_ERROR, errorMsg);
 
         if (e instanceof UserException) {
-            logger.error("biz error: {} {}, {}", method, uri, e.getMessage());
+            logger.error("biz error: {} {}, {}", method, uri, errorMsg);
             return;
         }
 
-        logger.error("sys request: {} {}, {}", method, uri, e.getMessage(), e);
+        logger.error("sys request: {} {}, {}", method, uri, errorMsg, e);
 
         // 发送邮件消息
         SystemConfig bean = SpringContextHolder.getBean(SystemConfig.class);
@@ -177,8 +187,8 @@ public class ErrorHandler {
             return;
         }
 
-        // 请求拦截器可能记录了请求信息，若存在，则打印出来
-        String requestLog = MDC.get("MDC:REQUET_LOG");
+        // 请求 Filter 拦截器可能记录了请求信息，若存在，则打印出来
+        String requestLog = LocalThreadHelper.get(REQUEST_LOG);
 
         try {
             MailUtil mu = new MailUtil();
