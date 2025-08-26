@@ -169,6 +169,9 @@ public class ErrorHandler {
         String method = request.getMethod();
         String uri = request.getRequestURI();
         String errorMsg = e.getMessage();
+        if (errorMsg == null) {
+            errorMsg = e.toString();
+        }
 
         // 异常信息通过 MDC (ThreadLocal 返回给 Filter 使用)
         LocalThreadHelper.set(REQUEST_ERROR, errorMsg);
