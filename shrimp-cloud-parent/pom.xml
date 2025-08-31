@@ -36,6 +36,14 @@
         <shrimp-cloud-plugin-gen.version>4.0.0-SNAPSHOT</shrimp-cloud-plugin-gen.version>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -104,14 +112,6 @@
 
     <build>
         <plugins>
-            <!-- springboot3 开始，parent 中默认附带了 spring-boot-maven-plugin， 需要全局关闭，按需打开 -->
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
             <!-- Source attach plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
