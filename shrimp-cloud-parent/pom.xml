@@ -168,6 +168,11 @@
                     <artifactId>shrimp-cloud-plugin-gen</artifactId>
                     <version>${shrimp-cloud-plugin-gen.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>3.5.1</version>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
