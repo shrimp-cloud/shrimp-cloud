@@ -22,7 +22,7 @@
     <properties>
         <spring.version>3.5.0</spring.version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
-        <shrimp.cloud.bom.version>4.0.0-SNAPSHOT</shrimp.cloud.bom.version>
+        <shrimp-cloud-bom.version>4.0.0-SNAPSHOT</shrimp-cloud-bom.version>
 
         <!-- shrimp 相关依赖 -->
         <shrimp-common.version>4.0.0-SNAPSHOT</shrimp-common.version>
@@ -49,7 +49,7 @@
             <dependency>
                 <groupId>com.wkclz.bom</groupId>
                 <artifactId>shrimp-cloud-bom</artifactId>
-                <version>${shrimp.cloud.bom.version}</version>
+                <version>${shrimp-cloud-bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
