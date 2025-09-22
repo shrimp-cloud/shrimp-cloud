@@ -202,7 +202,7 @@ public class ErrorHandler {
 
             String applicationName = bean.getApplicationName();
             String now = DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss");
-            String subject = "【"+applicationName+"】日志异常警告@" + now;
+            String subject = "【"+applicationName+"】日志异常警告@" + now + ": " + errorMsg;
 
             String html = """
             <html>
@@ -212,6 +212,7 @@ public class ErrorHandler {
                     <div>URL: ${url}</div>
                     <div>请求详情: </div>
                     <pre>${requestLog}</pre>
+                    <pre>异常摘要: ${errorMsg}</pre>
                     <div>异常内容: </div>
                     <pre>${stackTrace}</pre>
                 </body>
@@ -221,7 +222,8 @@ public class ErrorHandler {
             html = html.replace("${now}", now);
             html = html.replace("${url}", method + ":" + uri);
             html = html.replace("${requestLog}", requestLog == null ? "无请求详情" : JSONUtil.toJsonPrettyStr(requestLog));
-            html = html.replace("${stackTrace}", ExceptionUtils.getStackTrace(e));
+            html = html.replace("${errorMsg}", errorMsg);
+            html = html.replace("${stackTrace}", e.getMessage() + "<br />" + ExceptionUtils.getStackTrace(e));
 
             mu.setSubject(subject);
             mu.setContent(html);
