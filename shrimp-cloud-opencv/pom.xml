@@ -17,11 +17,6 @@
     <name>shrimp-cloud-opencv</name>
     <description>shrimp-cloud-opencv</description>
 
-    <properties>
-        <maven.compiler.source>25</maven.compiler.source>
-        <maven.compiler.target>25</maven.compiler.target>
-    </properties>
-
     <dependencies>
     </dependencies>
 

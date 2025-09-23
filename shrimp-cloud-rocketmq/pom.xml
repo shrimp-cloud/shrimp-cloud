@@ -17,11 +17,6 @@
     <name>shrimp-cloud-rocketmq</name>
     <description>shrimp-cloud-rocketmq</description>
 
-    <properties>
-        <maven.compiler.source>25</maven.compiler.source>
-        <maven.compiler.target>25</maven.compiler.target>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
