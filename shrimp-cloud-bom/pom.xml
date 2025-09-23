@@ -19,8 +19,8 @@
     <description>shrimp-cloud-bom 描述依赖版本</description>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
 
         <!-- Spring 依赖(非spring-cloud-dependencies定义的依赖)  -->
         <okhttp.version>4.12.0</okhttp.version> <!-- 5版本不可用 -->
