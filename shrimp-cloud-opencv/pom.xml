@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.wkclz.parent</groupId>
         <artifactId>shrimp-cloud-parent</artifactId>
-        <version>4.0.0-SNAPSHOT</version>
+        <version>${revision}</version>
         <relativePath>../shrimp-cloud-parent/pom.xml</relativePath>
     </parent>
 
@@ -16,8 +16,5 @@
 
     <name>shrimp-cloud-opencv</name>
     <description>shrimp-cloud-opencv</description>
-
-    <dependencies>
-    </dependencies>
 
 </project>

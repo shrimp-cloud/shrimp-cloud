@@ -13,7 +13,7 @@
 
     <groupId>com.wkclz.parent</groupId>
     <artifactId>shrimp-cloud-parent</artifactId>
-    <version>4.0.0-SNAPSHOT</version>
+    <version>${revision}</version>
 
     <packaging>pom</packaging>
     <name>shrimp-cloud-parent</name>
@@ -22,20 +22,15 @@
     <properties>
         <maven.compiler.release>25</maven.compiler.release>
 
+        <current-version>4.0.0</current-version>
+        <build.type>-SNAPSHOT</build.type>
+        <revision>${current-version}${build.type}</revision>
+
         <spring.version>3.5.0</spring.version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
-        <shrimp-cloud-bom.version>4.0.0-SNAPSHOT</shrimp-cloud-bom.version>
 
         <!-- shrimp 相关依赖 -->
-        <shrimp-common.version>4.0.0-SNAPSHOT</shrimp-common.version>
-        <shrimp-redis.version>4.0.0-SNAPSHOT</shrimp-redis.version>
-        <shrimp-spring.version>4.0.0-SNAPSHOT</shrimp-spring.version>
-        <shrimp-cas-starter.version>4.0.0-SNAPSHOT</shrimp-cas-starter.version>
-        <shrimp-mybatis.version>4.0.0-SNAPSHOT</shrimp-mybatis.version>
-        <shrimp-mqtt.version>4.0.0-SNAPSHOT</shrimp-mqtt.version>
         <shrimp-opencv.version>4.9.0-SNAPSHOT</shrimp-opencv.version>
-        <shrimp-cloud-swagger-starter.version>4.0.0-SNAPSHOT</shrimp-cloud-swagger-starter.version>
-        <shrimp-cloud-plugin-gen.version>4.0.0-SNAPSHOT</shrimp-cloud-plugin-gen.version>
     </properties>
 
     <dependencies>
@@ -51,7 +46,7 @@
             <dependency>
                 <groupId>com.wkclz.bom</groupId>
                 <artifactId>shrimp-cloud-bom</artifactId>
-                <version>${shrimp-cloud-bom.version}</version>
+                <version>${revision}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -76,12 +71,12 @@
             <dependency>
                 <groupId>com.wkclz.common</groupId>
                 <artifactId>shrimp-cloud-common</artifactId>
-                <version>${shrimp-common.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.wkclz.mqtt</groupId>
                 <artifactId>shrimp-cloud-mqtt</artifactId>
-                <version>${shrimp-mqtt.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.wkclz.opencv</groupId>
@@ -91,22 +86,22 @@
             <dependency>
                 <groupId>com.wkclz.mybatis</groupId>
                 <artifactId>shrimp-cloud-mybatis</artifactId>
-                <version>${shrimp-mybatis.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.wkclz.redis</groupId>
                 <artifactId>shrimp-cloud-redis</artifactId>
-                <version>${shrimp-redis.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.wkclz.spring</groupId>
                 <artifactId>shrimp-cloud-spring</artifactId>
-                <version>${shrimp-spring.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.wkclz.swagger</groupId>
                 <artifactId>shrimp-cloud-swagger-starter</artifactId>
-                <version>${shrimp-cloud-swagger-starter.version}</version>
+                <version>${revision}</version>
             </dependency>
 
         </dependencies>
@@ -168,7 +163,7 @@
                 <plugin>
                     <groupId>com.wkclz.plugin.gen</groupId>
                     <artifactId>shrimp-cloud-plugin-gen</artifactId>
-                    <version>${shrimp-cloud-plugin-gen.version}</version>
+                    <version>${revision}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>

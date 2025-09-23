@@ -6,13 +6,12 @@
     <parent>
         <groupId>com.wkclz.parent</groupId>
         <artifactId>shrimp-cloud-parent</artifactId>
-        <version>4.0.0-SNAPSHOT</version>
+        <version>${revision}</version>
         <relativePath>../shrimp-cloud-parent/pom.xml</relativePath>
     </parent>
 
     <groupId>com.wkclz.rocketmq</groupId>
     <artifactId>shrimp-cloud-rocketmq</artifactId>
-    <version>4.0.0-SNAPSHOT</version>
 
     <name>shrimp-cloud-rocketmq</name>
     <description>shrimp-cloud-rocketmq</description>

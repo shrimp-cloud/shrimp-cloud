@@ -5,15 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.6</version>
-        <relativePath/>
+        <groupId>com.wkclz.parent</groupId>
+        <artifactId>shrimp-cloud-parent</artifactId>
+        <version>${revision}</version>
+        <relativePath>../shrimp-cloud-parent/pom.xml</relativePath>
     </parent>
 
     <groupId>com.wkclz.plugin.gen</groupId>
     <artifactId>shrimp-cloud-plugin-gen</artifactId>
-    <version>4.0.0-SNAPSHOT</version>
+
     <packaging>maven-plugin</packaging>
 
     <name>shrimp-cloud-plugin-gen</name>
@@ -23,7 +23,6 @@
         <dependency>
             <groupId>com.alibaba.fastjson2</groupId>
             <artifactId>fastjson2</artifactId>
-            <version>2.0.57</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
@@ -40,14 +39,6 @@
 
     <build>
         <plugins>
-            <!-- springboot3 开始，parent 中默认附带了 spring-boot-maven-plugin， 需要全局关闭，按需打开 -->
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -63,13 +54,17 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+                <configuration>
+                    <!-- maven-plugin-plugin 还无法兼容 jdk25 -->
+                    <release>21</release>
+                </configuration>
             </plugin>
+
             <plugin>
                 <!-- 默认版本有 bug, 需要自己定义 -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.15.0</version>
+                <version>3.15.1</version>
                 <configuration>
                     <goalPrefix>shrimp-gen</goalPrefix>
                 </configuration>
