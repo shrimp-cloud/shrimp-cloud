@@ -23,6 +23,12 @@ public class SystemConfig {
     private String profiles;
 
 
+    // 配置解密
+
+    @Value("${shrimp.config.decrypt-aes-key:}")
+    private String configDecryptAesKey;
+
+
     // 告警邮件发送
 
     @Value("${alarm.email.enabled:false}")

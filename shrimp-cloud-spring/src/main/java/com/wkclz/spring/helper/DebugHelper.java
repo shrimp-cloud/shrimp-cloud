@@ -4,7 +4,6 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.wkclz.common.exception.SysException;
 import com.wkclz.common.utils.SecretUtil;
-import com.wkclz.spring.constant.LogTraceConstant;
 import com.wkclz.spring.entity.DebugInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -17,6 +16,9 @@ public class DebugHelper {
 
     private static final Logger logger = LoggerFactory.getLogger(DebugHelper.class);
     private static final ThreadLocal<DebugInfo> THREAD_LOCAL = new ThreadLocal();
+
+    // 跟踪信息
+    private final static String TRACE_ID = "trace-id";
 
     public static void debug(){
         debug(null);
@@ -55,7 +57,7 @@ public class DebugHelper {
         DebugInfo debugInfo = THREAD_LOCAL.get();
         long currentTimeMillis = System.currentTimeMillis();
 
-        String debugId = MDC.get(LogTraceConstant.TRACE_ID);
+        String debugId = MDC.get(TRACE_ID);
         if (debugId == null){
             debugId = SecretUtil.getJavaUuid();
         }
