@@ -62,7 +62,7 @@ public class MyBatisHelper {
     /**
      * 从 sql 中提取参数集
      */
-    public static List<String> getParams(String sql) {
+    public static List<String> sql2Params(String sql) {
         List<String> params = new ArrayList<>();
         if (StringUtils.isBlank(sql)) {
             return params;
