@@ -18,7 +18,7 @@ public class XxlJobConfig {
     private String adminAddresses;
 
     // 调度中心通讯TOKEN [选填]：非空时启用；
-    @Value("${xxl.job.admin.accessToken:default_token}")
+    @Value("${xxl.job.admin.accessToken:}")
     private String accessToken;
 
     // 调度中心通讯超时时间[选填]，单位秒；默认3s；

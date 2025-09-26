@@ -87,15 +87,21 @@ public class DynamicDataSource extends AbstractShrimpRoutingDataSource {
 
                 addDataSource(key, dataSource);
                 hasCreateDataSource.put(key, now);
-                countDownLatch.countDown();
             });
             try {
                 countDownLatch.await();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 throw SysException.error(e.getMessage());
+            } finally {
+                countDownLatch.countDown();
             }
             return key;
         }
     }
+
+    public void destoryDataSource(String key) {
+        // TODO 在数据源变更时，需要销毁旧数据源的连接池
+    }
+
 }

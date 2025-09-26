@@ -3,6 +3,7 @@ package com.wkclz.mybatis.base;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.wkclz.common.entity.BaseEntity;
+import com.wkclz.mybatis.bean.PageData;
 
 import java.util.List;
 import java.util.function.Function;

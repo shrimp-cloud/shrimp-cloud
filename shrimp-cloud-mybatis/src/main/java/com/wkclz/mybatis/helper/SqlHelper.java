@@ -125,7 +125,7 @@ public class SqlHelper {
     }
 
 
-    public static Object sqlActuator(String resultType, String sql, Map<String, Object> map, boolean toCamel) {
+    public static Object sqlExecutor(String resultType, String sql, Map<String, Object> map, boolean toCamel) {
         if (StringUtils.isBlank(resultType)) {
             throw BizException.error("resultType 不能为空");
         }

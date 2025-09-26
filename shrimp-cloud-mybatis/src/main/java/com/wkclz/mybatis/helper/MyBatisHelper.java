@@ -6,7 +6,7 @@ import com.wkclz.common.entity.BaseEntity;
 import com.wkclz.common.exception.SysException;
 import com.wkclz.common.tools.Md5Tool;
 import com.wkclz.common.utils.MapUtil;
-import com.wkclz.mybatis.base.PageData;
+import com.wkclz.mybatis.bean.PageData;
 import com.wkclz.spring.config.SpringContextHolder;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.builder.xml.XMLMapperEntityResolver;

@@ -1,4 +1,4 @@
-package com.wkclz.mybatis.base;
+package com.wkclz.mybatis.bean;
 
 import com.wkclz.common.entity.BaseEntity;
 
