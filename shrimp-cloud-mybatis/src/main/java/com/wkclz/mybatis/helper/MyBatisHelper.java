@@ -3,13 +3,26 @@ package com.wkclz.mybatis.helper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.wkclz.common.entity.BaseEntity;
+import com.wkclz.common.exception.BizException;
 import com.wkclz.common.exception.SysException;
 import com.wkclz.common.tools.Md5Tool;
 import com.wkclz.common.utils.MapUtil;
 import com.wkclz.mybatis.bean.PageData;
 import com.wkclz.spring.config.SpringContextHolder;
+import net.sf.jsqlparser.JSQLParserException;
+import net.sf.jsqlparser.expression.Alias;
+import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.schema.Column;
+import net.sf.jsqlparser.statement.Statement;
+import net.sf.jsqlparser.statement.select.PlainSelect;
+import net.sf.jsqlparser.statement.select.SelectItem;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.builder.xml.XMLMapperEntityResolver;
+import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.parsing.XPathParser;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
@@ -20,27 +33,173 @@ import org.springframework.core.io.Resource;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * @author shrimp
+ * @description MyBatis 的增强用法
+ */
 public class MyBatisHelper {
 
     private static final Logger logger = LoggerFactory.getLogger(MyBatisHelper.class);
+
+    private static final Pattern OBJ_PATTERN = Pattern.compile("#\\{.*?}");
+    private static final  Pattern LIST_PATTERN = Pattern.compile("collection=([\"|']).*?[\"|']");
+
     private static final Set<String> STATEMENTS = new HashSet<>();
 
     private static final String LT_TAG = "[__l_t__]";
     private static final String GT_TAG = "[__g_t__]";
     private static final List<String> XML_TAG = Arrays.asList(
-        "if",
-        "set",
-        "trim",
-        "when",
-        "bind",
-        "where",
-        "choose",
-        "foreach",
-        "otherwise"
-        );
+        "if", "set", "trim", "when", "bind", "where", "choose", "foreach", "otherwise");
 
+
+    /**************8 SQL 分析方法 8**************/
+
+
+    /**
+     * 从 sql 中提取参数集
+     */
+    public static List<String> getParams(String sql) {
+        List<String> params = new ArrayList<>();
+        if (StringUtils.isBlank(sql)) {
+            return params;
+        }
+        List<String> objParams = sql2ObjParams(sql);
+        List<String> listParams = sql2ListParams(sql);
+
+        params.addAll(objParams);
+        params.addAll(listParams);
+        return params;
+    }
+    private static List<String> sql2ObjParams(String sql) {
+        Matcher matcher = OBJ_PATTERN.matcher(sql);
+        // 遍历所有匹配的结果
+        List<String> params = new ArrayList<>();
+        while (matcher.find()) {
+            // 提取匹配的数字
+            String rt = matcher.group();
+            rt = rt.substring(2, rt.length() -1);
+            params.add(rt);
+        }
+        return params;
+    }
+    private static List<String> sql2ListParams(String sql) {
+        Matcher matcher = LIST_PATTERN.matcher(sql);
+        // 遍历所有匹配的结果
+        List<String> params = new ArrayList<>();
+        while (matcher.find()) {
+            // 提取匹配的数字
+            String rt = matcher.group();
+            rt = rt.substring(12, rt.length() -1);
+            params.add(rt);
+        }
+        return params;
+    }
+
+    /**
+     * 从 sql 中提取结果集
+     */
+    public static List<String> sql2Results(String sql, Map<String, Object> map) {
+        List<String> results = new ArrayList<>();
+        if (StringUtils.isBlank(sql)) {
+            return results;
+        }
+        if (map == null) {
+            map = new HashMap<>();
+        }
+
+        String statementStr = MyBatisHelper.reloadSql(sql);
+        SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
+        Configuration configuration = sqlSession.getConfiguration();
+        MappedStatement mappedStatement = configuration.getMappedStatement(statementStr);
+        BoundSql boundSql = mappedStatement.getSqlSource().getBoundSql(map);
+
+        Statement statement = null;
+        try {
+            statement = CCJSqlParserUtil.parse(boundSql.getSql());
+        } catch (JSQLParserException e) {
+            throw SysException.error("sql 解析异常: " + e.getMessage());
+        }
+
+        if (!(statement instanceof PlainSelect plainSelect)) {
+            throw BizException.error("此 sql 语句不是 select 语句，请修正全重试！");
+        }
+
+        List<SelectItem<?>> selectItems = plainSelect.getSelectItems();
+        for (SelectItem<?> selectItem : selectItems) {
+            // 别名
+            Alias alias = selectItem.getAlias();
+            if (alias != null) {
+                results.add(alias.getName());
+                continue;
+            }
+            // 字段
+            Expression expression = selectItem.getExpression();
+            if (expression instanceof Column column) {
+                results.add(column.getColumnName());
+                continue;
+            }
+            // 无法识别
+            results.add(selectItem.toString());
+        }
+        // 处理多余的信息
+        results = results.stream().map(t -> {
+            t = t.trim();
+            t = t.replace("`", "");
+            return t;
+        }).collect(Collectors.toList());
+        return results;
+    }
+
+
+    /**************8 SQL 执行方法 8**************/
+
+
+
+    /**
+     * SQL 执行器 (不指定具体的返回值)
+     * @param resultType OBJECT/LIST/PAGE
+     */
+    public static Object sqlExecutor(String resultType, String sql, Map<String, Object> map, boolean toCamel) {
+        if (StringUtils.isBlank(resultType)) {
+            throw BizException.error("resultType 不能为空");
+        }
+        if (StringUtils.isBlank(sql)) {
+            throw BizException.error("dataScript 不能为空");
+        }
+
+        // 必填参数，参数格式
+        if ("OBJECT".equals(resultType)) {
+            List<LinkedHashMap> maps;
+            if (toCamel) {
+                maps = MyBatisHelper.selectListToCamel(sql, map);
+            } else {
+                maps = MyBatisHelper.selectList(sql, map);
+            }
+            if (CollectionUtils.isEmpty(maps)) {
+                return new LinkedHashMap<>();
+            }
+            return maps.get(0);
+        }
+        if ("LIST".equals(resultType)) {
+            if (toCamel) {
+                return MyBatisHelper.selectListToCamel(sql, map);
+            } else {
+                return MyBatisHelper.selectList(sql, map);
+            }
+        }
+        if ("PAGE".equals(resultType)) {
+            if (toCamel) {
+                return MyBatisHelper.selectPageToCamel(sql, map);
+            } else {
+                return MyBatisHelper.selectPage(sql, map);
+            }
+        }
+        throw BizException.error("无法识别的返回类型: " + resultType);
+    }
 
     /**
      * 自定义 sql 查询-List
@@ -49,6 +208,25 @@ public class MyBatisHelper {
         SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
         String statement = reloadSql(sql);
         return sqlSession.selectList(statement, param);
+    }
+
+    /**
+     * 自定义 sql查询-List
+     */
+    public static List<LinkedHashMap> selectList(String sql, Map param) {
+        SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
+        String statement = reloadSql(sql);
+        List<LinkedHashMap> list = sqlSession.selectList(statement, param);
+        list = list.stream().filter(Objects::nonNull).toList();
+        return list;
+    }
+
+    /**
+     * 自定义 sql查询-List
+     */
+    public static List<LinkedHashMap> selectListToCamel(String sql, Map param) {
+        List<LinkedHashMap> maps = selectList(sql, param);
+        return MapUtil.toReplaceLinkedHashMapKeyLow(maps);
     }
 
     /**
@@ -73,30 +251,8 @@ public class MyBatisHelper {
     }
 
     /**
-     * 自定义 sql查询-List
-     */
-    public static List<LinkedHashMap> selectListToCamel(String sql, Map param) {
-        List<LinkedHashMap> maps = selectList(sql, param);
-        return MapUtil.toReplaceLinkedHashMapKeyLow(maps);
-    }
-    public static List<LinkedHashMap> selectList(String sql, Map param) {
-        SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
-        String statement = reloadSql(sql);
-        List<LinkedHashMap> list = sqlSession.selectList(statement, param);
-        list = list.stream().filter(Objects::nonNull).toList();
-        return list;
-    }
-
-    /**
      * 自定义 sql查询-page
      */
-    public static PageData<LinkedHashMap> selectPageToCamel(String sql, Map param) {
-        PageData<LinkedHashMap> page = selectPage(sql, param);
-        List<LinkedHashMap> rows = page.getRows();
-        rows = MapUtil.toReplaceLinkedHashMapKeyLow(rows);
-        page.setRows(rows);
-        return page;
-    }
     public static PageData<LinkedHashMap> selectPage(String sql, Map param) {
         SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
         String statement = reloadSql(sql);
@@ -119,6 +275,23 @@ public class MyBatisHelper {
             PageHelper.clearPage();
         }
     }
+
+    /**
+     * 自定义 sql查询-page
+     */
+    public static PageData<LinkedHashMap> selectPageToCamel(String sql, Map param) {
+        PageData<LinkedHashMap> page = selectPage(sql, param);
+        List<LinkedHashMap> rows = page.getRows();
+        rows = MapUtil.toReplaceLinkedHashMapKeyLow(rows);
+        page.setRows(rows);
+        return page;
+    }
+
+
+
+    /**************8 SQL 加载方法 8**************/
+
+
 
     /**
      * 重新加载资源

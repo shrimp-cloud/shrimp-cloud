@@ -1,4 +1,4 @@
-package com.wkclz.mybatis.util;
+package com.wkclz.mybatis.helper;
 
 import com.alibaba.druid.pool.DruidPooledConnection;
 import com.alibaba.druid.sql.SQLUtils;
@@ -21,9 +21,14 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class JdbcUtil {
+/**
+ * @author shrimp
+ * @date 2020-05-07 09:05
+ * @description 仅依赖于 java.sql 和 com.alibaba.druid 的 SQL 执行器。适用于非常 低层的逻辑
+ */
+public class JdbcHelper {
 
-    private static final Logger logger = LoggerFactory.getLogger(JdbcUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(JdbcHelper.class);
 
 
     /**
@@ -90,7 +95,7 @@ public class JdbcUtil {
     public static List<LinkedHashMap> jdbcQueryExecutor(Connection conn, String sql) {
         try (Statement statement = conn.createStatement()) {
             ResultSet results = statement.executeQuery(sql);
-            List<LinkedHashMap> maps = ResultSetMapper.toMapList(results);
+            List<LinkedHashMap> maps = SqlHelper.toMapList(results);
             return maps;
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);

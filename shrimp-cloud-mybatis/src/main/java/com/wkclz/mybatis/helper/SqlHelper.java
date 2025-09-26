@@ -1,170 +1,211 @@
 package com.wkclz.mybatis.helper;
 
-import com.wkclz.common.exception.BizException;
+import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.sql.ast.*;
+import com.alibaba.druid.sql.ast.expr.SQLCharExpr;
+import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
+import com.alibaba.druid.sql.ast.expr.SQLIntegerExpr;
+import com.alibaba.druid.sql.ast.statement.*;
+import com.alibaba.druid.sql.dialect.mysql.ast.MySqlKey;
+import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateTableStatement;
+import com.alibaba.fastjson2.JSONObject;
 import com.wkclz.common.exception.SysException;
-import com.wkclz.spring.config.SpringContextHolder;
-import net.sf.jsqlparser.JSQLParserException;
-import net.sf.jsqlparser.expression.Alias;
-import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.schema.Column;
-import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.select.PlainSelect;
-import net.sf.jsqlparser.statement.select.SelectItem;
+import com.wkclz.common.utils.StringUtil;
+import com.wkclz.mybatis.bean.ColumnInfo;
+import com.wkclz.mybatis.bean.KeyInfo;
+import com.wkclz.mybatis.bean.TableInfo;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.SqlSession;
 
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Set;
 
+/**
+ * @author shrimp
+ * @description SQL 语法分析
+ */
 public class SqlHelper {
 
-    private static final Pattern OBJ_PATTERN = Pattern.compile("#\\{.*?}");
-    private static final  Pattern LIST_PATTERN = Pattern.compile("collection=([\"|']).*?[\"|']");
 
     /**
-     * 从 sql 中提取参数集
+     * 从建表 ddl 中获得当前表的基本信息
      */
-    public static List<String> getParams(String sql) {
-        List<String> params = new ArrayList<>();
-        if (StringUtils.isBlank(sql)) {
-            return params;
-        }
-        List<String> objParams = getObjParams(sql);
-        List<String> listParams = getListParams(sql);
+    public static TableInfo getTableInfo(String ddl) {
+        MySqlCreateTableStatement tableStatement = getTableByCreateTableDdl(ddl);
+        TableInfo tableInfo = new TableInfo();
 
-        params.addAll(objParams);
-        params.addAll(listParams);
-        return params;
-    }
-    private static List<String> getObjParams(String sql) {
-        Matcher matcher = OBJ_PATTERN.matcher(sql);
-        // 遍历所有匹配的结果
-        List<String> params = new ArrayList<>();
-        while (matcher.find()) {
-            // 提取匹配的数字
-            String rt = matcher.group();
-            rt = rt.substring(2, rt.length() -1);
-            params.add(rt);
+        // 数据库类型
+        tableInfo.setDbType(tableStatement.getDbType().name());
+        // 表名
+        tableInfo.setTableName(tableStatement.getTableName().trim().replace("`", ""));
+        // 备注信息
+        SQLExpr sqlExpr = tableStatement.getComment();
+        if (sqlExpr instanceof SQLCharExpr sqlCharExpr) {
+            tableInfo.setTableComment(sqlCharExpr.getText());
         }
-        return params;
-    }
-    private static List<String> getListParams(String sql) {
-        Matcher matcher = LIST_PATTERN.matcher(sql);
-        // 遍历所有匹配的结果
-        List<String> params = new ArrayList<>();
-        while (matcher.find()) {
-            // 提取匹配的数字
-            String rt = matcher.group();
-            rt = rt.substring(12, rt.length() -1);
-            params.add(rt);
+        // 表 options 信息
+        List<SQLAssignItem> tableOptions = tableStatement.getTableOptions();
+        for (SQLAssignItem tableOption : tableOptions) {
+            SQLExpr target = tableOption.getTarget();
+            SQLExpr value = tableOption.getValue();
+
+            if (target instanceof SQLIdentifierExpr expr) {
+                String name = expr.getName();
+                if ("ENGINE".equalsIgnoreCase(name)) {
+                    if (value instanceof SQLIdentifierExpr v) {
+                        tableInfo.setEngine(v.getName());
+                    }
+                }
+                if ("AUTO_INCREMENT".equalsIgnoreCase(name)) {
+                    if (value instanceof SQLIntegerExpr v) {
+                        tableInfo.setAutoIncrement(v.getNumber());
+                    }
+                }
+                if ("CHARSET".equalsIgnoreCase(name)) {
+                    if (value instanceof SQLIdentifierExpr v) {
+                        tableInfo.setCharset(v.getName());
+                    }
+                }
+                if ("COLLATE".equalsIgnoreCase(name)) {
+                    if (value instanceof SQLIdentifierExpr v) {
+                        tableInfo.setCollate(v.getName());
+                    }
+                }
+            }
         }
-        return params;
+
+        // 字段信息
+        List<SQLTableElement> elements = tableStatement.getTableElementList();
+        List<ColumnInfo> columns = new ArrayList<>();
+        List<KeyInfo> keys = new ArrayList<>();
+        tableInfo.setColumns(columns);
+        tableInfo.setKeys(keys);
+        for (SQLTableElement element : elements) {
+            if (element instanceof SQLColumnDefinition e) {
+                ColumnInfo column = new ColumnInfo();
+                columns.add(column);
+                column.setAutoIncrement(e.isAutoIncrement() ? true : null);
+                column.setColumnName(e.getColumnName().trim().replace("`", ""));
+                SQLExpr comment = e.getComment();
+                if (comment instanceof SQLCharExpr sqlCharExpr) {
+                    column.setColumnComment(sqlCharExpr.getText());
+                }
+
+                if (e.getDefaultExpr() != null) {
+                    if (e.getDefaultExpr() instanceof SQLCharExpr t) {
+                        column.setDefaultValue(t.getValue());
+                    }
+                    if (e.getDefaultExpr() instanceof SQLCurrentTimeExpr t) {
+                        column.setDefaultValue(t.getType().name);
+                    }
+                }
+                if (e.getOnUpdate() != null) {
+                    if (e.getOnUpdate() instanceof SQLCurrentTimeExpr t) {
+                        column.setOnUpdate(t.getType().name);
+                    }
+                }
+
+                List<SQLColumnConstraint> constraints = e.getConstraints();
+                if (CollectionUtils.isNotEmpty(constraints)) {
+                    for (SQLColumnConstraint constraint : constraints) {
+                        if (constraint instanceof SQLNotNullConstraint) {
+                            column.setNotNull(true);
+                        } else {
+                            System.out.println(constraint);
+                        }
+                    }
+                }
+
+                SQLDataType dataType = e.getDataType();
+                column.setDataType(dataType.getName());
+                List<SQLExpr> arguments = dataType.getArguments();
+                if (CollectionUtils.isNotEmpty(arguments)) {
+                    SQLExpr sqlExpr1 = arguments.get(0);
+                    if (sqlExpr1 instanceof SQLIntegerExpr s1) {
+                        column.setLength(s1.getNumber());
+                    } else {
+                        System.out.println(sqlExpr1);
+                    }
+                }
+                if (dataType instanceof SQLCharacterDataType type) {
+                    column.setCharset(type.getCharSetName());
+                    column.setCollate(type.getCollate());
+                } else if (dataType instanceof SQLDataTypeImpl t) {
+                    column.setUnsigned(t.isUnsigned() ? true : null);
+                } else {
+                    System.out.println(dataType);
+                }
+            }
+
+            if (element instanceof MySqlKey k) {
+                KeyInfo key = new KeyInfo();
+                keys.add(key);
+                key.setIndexType(k.getIndexType());
+                SQLIndexDefinition indexDefinition = k.getIndexDefinition();
+                key.setType(indexDefinition.getType());
+                SQLName name = indexDefinition.getName();
+                if (name != null) {
+                    key.setName(name.getSimpleName().trim().replace("`", ""));
+                }
+
+                List<SQLSelectOrderByItem> keyColumns = indexDefinition.getColumns();
+                if (CollectionUtils.isNotEmpty(keyColumns)) {
+                    List<ColumnInfo> indexColumns = new ArrayList<>();
+                    key.setColumns(indexColumns);
+                    for (SQLSelectOrderByItem keyColumn : keyColumns) {
+                        ColumnInfo idxColumn = new ColumnInfo();
+                        indexColumns.add(idxColumn);
+                        SQLExpr expr = keyColumn.getExpr();
+                        if (expr instanceof SQLIdentifierExpr t) {
+                            idxColumn.setColumnName(t.getName().trim().replace("`", ""));
+                        } else {
+                            System.out.println(keyColumn);
+                        }
+                    }
+                    if (key.getName() == null) {
+                        key.setName(indexColumns.get(0).getColumnName());
+                    }
+                }
+            }
+        }
+        return tableInfo;
     }
 
 
     /**
-     * 从 sql 中提取结果集
+     * 建表 DDL 转换为 建表 Statement
      */
-    public static List<String> getResults(String sql, Map<String, Object> map) {
-        List<String> results = new ArrayList<>();
-        if (StringUtils.isBlank(sql)) {
-            return results;
+    private static MySqlCreateTableStatement getTableByCreateTableDdl(String ddl) {
+        if (StringUtils.isBlank(ddl)) {
+            throw SysException.error("table create ddl can not be null");
         }
-        if (map == null) {
-            map = new HashMap<>();
+        List<SQLStatement> statements = SQLUtils.parseStatements(ddl, "mysql");
+        if (CollectionUtils.isEmpty(statements)) {
+            throw SysException.error("table create ddl can not be null");
         }
-
-        String statementStr = MyBatisHelper.reloadSql(sql);
-        SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
-        Configuration configuration = sqlSession.getConfiguration();
-        MappedStatement mappedStatement = configuration.getMappedStatement(statementStr);
-        BoundSql boundSql = mappedStatement.getSqlSource().getBoundSql(map);
-
-        Statement statement = null;
-        try {
-            statement = CCJSqlParserUtil.parse(boundSql.getSql());
-        } catch (JSQLParserException e) {
-            throw SysException.error("sql 解析异常: " + e.getMessage());
+        if (statements.size() > 1) {
+            throw SysException.error("table create ddl contant more than one table");
         }
 
-        if (!(statement instanceof PlainSelect plainSelect)) {
-            throw BizException.error("此 sql 语句不是 select 语句，请修正全重试！");
+        SQLStatement sqlStatement = statements.get(0);
+        if (sqlStatement instanceof MySqlCreateTableStatement createTableStatement) {
+            return createTableStatement;
         }
 
-        List<SelectItem<?>> selectItems = plainSelect.getSelectItems();
-        for (SelectItem<?> selectItem : selectItems) {
-            // 别名
-            Alias alias = selectItem.getAlias();
-            if (alias != null) {
-                results.add(alias.getName());
-                continue;
-            }
-            // 字段
-            Expression expression = selectItem.getExpression();
-            if (expression instanceof Column column) {
-                results.add(column.getColumnName());
-                continue;
-            }
-            // 无法识别
-            results.add(selectItem.toString());
-        }
-        // 处理多余的信息
-        results = results.stream().map(t -> {
-            t = t.trim();
-            t = t.replace("`", "");
-            return t;
-        }).collect(Collectors.toList());
-        return results;
+        throw SysException.error("table create ddl is not a create table ddl!");
     }
 
 
-    public static Object sqlExecutor(String resultType, String sql, Map<String, Object> map, boolean toCamel) {
-        if (StringUtils.isBlank(resultType)) {
-            throw BizException.error("resultType 不能为空");
-        }
-        if (StringUtils.isBlank(sql)) {
-            throw BizException.error("dataScript 不能为空");
-        }
-
-        // 必填参数，参数格式
-        if ("OBJECT".equals(resultType)) {
-            List<LinkedHashMap> maps;
-            if (toCamel) {
-                maps = MyBatisHelper.selectListToCamel(sql, map);
-            } else {
-                maps = MyBatisHelper.selectList(sql, map);
-            }
-            if (CollectionUtils.isEmpty(maps)) {
-                return new LinkedHashMap<>();
-            }
-            return maps.get(0);
-        }
-        if ("LIST".equals(resultType)) {
-            if (toCamel) {
-                return MyBatisHelper.selectListToCamel(sql, map);
-            } else {
-                return MyBatisHelper.selectList(sql, map);
-            }
-        }
-        if ("PAGE".equals(resultType)) {
-            if (toCamel) {
-                return MyBatisHelper.selectPageToCamel(sql, map);
-            } else {
-                return MyBatisHelper.selectPage(sql, map);
-            }
-        }
-        throw BizException.error("无法识别的返回类型: " + resultType);
-    }
-
-    public static List<LinkedHashMap> linkedHashMap2List(LinkedHashMap linkedHashMap) {
-        List<LinkedHashMap> data = new ArrayList<>();
+    /**
+     * LinkedHashMap 转 List (指定为 key, value)
+     */
+    public static List<LinkedHashMap<String, Object>> linkedHashMap2List(LinkedHashMap<Object, Object> linkedHashMap) {
+        List<LinkedHashMap<String, Object>> data = new ArrayList<>();
         if (linkedHashMap == null) {
             return data;
         }
@@ -179,5 +220,72 @@ public class SqlHelper {
         return data;
     }
 
+
+    /**
+     * 执行结果转 Map
+     */
+    public static List<LinkedHashMap> toMapList(ResultSet rs) {
+        List<LinkedHashMap> list = new ArrayList<>();
+        try {
+            // 获取数据库表结构
+            ResultSetMetaData meta = rs.getMetaData();
+            while (rs.next()) {
+                LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+                // 循环获取指定行的每一列的信息
+                for (int i = 1; i <= meta.getColumnCount(); i++) {
+                    // 当前列名
+                    String colName = meta.getColumnLabel(i);
+                    colName = StringUtil.underlineToCamel(colName);
+                    Object value = rs.getObject(i);
+                    if (value != null) {
+                        map.put(colName, value);
+                    }
+                }
+                list.add(map);
+            }
+        } catch (SQLException e) {
+            throw SysException.error("SQL 结果无法解析: {}", e.getMessage());
+        }
+        return list;
+    }
+
+
+
+
+
+
+    public static void main(String[] args) {
+        String demoDdl = getDemoDdl();
+        TableInfo tableInfo = getTableInfo(demoDdl);
+        String jsonString = JSONObject.toJSONString(tableInfo);
+        System.out.println(jsonString);
+    }
+
+    private static String getDemoDdl() {
+        return """
+            CREATE TABLE `auth_api` (
+                `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+                `module` varchar(31) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL COMMENT '模块',
+                `app_code` varchar(31) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL COMMENT '应用编码',
+                `api_code` varchar(31) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL COMMENT '路由映射编码',
+                `api_method` varchar(15) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL COMMENT '路由映射方法',
+                `api_uri` varchar(127) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL COMMENT '路由映射URI',
+                `api_name` varchar(127) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL COMMENT '路由映射名称',
+                `sort` int NOT NULL DEFAULT '0' COMMENT '排序',
+                `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                `create_by` varchar(31) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL COMMENT '创建人',
+                `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                `update_by` varchar(31) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL COMMENT '更新人',
+                `remark` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL COMMENT '备注',
+                `version` int NOT NULL DEFAULT '0' COMMENT '版本号',
+                `status` bigint unsigned NOT NULL DEFAULT '1' COMMENT 'status',
+                PRIMARY KEY (`id`) USING BTREE,
+                KEY `app_code` (`app_code`) USING BTREE,
+                KEY `mapping_code` (`api_code`) USING BTREE,
+                KEY `mapping_uri` (`api_uri`) USING BTREE,
+                KEY `mapping_name` (`api_name`) USING BTREE
+              ) ENGINE=InnoDB AUTO_INCREMENT=394 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci COMMENT='路由映射';
+             """;
+    }
 
 }

@@ -4,7 +4,7 @@ import com.wkclz.common.entity.BaseEntity;
 import com.wkclz.common.exception.DataException;
 import com.wkclz.common.utils.BeanUtil;
 import com.wkclz.common.utils.StringUtil;
-import com.wkclz.mybatis.util.JdbcUtil;
+import com.wkclz.mybatis.helper.JdbcHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
@@ -81,7 +81,7 @@ public class QueryInterceptor implements Interceptor {
         BeanUtil.removeBlank(entity);
         String orderBy = entity.getOrderBy();
         // 注入风险检测
-        if (orderBy != null && !orderBy.equals(BaseEntity.DEFAULE_ORDER_BY) && JdbcUtil.sqlInj(orderBy)) {
+        if (orderBy != null && !orderBy.equals(BaseEntity.DEFAULE_ORDER_BY) && JdbcHelper.sqlInj(orderBy)) {
             throw DataException.error("orderBy 有注入风险，请谨慎操作！");
         }
 

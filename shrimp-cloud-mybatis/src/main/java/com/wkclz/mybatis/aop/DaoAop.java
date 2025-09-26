@@ -8,7 +8,7 @@ import com.wkclz.common.utils.BeanUtil;
 import com.wkclz.common.utils.StringUtil;
 import com.wkclz.mybatis.base.BaseMapper;
 import com.wkclz.mybatis.dynamicdb.DynamicDataSourceHolder;
-import com.wkclz.mybatis.util.JdbcUtil;
+import com.wkclz.mybatis.helper.JdbcHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
@@ -95,7 +95,7 @@ public class DaoAop {
         BeanUtil.removeBlank(entity);
         String orderBy = entity.getOrderBy();
         // 注入风险检测
-        if (orderBy != null && !orderBy.equals(BaseEntity.DEFAULE_ORDER_BY) && JdbcUtil.sqlInj(orderBy)) {
+        if (orderBy != null && !orderBy.equals(BaseEntity.DEFAULE_ORDER_BY) && JdbcHelper.sqlInj(orderBy)) {
             throw BizException.error("orderBy 有注入风险，请谨慎操作！");
         }
 
