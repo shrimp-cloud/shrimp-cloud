@@ -23,7 +23,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author shrimp
@@ -202,26 +201,6 @@ public class SqlHelper {
 
 
     /**
-     * LinkedHashMap 转 List (指定为 key, value)
-     */
-    public static List<LinkedHashMap<String, Object>> linkedHashMap2List(LinkedHashMap<Object, Object> linkedHashMap) {
-        List<LinkedHashMap<String, Object>> data = new ArrayList<>();
-        if (linkedHashMap == null) {
-            return data;
-        }
-        Set set = linkedHashMap.keySet();
-        for (Object o : set) {
-            Object value = linkedHashMap.get(o);
-            LinkedHashMap<String, Object> row = new LinkedHashMap<>();
-            row.put("key", o);
-            row.put("value", value);
-            data.add(row);
-        }
-        return data;
-    }
-
-
-    /**
      * 执行结果转 Map
      */
     public static List<LinkedHashMap> toMapList(ResultSet rs) {
@@ -248,9 +227,6 @@ public class SqlHelper {
         }
         return list;
     }
-
-
-
 
 
 
