@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.wkclz.common.annotation.Desc;
 import com.wkclz.common.annotation.Router;
 import com.wkclz.common.utils.ClassUtil;
+import com.wkclz.common.utils.StringUtil;
 import com.wkclz.spring.entity.RestInfo;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -170,7 +171,7 @@ public class RestUtil {
         RestInfo restInfo = new RestInfo();
         restInfo.setApiMethod(requestMethod.name());
         restInfo.setApiUri(uri);
-        restInfo.setApiName(desc);
+        restInfo.setApiDesc(desc);
         /*
         restInfo.setReturnType(method.getReturnType());
         Class<?>[] parameterTypes = method.getParameterTypes();
@@ -191,13 +192,14 @@ public class RestUtil {
         }
         */
 
-        // 方法名 【无意义，不再转换】
-        /*
+        // 方法名
         String restName = uri.substring(1);
         restName = restName.replace("/", "_");
+        restName = restName.replace("{", "");
+        restName = restName.replace("}", "");
+        restName = restName.replace("*", "");
         restName = StringUtil.underlineToCamel(restName);
-        restInfo.setDesc(restName);
-        */
+        restInfo.setApiName(restName);
         return restInfo;
     }
 

@@ -13,6 +13,7 @@ public class RestInfo implements Serializable {
     private String apiMethod;
     private String apiUri;
     private String apiName;
+    private String apiDesc;
     private Integer writeFlag;
 
 }
