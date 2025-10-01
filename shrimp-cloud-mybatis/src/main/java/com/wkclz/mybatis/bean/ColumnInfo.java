@@ -14,7 +14,7 @@ public class ColumnInfo {
     private String dataType;
     private String charset;
     private String collate;
-    private Number length;
+    private Long length;
     private String columnComment;
     private Object defaultValue;
     private Object onUpdate;

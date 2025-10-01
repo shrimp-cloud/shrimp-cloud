@@ -12,7 +12,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.wkclz.common.exception.SysException;
 import com.wkclz.common.utils.StringUtil;
 import com.wkclz.mybatis.bean.ColumnInfo;
-import com.wkclz.mybatis.bean.KeyInfo;
+import com.wkclz.mybatis.bean.IndexInfo;
 import com.wkclz.mybatis.bean.TableInfo;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -62,7 +62,7 @@ public class SqlHelper {
                 }
                 if ("AUTO_INCREMENT".equalsIgnoreCase(name)) {
                     if (value instanceof SQLIntegerExpr v) {
-                        tableInfo.setAutoIncrement(v.getNumber());
+                        tableInfo.setAutoIncrement(v.getNumber().longValue());
                     }
                 }
                 if ("CHARSET".equalsIgnoreCase(name)) {
@@ -81,13 +81,14 @@ public class SqlHelper {
         // 字段信息
         List<SQLTableElement> elements = tableStatement.getTableElementList();
         List<ColumnInfo> columns = new ArrayList<>();
-        List<KeyInfo> keys = new ArrayList<>();
+        List<IndexInfo> indexs = new ArrayList<>();
         tableInfo.setColumns(columns);
-        tableInfo.setKeys(keys);
+        tableInfo.setIndexs(indexs);
         for (SQLTableElement element : elements) {
             if (element instanceof SQLColumnDefinition e) {
                 ColumnInfo column = new ColumnInfo();
                 columns.add(column);
+                column.setTableName(tableInfo.getTableName());
                 column.setAutoIncrement(e.isAutoIncrement() ? true : null);
                 column.setColumnName(e.getColumnName().trim().replace("`", ""));
                 SQLExpr comment = e.getComment();
@@ -126,7 +127,7 @@ public class SqlHelper {
                 if (CollectionUtils.isNotEmpty(arguments)) {
                     SQLExpr sqlExpr1 = arguments.get(0);
                     if (sqlExpr1 instanceof SQLIntegerExpr s1) {
-                        column.setLength(s1.getNumber());
+                        column.setLength(s1.getNumber().longValue());
                     } else {
                         System.out.println(sqlExpr1);
                     }
@@ -142,32 +143,32 @@ public class SqlHelper {
             }
 
             if (element instanceof MySqlKey k) {
-                KeyInfo key = new KeyInfo();
-                keys.add(key);
-                key.setIndexType(k.getIndexType());
+                IndexInfo index = new IndexInfo();
+                indexs.add(index);
+                index.setTableSchema(tableInfo.getTableSchema());
+                index.setTableName(tableInfo.getTableName());
+                index.setIndexType(k.getIndexType());
                 SQLIndexDefinition indexDefinition = k.getIndexDefinition();
-                key.setType(indexDefinition.getType());
+                index.setType(indexDefinition.getType());
                 SQLName name = indexDefinition.getName();
                 if (name != null) {
-                    key.setName(name.getSimpleName().trim().replace("`", ""));
+                    index.setIndexName(name.getSimpleName().trim().replace("`", ""));
                 }
 
                 List<SQLSelectOrderByItem> keyColumns = indexDefinition.getColumns();
                 if (CollectionUtils.isNotEmpty(keyColumns)) {
-                    List<ColumnInfo> indexColumns = new ArrayList<>();
-                    key.setColumns(indexColumns);
+                    List<String> indexColumns = new ArrayList<>();
+                    index.setColumns(indexColumns);
                     for (SQLSelectOrderByItem keyColumn : keyColumns) {
-                        ColumnInfo idxColumn = new ColumnInfo();
-                        indexColumns.add(idxColumn);
                         SQLExpr expr = keyColumn.getExpr();
                         if (expr instanceof SQLIdentifierExpr t) {
-                            idxColumn.setColumnName(t.getName().trim().replace("`", ""));
+                            indexColumns.add(t.getName().trim().replace("`", ""));
                         } else {
                             System.out.println(keyColumn);
                         }
                     }
-                    if (key.getName() == null) {
-                        key.setName(indexColumns.get(0).getColumnName());
+                    if (index.getIndexName() == null) {
+                        index.setIndexName(indexColumns.get(0));
                     }
                 }
             }

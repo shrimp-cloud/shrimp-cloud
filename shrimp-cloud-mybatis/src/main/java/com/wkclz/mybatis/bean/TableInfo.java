@@ -14,12 +14,12 @@ public class TableInfo {
     private String dbType;
 
     private String engine;
-    private Number autoIncrement;
+    private Long autoIncrement;
     private String charset;
     private String collate;
 
     private List<ColumnInfo> columns;
     // index
-    private List<KeyInfo> keys;
+    private List<IndexInfo> indexs;
 
 }
