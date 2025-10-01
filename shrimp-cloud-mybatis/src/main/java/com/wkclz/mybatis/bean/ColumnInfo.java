@@ -2,8 +2,10 @@ package com.wkclz.mybatis.bean;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class ColumnInfo {
+public class ColumnInfo implements Serializable {
 
     private String tableSchema;
     private String tableName;

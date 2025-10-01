@@ -2,10 +2,11 @@ package com.wkclz.mybatis.bean;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class TableInfo {
+public class TableInfo implements Serializable {
 
     private String tableSchema;
 

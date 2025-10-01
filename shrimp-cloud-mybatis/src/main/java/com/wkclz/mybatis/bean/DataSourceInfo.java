@@ -4,15 +4,13 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidPooledConnection;
 import com.wkclz.common.exception.SysException;
 import com.wkclz.common.tools.Md5Tool;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DataSourceInfo {
-    private static final Logger logger = LoggerFactory.getLogger(DataSourceInfo.class);
+public class DataSourceInfo implements Serializable {
 
     private static final Map<String, DruidDataSource> DS_MAP = new HashMap<>();
 

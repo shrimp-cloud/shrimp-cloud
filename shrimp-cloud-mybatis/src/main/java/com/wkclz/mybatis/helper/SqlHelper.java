@@ -8,12 +8,16 @@ import com.alibaba.druid.sql.ast.expr.SQLIntegerExpr;
 import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.mysql.ast.MySqlKey;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateTableStatement;
+import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlDeleteStatement;
+import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlInsertStatement;
+import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlUpdateStatement;
 import com.alibaba.fastjson2.JSONObject;
 import com.wkclz.common.exception.SysException;
 import com.wkclz.common.utils.StringUtil;
 import com.wkclz.mybatis.bean.ColumnInfo;
 import com.wkclz.mybatis.bean.IndexInfo;
 import com.wkclz.mybatis.bean.TableInfo;
+import com.wkclz.mybatis.bean.UpdateInfo;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -181,18 +185,7 @@ public class SqlHelper {
      * 建表 DDL 转换为 建表 Statement
      */
     private static MySqlCreateTableStatement getTableByCreateTableDdl(String ddl) {
-        if (StringUtils.isBlank(ddl)) {
-            throw SysException.error("table create ddl can not be null");
-        }
-        List<SQLStatement> statements = SQLUtils.parseStatements(ddl, "mysql");
-        if (CollectionUtils.isEmpty(statements)) {
-            throw SysException.error("table create ddl can not be null");
-        }
-        if (statements.size() > 1) {
-            throw SysException.error("table create ddl contant more than one table");
-        }
-
-        SQLStatement sqlStatement = statements.get(0);
+        SQLStatement sqlStatement = getSQLStatement(ddl);
         if (sqlStatement instanceof MySqlCreateTableStatement createTableStatement) {
             return createTableStatement;
         }
@@ -200,6 +193,41 @@ public class SqlHelper {
         throw SysException.error("table create ddl is not a create table ddl!");
     }
 
+
+    public static UpdateInfo getUpdateInfo(String dml) {
+        SQLStatement sqlStatement = getSQLStatement(dml);
+        UpdateInfo updateInfo = new UpdateInfo();
+        updateInfo.setScript(dml);
+
+        if (sqlStatement instanceof MySqlInsertStatement insert) {
+            updateInfo.setOpType("INSERT");
+            updateInfo.setTableName(insert.getTableName().getSimpleName());
+        }
+        if (sqlStatement instanceof MySqlUpdateStatement update) {
+            updateInfo.setOpType("UPDATE");
+            updateInfo.setTableName(update.getTableName().getSimpleName());
+        }
+        if (sqlStatement instanceof MySqlDeleteStatement delete) {
+            updateInfo.setOpType("DELETE");
+            updateInfo.setTableName(delete.getTableName().getSimpleName());
+        }
+        return updateInfo;
+    }
+
+
+    private static SQLStatement getSQLStatement(String script) {
+        if (StringUtils.isBlank(script)) {
+            throw SysException.error("script can not be null");
+        }
+        List<SQLStatement> statements = SQLUtils.parseStatements(script, "mysql");
+        if (CollectionUtils.isEmpty(statements)) {
+            throw SysException.error("script with no context");
+        }
+        if (statements.size() > 1) {
+            throw SysException.error("script contant more than one command");
+        }
+        return statements.get(0);
+    }
 
     /**
      * 执行结果转 Map

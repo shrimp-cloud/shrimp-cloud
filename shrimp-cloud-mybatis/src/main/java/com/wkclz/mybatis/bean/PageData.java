@@ -2,13 +2,14 @@ package com.wkclz.mybatis.bean;
 
 import com.wkclz.common.entity.BaseEntity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Description:
  * Created: wangkaicun @ 2017-11-12 上午12:10
  */
-public class PageData<T> {
+public class PageData<T> implements Serializable {
 
     private List<T> rows;
 
