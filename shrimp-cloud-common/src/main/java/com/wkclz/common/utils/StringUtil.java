@@ -42,10 +42,19 @@ public class StringUtil {
 
 
     /**
+     * 首字母转小写
+     */
+    public static String firstChatToLowerCase(String param) {
+        if (param == null || param.trim().isEmpty()) {
+            return param;
+        }
+        String fistChar = param.substring(0, 1).toLowerCase();
+        return fistChar + param.substring(1);
+    }
+
+
+    /**
      * 首字母转大写
-     *
-     * @param param
-     * @return
      */
     public static String firstChatToUpperCase(String param) {
         if (param == null || param.trim().isEmpty()) {

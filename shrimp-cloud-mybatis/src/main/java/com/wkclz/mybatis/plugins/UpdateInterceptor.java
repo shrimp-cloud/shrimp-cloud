@@ -3,6 +3,8 @@ package com.wkclz.mybatis.plugins;
 import com.wkclz.common.emuns.ResultStatus;
 import com.wkclz.common.entity.BaseEntity;
 import com.wkclz.common.exception.BizException;
+import com.wkclz.mybatis.plugins.helper.LengthCheckHelper;
+import com.wkclz.spring.config.SpringContextHolder;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.Executor;
@@ -13,10 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 @Intercepts({@Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class})})
 public class UpdateInterceptor implements Interceptor {
@@ -25,9 +24,30 @@ public class UpdateInterceptor implements Interceptor {
     private static final String MDC_USER_CODE_KEY = "userCode";
     private static final String DEFAULT_USER_CODE = "guest";
 
+    private static final List<String> UPDATE_NAMES = Arrays.asList(
+        "insert", "insertBatch", "updateAll", "updateSelective",
+        "updateSelectiveWithoutLock", "updateBatch");
+
+
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
+        // ID 检查，Version 号检查， 用户信息设置
+        idVersionUserCheck(invocation);
+        // 检查数据的长度
+        checkLength(invocation);
+        return invocation.proceed();
+    }
 
+    @Override
+    public Object plugin(Object target) {
+        return Plugin.wrap(target, this);
+    }
+
+    @Override
+    public void setProperties(Properties properties) {
+    }
+
+    private void idVersionUserCheck(Invocation invocation) {
         String userCode = MDC.get(MDC_USER_CODE_KEY);
         if (StringUtils.isBlank(userCode)) {
             userCode = DEFAULT_USER_CODE;
@@ -66,17 +86,6 @@ public class UpdateInterceptor implements Interceptor {
         }
         logger.debug("mybatis.update.interceptor: operate user: {}", userCode);
 
-        Object proceedReslut = invocation.proceed();
-        return proceedReslut;
-    }
-
-    @Override
-    public Object plugin(Object target) {
-        return Plugin.wrap(target, this);
-    }
-
-    @Override
-    public void setProperties(Properties properties) {
     }
 
     private static boolean checkEntity(Object paramter, SqlCommandType commandType, String userCode, boolean chechVersion, boolean checkId) {
@@ -115,4 +124,49 @@ public class UpdateInterceptor implements Interceptor {
         }
         return true;
     }
+
+    private void checkLength(Invocation invocation) {
+        Object[] args = invocation.getArgs();
+        MappedStatement mappedStatement = (MappedStatement) args[0];
+        Object parameter = args[1];
+        String id = mappedStatement.getId();
+        String name = id.substring(id.lastIndexOf(".") + 1);
+
+        if (!UPDATE_NAMES.contains(name)) {
+            return;
+        }
+
+        // 参数为对象
+        if (parameter instanceof BaseEntity baseEntity) {
+            lengthCheckHandle(baseEntity);
+        }
+
+        // 参数为 List 【在 Map 里面】
+        if (parameter instanceof Map map) {
+            Collection values = map.values();
+            for (Object parameterObj : values) {
+                if (parameterObj instanceof Collection collection) {
+                    for (Object p : collection) {
+                        boolean isBaseEntity = lengthCheckHandle(p);
+                        if (!isBaseEntity) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean lengthCheckHandle(Object paramter) {
+        if (!(paramter instanceof BaseEntity entity)) {
+            return false;
+        }
+
+        LengthCheckHelper helper = SpringContextHolder.getBean(LengthCheckHelper.class);
+        helper.handleCheck(entity);
+
+        return true;
+    }
+
+
 }

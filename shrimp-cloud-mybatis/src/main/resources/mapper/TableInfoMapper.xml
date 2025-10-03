@@ -40,5 +40,21 @@
             count DESC
     </select>
 
+
+    <select id="getColumnLengthList" parameterType="com.wkclz.mybatis.bean.ColumnQuery" resultType="com.wkclz.mybatis.bean.ColumnInfo">
+        SELECT
+            column_name,
+            data_type,
+            character_maximum_length `length`,
+            column_comment
+        FROM
+            information_schema.COLUMNS
+        WHERE
+            table_schema = #{tableSchema}
+            AND table_name = #{tableName}
+            AND data_type IN ('varchar', 'char', 'text', 'tinytext')
+            AND character_maximum_length IS NOT NULL
+    </select>
+
 </mapper>
 

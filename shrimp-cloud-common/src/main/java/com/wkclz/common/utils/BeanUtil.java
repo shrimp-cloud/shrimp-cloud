@@ -233,11 +233,6 @@ public class BeanUtil {
             return cachedMethods;
         }
 
-        cachedMethods = CLASS_METHOD_CACHE.get(clazz);
-        if (cachedMethods != null) {
-            return cachedMethods;
-        }
-
         Class<? super T> superclass = clazz.getSuperclass();
         Field[] superFields = superclass.getDeclaredFields();
         Method[] superMethods = superclass.getDeclaredMethods();
@@ -253,13 +248,13 @@ public class BeanUtil {
         methods.addAll(Arrays.asList(superMethods));
         methods.addAll(Arrays.asList(declaredMethods));
 
-        List<String> baseEntityField = getBaseEntityField();
+        // List<String> baseEntityField = getBaseEntityField();
         Map<String, FieldInfo> getters = new HashMap<>();
         for (Field field : fields) {
             String name = field.getName();
-            if (baseEntityField.contains(field.getName())) {
-                continue;
-            }
+            // if (baseEntityField.contains(field.getName())) {
+            //     continue;
+            // }
             String getter = "get" + name.substring(0, 1).toUpperCase() + name.substring(1);
             for (Method method : methods) {
                 if (getter.equals(method.getName())) {

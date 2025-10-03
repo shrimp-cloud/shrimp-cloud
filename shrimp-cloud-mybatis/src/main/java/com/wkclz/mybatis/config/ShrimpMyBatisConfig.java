@@ -9,8 +9,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ShrimpMyBatisConfig {
 
-  @Value("${shrimp.mybatis.datasource.cache-second:60}")
-  private Integer datasourceCacheSecond;
+    @Value("${shrimp.mybatis.data-length-check:1}")
+    private Integer dataLengthCheck;
+    @Value("${shrimp.mybatis.datasource.cache-second:60}")
+    private Integer datasourceCacheSecond;
 
     @Value("${spring.datasource.url:}")
     private String datasourceUrl;
