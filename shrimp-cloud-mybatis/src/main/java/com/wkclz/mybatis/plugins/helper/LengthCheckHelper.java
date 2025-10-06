@@ -36,7 +36,7 @@ public class LengthCheckHelper {
     @Resource
     private TableInfoMapper tableInfoMapper;
 
-    public synchronized <T extends BaseEntity> void handleCheck(T entity) {
+    public <T extends BaseEntity> void handleCheck(T entity) {
         if (entity == null) {
             return;
         }
@@ -47,36 +47,7 @@ public class LengthCheckHelper {
             return;
         }
 
-        Map<String, ColumnInfo> columns = COLLUMN_MAP.get(entity.getClass());
-        if (columns == null) {
-            CompletableFuture<Map<String, ColumnInfo>> future = CompletableFuture.supplyAsync(() -> {
-                String tableName = getTableName(entity.getClass());
-                String tableSchema = config.getTableSchema();
-                ColumnQuery query = new ColumnQuery();
-                query.setTableSchema(tableSchema);
-                query.setTableName(tableName);
-                List<ColumnInfo> cs = tableInfoMapper.getColumnLengthList(query);
-                Map<String, ColumnInfo> map;
-                if (CollectionUtils.isEmpty(cs)) {
-                    map = new HashMap<>();
-                } else {
-                    map = cs.stream().collect(Collectors.toMap(
-                        t -> StringUtil.underlineToCamel(t.getColumnName()),
-                        t -> t
-                    ));
-                }
-                return map;
-            });
-            try {
-                columns = future.get();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw SysException.error(e.getMessage());
-            } catch (ExecutionException e) {
-                throw SysException.error(e.getMessage());
-            }
-            COLLUMN_MAP.put(entity.getClass(), columns);
-        }
+        Map<String, ColumnInfo> columns = getColumns(entity.getClass());
 
         // 不是现有的表对象，或无任何字段信息
         if (columns.isEmpty()) {
@@ -112,6 +83,40 @@ public class LengthCheckHelper {
                     key, column.getColumnComment(), column.getLength(), v, length);
             }
         }
+    }
+
+    private synchronized Map<String, ColumnInfo> getColumns(Class<?> clazz) {
+        Map<String, ColumnInfo> columns = COLLUMN_MAP.get(clazz);
+        if (columns == null) {
+            CompletableFuture<Map<String, ColumnInfo>> future = CompletableFuture.supplyAsync(() -> {
+                String tableName = getTableName(clazz);
+                String tableSchema = config.getTableSchema();
+                ColumnQuery query = new ColumnQuery();
+                query.setTableSchema(tableSchema);
+                query.setTableName(tableName);
+                List<ColumnInfo> cs = tableInfoMapper.getColumnLengthList(query);
+                Map<String, ColumnInfo> map;
+                if (CollectionUtils.isEmpty(cs)) {
+                    map = new HashMap<>();
+                } else {
+                    map = cs.stream().collect(Collectors.toMap(
+                        t -> StringUtil.underlineToCamel(t.getColumnName()),
+                        t -> t
+                    ));
+                }
+                return map;
+            });
+            try {
+                columns = future.get();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw SysException.error(e.getMessage());
+            } catch (ExecutionException e) {
+                throw SysException.error(e.getMessage());
+            }
+            COLLUMN_MAP.put(clazz, columns);
+        }
+        return columns;
     }
 
 
