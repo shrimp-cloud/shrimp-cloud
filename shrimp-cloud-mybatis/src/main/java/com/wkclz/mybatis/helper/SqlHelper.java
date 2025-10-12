@@ -18,6 +18,7 @@ import com.wkclz.mybatis.bean.ColumnInfo;
 import com.wkclz.mybatis.bean.IndexInfo;
 import com.wkclz.mybatis.bean.TableInfo;
 import com.wkclz.mybatis.bean.UpdateInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,6 +33,7 @@ import java.util.List;
  * @author shrimp
  * @description SQL 语法分析
  */
+@Slf4j
 public class SqlHelper {
 
 
@@ -93,18 +95,22 @@ public class SqlHelper {
                 ColumnInfo column = new ColumnInfo();
                 columns.add(column);
                 column.setTableName(tableInfo.getTableName());
-                column.setAutoIncrement(e.isAutoIncrement() ? true : null);
+                column.setAutoIncrement(e.isAutoIncrement());
                 column.setColumnName(e.getColumnName().trim().replace("`", ""));
                 SQLExpr comment = e.getComment();
                 if (comment instanceof SQLCharExpr sqlCharExpr) {
                     column.setColumnComment(sqlCharExpr.getText());
                 }
 
-                if (e.getDefaultExpr() != null) {
-                    if (e.getDefaultExpr() instanceof SQLCharExpr t) {
+                SQLExpr defaultExpr = e.getDefaultExpr();
+                if (defaultExpr != null) {
+                    if (defaultExpr instanceof SQLIntegerExpr t) {
                         column.setDefaultValue(t.getValue());
                     }
-                    if (e.getDefaultExpr() instanceof SQLCurrentTimeExpr t) {
+                    if (defaultExpr instanceof SQLCharExpr t) {
+                        column.setDefaultValue(t.getValue());
+                    }
+                    if (defaultExpr instanceof SQLCurrentTimeExpr t) {
                         column.setDefaultValue(t.getType().name);
                     }
                 }
@@ -129,18 +135,24 @@ public class SqlHelper {
                 column.setDataType(dataType.getName());
                 List<SQLExpr> arguments = dataType.getArguments();
                 if (CollectionUtils.isNotEmpty(arguments)) {
-                    SQLExpr sqlExpr1 = arguments.get(0);
-                    if (sqlExpr1 instanceof SQLIntegerExpr s1) {
-                        column.setLength(s1.getNumber().longValue());
+                    if (arguments.size() == 1) {
+                        SQLExpr sqlExpr1 = arguments.get(0);
+                        if (sqlExpr1 instanceof SQLIntegerExpr s1) {
+                            column.setLength(s1.getNumber().longValue());
+                        } else {
+                            log.warn("column with unknown defaultValue: {}/{}/{}",
+                                column.getTableName(), column.getColumnName(), column.getDataType());
+                        }
                     } else {
-                        System.out.println(sqlExpr1);
+                        log.warn("column with mutlipart defaultValue: {}/{}/{}",
+                            column.getTableName(), column.getColumnName(), column.getDataType());
                     }
                 }
                 if (dataType instanceof SQLCharacterDataType type) {
                     column.setCharset(type.getCharSetName());
                     column.setCollate(type.getCollate());
                 } else if (dataType instanceof SQLDataTypeImpl t) {
-                    column.setUnsigned(t.isUnsigned() ? true : null);
+                    column.setUnsigned(t.isUnsigned());
                 } else {
                     System.out.println(dataType);
                 }
