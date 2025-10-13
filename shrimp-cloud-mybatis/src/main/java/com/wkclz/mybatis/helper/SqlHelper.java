@@ -166,7 +166,15 @@ public class SqlHelper {
                 index.setIndexType(k.getIndexType());
                 SQLIndexDefinition indexDefinition = k.getIndexDefinition();
                 index.setType(indexDefinition.getType());
+                
+                // 设置是否为唯一索引
+                boolean isUnique = "PRIMARY".equalsIgnoreCase(indexDefinition.getType()) || "UNIQUE".equalsIgnoreCase(indexDefinition.getType());
+                index.setNonUnique(isUnique ? 0 : 1);
+                
                 SQLName name = indexDefinition.getName();
+                if (name == null && "PRIMARY".equalsIgnoreCase(indexDefinition.getType())) {
+                    index.setIndexName("PRIMARY");
+                }
                 if (name != null) {
                     index.setIndexName(name.getSimpleName().trim().replace("`", ""));
                 }

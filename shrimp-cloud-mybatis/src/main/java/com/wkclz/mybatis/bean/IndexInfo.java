@@ -5,12 +5,16 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * @author shrimp
+ */
 @Data
 public class IndexInfo implements Serializable {
 
     private String tableSchema;
     private String tableName;
     private String indexName;
+    private Integer nonUnique;
 
     // Using btree/hash
     private String indexType;
