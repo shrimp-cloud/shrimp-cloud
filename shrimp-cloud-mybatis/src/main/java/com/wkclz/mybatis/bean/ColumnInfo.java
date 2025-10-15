@@ -22,4 +22,8 @@ public class ColumnInfo implements Serializable {
     private Object onUpdate;
     private Boolean notNull;
 
+    // 字段顺序
+    private String after;
+    private Integer ordinalPosition;
+
 }

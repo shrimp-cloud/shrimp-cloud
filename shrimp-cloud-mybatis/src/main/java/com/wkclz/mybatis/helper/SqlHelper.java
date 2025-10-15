@@ -90,12 +90,19 @@ public class SqlHelper {
         List<IndexInfo> indexs = new ArrayList<>();
         tableInfo.setColumns(columns);
         tableInfo.setIndexs(indexs);
-        for (SQLTableElement element : elements) {
+        for (int i = 0; i < elements.size(); i++) {
+            SQLTableElement element = elements.get(i);
             if (element instanceof SQLColumnDefinition e) {
                 ColumnInfo column = new ColumnInfo();
                 columns.add(column);
                 column.setTableName(tableInfo.getTableName());
                 column.setAutoIncrement(e.isAutoIncrement());
+                // 字段顺序
+                column.setOrdinalPosition(i+1);
+                // 字段相对位置
+                if (i > 0) {
+                    column.setAfter(columns.get(i-1).getColumnName());
+                }
                 column.setColumnName(e.getColumnName().trim().replace("`", ""));
                 SQLExpr comment = e.getComment();
                 if (comment instanceof SQLCharExpr sqlCharExpr) {
