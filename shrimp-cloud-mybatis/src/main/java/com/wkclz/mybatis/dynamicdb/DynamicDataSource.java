@@ -1,6 +1,5 @@
 package com.wkclz.mybatis.dynamicdb;
 
-import cn.hutool.core.thread.ThreadUtil;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.wkclz.common.exception.SysException;
@@ -13,8 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.sql.DataSource;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 
 /**
  * 重写 determineCurrentLookupKey() 方法来实现数据源切换功能
@@ -56,11 +56,9 @@ public class DynamicDataSource extends AbstractShrimpRoutingDataSource {
             }
 
             // 使用异步线程。否则使用默认数据源管理三方数据的场景下，会进入死循环
-            CountDownLatch countDownLatch = ThreadUtil.newCountDownLatch(1);
-            ThreadUtil.newExecutor().execute(() -> {
+            CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
                 // 若想用多数据源，必需注入此工厂
                 DynamicDataSourceFactory dynamicDataSourceFactory = SpringContextHolder.getBean(DynamicDataSourceFactory.class);
-
                 // 只返回基础数据
                 DataSourceInfo ds = dynamicDataSourceFactory.createDataSource(key);
                 if (ds == null) {
@@ -79,24 +77,22 @@ public class DynamicDataSource extends AbstractShrimpRoutingDataSource {
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-
                 /*
                 使用默认参数的方案
                 DruidDataSource druidDataSource = DataSourceInfo.getDruidDataSource(ds);
                 */
-
                 addDataSource(key, dataSource);
                 hasCreateDataSource.put(key, now);
+                return key;
             });
             try {
-                countDownLatch.await();
+                return future.get();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 throw SysException.error(e.getMessage());
-            } finally {
-                countDownLatch.countDown();
+            } catch (ExecutionException e) {
+                throw SysException.error(e.getMessage());
             }
-            return key;
         }
     }
 
