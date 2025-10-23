@@ -226,18 +226,23 @@ public class SqlHelper {
         UpdateInfo updateInfo = new UpdateInfo();
         updateInfo.setScript(dml);
 
+        String tableName = null;
         if (sqlStatement instanceof MySqlInsertStatement insert) {
             updateInfo.setOpType("INSERT");
-            updateInfo.setTableName(insert.getTableName().getSimpleName());
+            tableName = insert.getTableName().getSimpleName();
         }
         if (sqlStatement instanceof MySqlUpdateStatement update) {
             updateInfo.setOpType("UPDATE");
-            updateInfo.setTableName(update.getTableName().getSimpleName());
+            tableName = update.getTableName().getSimpleName();
         }
         if (sqlStatement instanceof MySqlDeleteStatement delete) {
             updateInfo.setOpType("DELETE");
-            updateInfo.setTableName(delete.getTableName().getSimpleName());
+            tableName = delete.getTableName().getSimpleName();
         }
+        if (tableName != null) {
+            updateInfo.setTableName(tableName.trim().replace("`", ""));
+        }
+
         return updateInfo;
     }
 
