@@ -28,6 +28,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author shrimp
@@ -35,6 +37,14 @@ import java.util.List;
  */
 @Slf4j
 public class SqlHelper {
+
+
+    // 多行注释 /* ... */
+    private static final Pattern MULTILINE_COMMENT = Pattern.compile("/\\*[^*]*\\*+(?:[^/*][^*]*\\*+)*/", Pattern.DOTALL);
+    // 单行注释 -- ...（到行尾）
+    private static final Pattern SINGLE_LINE_COMMENT_DASH = Pattern.compile("--[^\\n\\r]*");
+    // 单行注释 # ...（MySQL 风格）
+    private static final Pattern SINGLE_LINE_COMMENT_HASH = Pattern.compile("#[^\\n\\r]*");
 
 
     /**
@@ -289,6 +299,31 @@ public class SqlHelper {
         return list;
     }
 
+
+
+
+    /**
+     * 移除 SQL 字符串中的所有注释
+     * @param sql 原始 SQL 字符串
+     * @return 移除注释后的 SQL 字符串
+     */
+    public static String removeComments(String sql) {
+        if (sql == null || sql.trim().isEmpty()) {
+            return sql;
+        }
+        String result = sql;
+        // 1. 先处理多行注释（必须先做，避免 -- 在 /* */ 中被误删）
+        Matcher multiMatcher = MULTILINE_COMMENT.matcher(result);
+        result = multiMatcher.replaceAll("");
+
+        // 2. 移除 -- 开头的单行注释
+        Matcher dashMatcher = SINGLE_LINE_COMMENT_DASH.matcher(result);
+        result = dashMatcher.replaceAll("");
+
+        // 3. 移除 # 开头的单行注释（MySQL）
+        Matcher hashMatcher = SINGLE_LINE_COMMENT_HASH.matcher(result);
+        return hashMatcher.replaceAll("");
+    }
 
 
     public static void main(String[] args) {
