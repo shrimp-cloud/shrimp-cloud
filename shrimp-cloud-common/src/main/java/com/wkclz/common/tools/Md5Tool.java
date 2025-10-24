@@ -5,8 +5,11 @@ import com.wkclz.common.exception.BizException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.regex.Pattern;
 
 public class Md5Tool {
+
+    private static final Pattern MD5_PATTERN = Pattern.compile("^[a-fA-F0-9]{32}$");
 
 
     public static String md5lowerCase32(String str) {
@@ -55,7 +58,12 @@ public class Md5Tool {
         return md5code.toString();
     }
 
-
+    public static boolean isMd5(String md5) {
+        if (md5 == null || md5.isEmpty()) {
+            return false;
+        }
+        return MD5_PATTERN.matcher(md5).matches();
+    }
 
 
 }
