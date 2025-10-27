@@ -34,8 +34,8 @@ public enum DataTypeEnum {
     JSON("String", "string", "TEXTAREA"),
 
     TIME("Date", "number", "NUMBER"),
-    DATE("Date", "number", "DATE"),
-    DATETIME("Date", "number", "DATETIME"),
+    DATE("Date", "date", "DATE"),
+    DATETIME("Date", "datetime", "DATETIME"),
     TIMESTAMP("Date", "number", "NUMBER"),
     YEAR("Date", "number", "NUMBER"),
 
