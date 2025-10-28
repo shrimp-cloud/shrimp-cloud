@@ -1,0 +1,28 @@
+# Tomcat
+server:
+  # 端 口
+  port: 8088
+  # Servlet
+  servlet:
+    # Session
+    session:
+      # 超 时 时 间
+      timeout: 120m
+netty:
+  # 监听端口
+  nettyPort: 10000
+  # 是否写日志
+  isWriteLog: true
+  # 服务名称，会在数据对象中体现，可入库备查
+  appName: nettyApp
+  # 协议名称 tcp或者udp
+  serverType: tcp
+  # spring消息队列长度设定值
+  capacity: 1000
+  # 是否启动web管理端
+  isManager: true
+  #四种处理数据方式，队列disruptor和queue，异步处理asyn，同步默认处理default
+  #executeDataName: disruptor
+  #executeDataName: default
+  #executeDataName: queue
+  executeDataName: asyn
