@@ -11,6 +11,9 @@ import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateTableStateme
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlDeleteStatement;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlInsertStatement;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlUpdateStatement;
+import com.alibaba.druid.sql.parser.SQLParserUtils;
+import com.alibaba.druid.sql.parser.SQLStatementParser;
+import com.alibaba.druid.util.JdbcConstants;
 import com.alibaba.fastjson2.JSONObject;
 import com.wkclz.common.exception.SysException;
 import com.wkclz.common.utils.StringUtil;
@@ -300,6 +303,27 @@ public class SqlHelper {
     }
 
 
+    public static boolean isPureSelect(String sql) {
+        if (sql == null || sql.trim().isEmpty()) {
+            return false;
+        }
+        try {
+            // ✅ 使用 SQLParserUtils 获取对应数据库的 Parser
+            SQLStatementParser parser = SQLParserUtils.createSQLStatementParser(sql, JdbcConstants.MYSQL);
+            // 解析成语句列表
+            List<SQLStatement> statementList = parser.parseStatementList();
+            // ❌ 不允许多条 SQL（防止 SQL 注入拼接）
+            if (statementList.size() != 1) {
+                return false;
+            }
+            SQLStatement stmt = statementList.getFirst();
+            // ✅ 判断是否为 SELECT 语句
+            return stmt instanceof SQLSelectStatement;
+        } catch (Exception e) {
+            // 解析失败，说明 SQL 不合法或不是标准 SELECT
+            return false;
+        }
+    }
 
 
     /**
