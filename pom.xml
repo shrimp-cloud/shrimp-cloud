@@ -32,6 +32,7 @@
 
         <!-- 测试库 -->
         <module>shrimp-cloud-test</module>
+        <module>shrimp-cloud-netty-server</module>
     </modules>
 
     <properties>
