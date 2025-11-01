@@ -67,7 +67,7 @@
             index_type,
             column_name
         FROM
-            information_schema.STATISTICS
+            information_schema.`STATISTICS`
         WHERE
             table_schema = #{tableSchema}
             <if test="tableNames != null and tableNames.size > 0">

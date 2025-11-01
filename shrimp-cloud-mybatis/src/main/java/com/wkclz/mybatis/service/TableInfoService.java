@@ -1,6 +1,8 @@
 package com.wkclz.mybatis.service;
 
+import com.wkclz.mybatis.bean.ColumnInfo;
 import com.wkclz.mybatis.bean.ColumnQuery;
+import com.wkclz.mybatis.bean.IndexInfo;
 import com.wkclz.mybatis.bean.TableInfo;
 import com.wkclz.mybatis.config.ShrimpMyBatisConfig;
 import com.wkclz.mybatis.dao.TableInfoMapper;
@@ -29,6 +31,23 @@ public class TableInfoService {
         entity.setTableSchema(config.getTableSchema());
         return tableInfoMapper.getTables(entity);
     }
+
+    public List<ColumnInfo> getColumns(TableInfo entity) {
+        if (entity == null) {
+            entity = new TableInfo();
+        }
+        entity.setTableSchema(config.getTableSchema());
+        return tableInfoMapper.getColumns(entity);
+    }
+
+    public List<IndexInfo> getIndexs(TableInfo entity) {
+        if (entity == null) {
+            entity = new TableInfo();
+        }
+        entity.setTableSchema(config.getTableSchema());
+        return tableInfoMapper.getIndexs(entity);
+    }
+
 
     public List<ColumnQuery> getColumnInfos4Options(ColumnQuery query) {
         if (query == null) {

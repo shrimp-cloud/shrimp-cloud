@@ -27,5 +27,6 @@ public class TableInfo implements Serializable {
 
     // 辅助查询字段
     private List<String> tableNames;
+    private List<String> columnNames;
 
 }
