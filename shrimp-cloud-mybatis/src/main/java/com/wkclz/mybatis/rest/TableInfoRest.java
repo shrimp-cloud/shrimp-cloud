@@ -31,7 +31,7 @@ public class TableInfoRest {
 
     @GetMapping(Routes.DB_COLUMN_LIST)
     public Result dbColumnList(ColumnQuery query) {
-        List<ColumnQuery> columns = tableInfoService.getColumnInfos(query);
+        List<ColumnQuery> columns = tableInfoService.getColumnInfos4Options(query);
         return Result.data(columns);
     }
 

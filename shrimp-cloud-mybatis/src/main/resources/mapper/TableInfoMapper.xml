@@ -4,19 +4,82 @@
 
     <select id="getTables" parameterType="com.wkclz.mybatis.bean.TableInfo" resultType="com.wkclz.mybatis.bean.TableInfo">
         SELECT
+            table_schema,
             table_name,
-            table_comment
+            table_comment,
+            `engine`,
+            table_collation `collate`
         FROM
-            information_schema.TABLES
+            information_schema.`TABLES`
         WHERE
             table_schema = #{tableSchema}
             <if test="tableName != null">AND table_name LIKE CONCAT('%', #{tableName}, '%') </if>
             <if test="tableComment != null">AND table_comment LIKE CONCAT('%', #{tableComment}, '%') </if>
+            <if test="tableNames != null and tableNames.size > 0">
+                AND table_name IN ( <foreach collection="tableNames" item="item" separator=","> #{item} </foreach> )
+            </if>
         ORDER BY
             table_name
     </select>
 
-    <select id="getColumnInfos" parameterType="com.wkclz.mybatis.bean.ColumnQuery" resultType="com.wkclz.mybatis.bean.ColumnQuery">
+
+    <select id="getColumns"
+            parameterType="com.wkclz.mybatis.bean.TableInfo"
+            resultType="com.wkclz.mybatis.bean.ColumnInfo">
+        SELECT
+            table_schema,
+            table_name,
+            column_name,
+            IF(LOCATE('unsigned', column_type) > 0, true, false) `unsigned`,
+            IF(LOCATE('auto_increment', extra) > 0, true, false) `auto_increment`,
+            data_type,
+            character_set_name `charset`,
+            collation_name `collate`,
+            character_maximum_length length,
+            column_comment,
+            column_default default_value,
+            IF(LOCATE('CURRENT_TIMESTAMP', extra) > 0, 1, 0) `on_update`,
+            IF(is_nullable = 'NO', true, false) not_Null,
+            ordinal_position
+        FROM
+            information_schema.`COLUMNS`
+        WHERE
+            table_schema = #{tableSchema}
+            <if test="tableNames != null and tableNames.size > 0">
+                AND table_name IN ( <foreach collection="tableNames" item="item" separator=","> #{item} </foreach> )
+            </if>
+            <if test="columnNames != null and columnNames.size > 0">
+                AND column_name IN ( <foreach collection="columnNames" item="item" separator=","> #{item} </foreach> )
+            </if>
+        ORDER BY
+            ordinal_position
+    </select>
+
+
+    <select id="getIndexs"
+            parameterType="com.wkclz.mybatis.bean.TableInfo"
+            resultType="com.wkclz.mybatis.bean.IndexInfo">
+        SELECT
+            table_schema,
+            table_name,
+            non_unique,
+            index_name,
+            index_type,
+            column_name
+        FROM
+            information_schema.STATISTICS
+        WHERE
+            table_schema = #{tableSchema}
+            <if test="tableNames != null and tableNames.size > 0">
+                AND table_name IN ( <foreach collection="tableNames" item="item" separator=","> #{item} </foreach> )
+            </if>
+        ORDER BY
+            index_name
+    </select>
+
+
+
+    <select id="getColumnInfos4Options" parameterType="com.wkclz.mybatis.bean.ColumnQuery" resultType="com.wkclz.mybatis.bean.ColumnQuery">
         SELECT
             column_name,
             data_type,
@@ -29,6 +92,9 @@
             AND table_schema = #{tableSchema}
             <if test="tableName != null">AND table_name = #{tableName} </if>
             <if test="columnName != null">AND column_name = #{columnName} </if>
+            <if test="tableNames != null and tableNames.size > 0">
+                AND table_name IN ( <foreach collection="tableNames" item="item" separator=","> #{item} </foreach> )
+            </if>
             <if test="columnNames != null and columnNames.size > 0">
                 AND column_name IN ( <foreach collection="columnNames" item="item" separator=","> #{item} </foreach> )
             </if>

@@ -350,13 +350,6 @@ public class SqlHelper {
     }
 
 
-    public static void main(String[] args) {
-        String demoDdl = getDemoDdl();
-        TableInfo tableInfo = getTableInfo(demoDdl);
-        String jsonString = JSONObject.toJSONString(tableInfo);
-        System.out.println(jsonString);
-    }
-
     private static String getDemoDdl() {
         return """
             CREATE TABLE `auth_api` (
@@ -382,6 +375,16 @@ public class SqlHelper {
                 KEY `mapping_name` (`api_name`) USING BTREE
               ) ENGINE=InnoDB AUTO_INCREMENT=394 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci COMMENT='路由映射';
              """;
+    }
+
+
+
+
+    public static void main(String[] args) {
+        String demoDdl = getDemoDdl();
+        TableInfo tableInfo = getTableInfo(demoDdl);
+        String jsonString = JSONObject.toJSONString(tableInfo);
+        System.out.println(jsonString);
     }
 
 }

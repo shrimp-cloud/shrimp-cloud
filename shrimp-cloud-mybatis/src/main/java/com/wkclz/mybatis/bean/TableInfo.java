@@ -19,8 +19,13 @@ public class TableInfo implements Serializable {
     private String charset;
     private String collate;
 
+
+
     private List<ColumnInfo> columns;
     // index
     private List<IndexInfo> indexs;
+
+    // 辅助查询字段
+    private List<String> tableNames;
 
 }

@@ -15,7 +15,6 @@ public class ColumnQuery implements Serializable {
     private String tableSchema;
     private String tableName;
     private String columnName;
-    private List<String> columnNames;
 
     private String dataType;
     private String javaType;
@@ -23,5 +22,10 @@ public class ColumnQuery implements Serializable {
     private String inputType;
     private String columnComment;
     private Integer count;
+
+
+    // 辅助查询字段
+    private List<String> columnNames;
+    private List<String> tableNames;
 
 }

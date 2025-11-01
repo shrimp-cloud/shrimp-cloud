@@ -30,12 +30,12 @@ public class TableInfoService {
         return tableInfoMapper.getTables(entity);
     }
 
-    public List<ColumnQuery> getColumnInfos(ColumnQuery query) {
+    public List<ColumnQuery> getColumnInfos4Options(ColumnQuery query) {
         if (query == null) {
             return Collections.emptyList();
         }
         query.setTableSchema(config.getTableSchema());
-        return tableInfoMapper.getColumnInfos(query);
+        return tableInfoMapper.getColumnInfos4Options(query);
     }
 
 }
