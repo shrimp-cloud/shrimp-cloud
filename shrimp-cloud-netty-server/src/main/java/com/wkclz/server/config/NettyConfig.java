@@ -1,15 +1,14 @@
 package com.wkclz.server.config;
 
-import com.wkclz.server.handler.interfaces.ExecuteData;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * netty配置信息类
  */
-@Component
 @Data
+@Configuration
 public class NettyConfig {
 
     @Value("${netty.nettyPort}")

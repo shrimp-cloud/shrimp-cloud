@@ -10,9 +10,7 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.DatagramPacket;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.messaging.MessageChannel;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -23,12 +21,12 @@ import java.util.Map;
 @Component
 @ChannelHandler.Sharable
 public class UdpDataHandler extends SimpleChannelInboundHandler<DatagramPacket> {
-    @Autowired
+    @Resource
     private NettyConfig nettyConfig;
-    @Autowired
+    @Resource
     private Map<String,ExecuteData> executeDataMap;
-    @Autowired
-    LogPlug logPlug;
+    @Resource
+    private LogPlug logPlug;
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket packet) {
         int length = packet.content().readableBytes();

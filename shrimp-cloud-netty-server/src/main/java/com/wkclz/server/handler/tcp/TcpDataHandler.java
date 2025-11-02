@@ -11,10 +11,9 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayOutputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -24,12 +23,12 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 @ChannelHandler.Sharable
 public class TcpDataHandler extends SimpleChannelInboundHandler<ByteBuf> {
-    @Autowired
+    @Resource
     private NettyConfig nettyConfig;
-    @Autowired
+    @Resource
     private Map<String,ExecuteData> executeDataMap;
-    @Autowired
-    LogPlug logPlug;
+    @Resource
+    private LogPlug logPlug;
     Map<String,ChannelHandlerContext> session = new ConcurrentHashMap<>();
 
     @Override

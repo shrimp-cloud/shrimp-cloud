@@ -2,7 +2,7 @@ package com.wkclz.server.handler.queue;
 
 import com.wkclz.server.bean.ReceiveData;
 import com.wkclz.server.handler.interfaces.ExecuteData;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.MessageChannel;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @ConditionalOnExpression("'${netty.executeDataName}'.equals('queue')")
 public class QueueExecuteData implements ExecuteData {
 
-    @Autowired
+    @Resource
     private MessageChannel messageChannel;
 
     @Override

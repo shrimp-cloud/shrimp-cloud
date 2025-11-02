@@ -1,15 +1,14 @@
 package com.wkclz.server.handler.base;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.wkclz.server.handler.log.LogPlug;
 import com.wkclz.server.bean.ReceiveData;
 import com.wkclz.server.handler.interfaces.ExecuteData;
+import com.wkclz.server.handler.log.LogPlug;
 import com.wkclz.server.util.NettyHandlerMethodUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
@@ -18,7 +17,7 @@ import java.util.List;
 @Component("default")
 public class DefaultExecuteData implements ExecuteData {
 
-    @Autowired
+    @Resource
     private LogPlug logPlug;
     @Override
     public void invoke(ReceiveData r) {
