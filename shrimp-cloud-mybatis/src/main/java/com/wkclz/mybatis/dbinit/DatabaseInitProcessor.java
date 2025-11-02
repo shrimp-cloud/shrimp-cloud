@@ -5,6 +5,7 @@ import com.wkclz.mybatis.bean.IndexInfo;
 import com.wkclz.mybatis.bean.SqlScriptInfo;
 import com.wkclz.mybatis.bean.TableInfo;
 import com.wkclz.mybatis.config.DbScriptInitConfig;
+import com.wkclz.spring.helper.IpHelper;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
@@ -12,6 +13,8 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +29,9 @@ import java.util.stream.Collectors;
 public class DatabaseInitProcessor implements BeanPostProcessor {
 
     private static boolean init_flag = false;
+    
+    // 当前实例的唯一标识
+    private static String INSTANCE_ID = null;
 
     @Resource
     private SqlSession sqlSession;
@@ -33,6 +39,8 @@ public class DatabaseInitProcessor implements BeanPostProcessor {
     private DbScriptInitConfig dbScriptInitConfig;
     @Resource
     private DatabaseUpdateHelper databaseUpdateHelper;
+    @Resource
+    private DataSource dataSource;
 
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if (init_flag) {
@@ -46,58 +54,197 @@ public class DatabaseInitProcessor implements BeanPostProcessor {
             return bean;
         }
 
-        // 获取所有 DDL 脚本
-        List<SqlScriptInfo> scripts = DatabaseUpdateHelper.scanSqlScripts();
-        if (scripts.isEmpty()) {
-            log.debug("tables can not be scan!");
-            return bean;
+        // 使用数据库锁避免多实例重复执行
+        Connection connection = null;
+        boolean lockAcquired = false;
+        try {
+            connection = dataSource.getConnection();
+            lockAcquired = acquireDistributedLock(connection);
+
+            if (!lockAcquired) {
+                log.info("未能获取数据库初始化锁，可能其他实例正在执行初始化");
+                return bean;
+            }
+
+            log.info("成功获取数据库初始化锁，实例ID: {}，开始执行数据库初始化", getInstanceId());
+
+            // 获取所有 DDL 脚本
+            List<SqlScriptInfo> scripts = DatabaseUpdateHelper.scanSqlScripts();
+            if (scripts.isEmpty()) {
+                log.debug("tables can not be scan!");
+                return bean;
+            }
+
+            // 获取已存在的表信息
+            List<SqlScriptInfo> tables = scripts.stream().filter(t -> "ddl".equals(t.getType())).toList();
+            List<String> tableNames = tables.stream().map(SqlScriptInfo::getTableName).toList();
+            List<TableInfo> dbexistTables = databaseUpdateHelper.getTables(tableNames);
+
+            // 新出现的表
+            List<String> existTableNames = dbexistTables.stream().map(TableInfo::getTableName).toList();
+            List<SqlScriptInfo> newTables = tables.stream().filter(t -> !existTableNames.contains(t.getTableName())).toList();
+            List<String> newTableNames = newTables.stream().map(SqlScriptInfo::getTableName).toList();
+
+            // 新表中的数据
+            List<SqlScriptInfo> dmls = scripts.stream()
+                .filter(t -> "dml".equals(t.getType()))
+                .filter(t -> newTableNames.contains(t.getTableName()))
+                .toList();
+
+            // 字段处理  existTables ->
+            List<SqlScriptInfo> scriptExistTables = tables.stream().filter(t -> existTableNames.contains(t.getTableName())).toList();
+
+            // scriptExistTables 与 dbeExistTables 对比，得到  alter 和 drop 语句
+            List<String> statements = handleTable4Alter(scriptExistTables, dbexistTables);
+
+            // alter 处理分类
+            List<String> addColumns = statements.stream().filter(t -> t.contains(" ADD COLUMN ")).toList();
+            List<String> modifyColumns = statements.stream().filter(t -> t.contains(" MODIFY COLUMN ")).toList();
+            List<String> dropColumns = statements.stream().filter(t -> t.contains(" DROP COLUMN ")).toList();
+            List<String> addIndexes = statements.stream().filter(t -> t.contains(" ADD ") && t.contains(" INDEX ")).toList();
+            List<String> dropIndexes = statements.stream().filter(t -> t.contains(" DROP INDEX ")).toList();
+
+            log.info("init tables and data...");
+
+            // 创建表
+            executeCreateTables(newTables);
+            // 新表插入新数据
+            executeInsertDatas(dmls);
+
+            // 字段，索引处理
+            executeAlterAddColumns(addColumns);
+            executeAlterModifyColumns(modifyColumns);
+            executeAlterDropColumns(dropColumns);
+            executeAlterAddIndexes(addIndexes);
+            executeAlterDropIndexes(dropIndexes);
+
+            log.info("init tables and data success!");
+        } catch (Exception e) {
+            log.error("数据库初始化过程中发生异常", e);
+        } finally {
+            // 释放锁
+            if (lockAcquired && connection != null) {
+                try {
+                    releaseDistributedLock(connection);
+                } catch (Exception e) {
+                    log.error("释放数据库初始化锁时发生异常", e);
+                }
+            }
+
+            // 关闭连接
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (Exception e) {
+                    log.error("关闭数据库连接时发生异常", e);
+                }
+            }
+        }
+        return bean;
+    }
+
+    /**
+     * 获取分布式锁
+     *
+     * @param connection 数据库连接
+     * @return 是否成功获取锁
+     */
+    private boolean acquireDistributedLock(Connection connection) throws SQLException {
+        try {
+            // 创建锁表（如果不存在）
+            createLockTableIfNotExists(connection);
+
+            // 清理过期锁
+            cleanupExpiredLocks(connection);
+
+            // 尝试插入锁记录
+            String sql = "INSERT INTO db_init_lock (lock_key, lock_owner, create_time) VALUES (?, ?, NOW())";
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setString(1, "db_init_lock");
+                ps.setString(2, getInstanceId());
+                ps.executeUpdate();
+                return true;
+            }
+        } catch (SQLException e) {
+            // 如果是唯一约束冲突，说明锁已被其他实例持有
+            if (e.getMessage().contains("Duplicate entry") || e.getMessage().contains("UNIQUE constraint failed")) {
+                return false;
+            }
+            throw e;
+        }
+    }
+
+    /**
+     * 释放分布式锁
+     *
+     * @param connection 数据库连接
+     */
+    private void releaseDistributedLock(Connection connection) throws SQLException {
+        String sql = "DELETE FROM db_init_lock WHERE lock_key = ? AND lock_owner = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, "db_init_lock");
+            ps.setString(2, getInstanceId());
+            ps.executeUpdate();
+        }
+        log.info("已释放数据库初始化锁，实例ID: {}", getInstanceId());
+    }
+
+    /**
+     * 创建锁表（如果不存在）
+     *
+     * @param connection 数据库连接
+     */
+    private void createLockTableIfNotExists(Connection connection) throws SQLException {
+        // 检查表是否已存在
+        String checkSql = "SELECT 1 FROM information_schema.TABLES WHERE TABLE_NAME = 'db_init_lock' AND TABLE_SCHEMA = DATABASE()";
+        try (PreparedStatement ps = connection.prepareStatement(checkSql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return; // 表已存在
+            }
+        } catch (SQLException e) {
+            // 忽略检查表是否存在的异常
         }
 
-        // 获取已存在的表信息
-        List<SqlScriptInfo> tables = scripts.stream().filter(t -> "ddl".equals(t.getType())).toList();
-        List<String> tableNames = tables.stream().map(SqlScriptInfo::getTableName).toList();
-        List<TableInfo> dbexistTables = databaseUpdateHelper.getTables(tableNames);
-
-        // 新出现的表
-        List<String> existTableNames = dbexistTables.stream().map(TableInfo::getTableName).toList();
-        List<SqlScriptInfo> newTables = tables.stream().filter(t -> !existTableNames.contains(t.getTableName())).toList();
-        List<String> newTableNames = newTables.stream().map(SqlScriptInfo::getTableName).toList();
-
-        // 新表中的数据
-        List<SqlScriptInfo> dmls = scripts.stream()
-            .filter(t -> "dml".equals(t.getType()))
-            .filter(t -> newTableNames.contains(t.getTableName()))
-            .toList();
-
-        // 字段处理  existTables ->
-        List<SqlScriptInfo> scriptExistTables = tables.stream().filter(t -> existTableNames.contains(t.getTableName())).toList();
-
-        // scriptExistTables 与 dbeExistTables 对比，得到  alter 和 drop 语句
-        List<String> statements = handleTable4Alter(scriptExistTables, dbexistTables);
-
-        // alter 处理分类
-        List<String> addColumns = statements.stream().filter(t -> t.contains(" ADD COLUMN ")).toList();
-        List<String> modifyColumns = statements.stream().filter(t -> t.contains(" MODIFY COLUMN ")).toList();
-        List<String> dropColumns = statements.stream().filter(t -> t.contains(" DROP COLUMN ")).toList();
-        List<String> addIndexes = statements.stream().filter(t -> t.contains(" ADD ") && t.contains(" INDEX ")).toList();
-        List<String> dropIndexes = statements.stream().filter(t -> t.contains(" DROP INDEX ")).toList();
-
-        log.info("init tables and data...");
-
         // 创建表
-        executeCreateTables(newTables);
-        // 新表插入新数据
-        executeInsertDatas(dmls);
+        String createTableSql = """
+                    CREATE TABLE db_init_lock (
+                    lock_key VARCHAR(100) NOT NULL,
+                    lock_owner VARCHAR(100) NOT NULL,
+                    create_time DATETIME NOT NULL,
+                    PRIMARY KEY (lock_key))
+                """;
 
-        // 字段，索引处理
-        executeAlterAddColumns(addColumns);
-        executeAlterModifyColumns(modifyColumns);
-        executeAlterDropColumns(dropColumns);
-        executeAlterAddIndexes(addIndexes);
-        executeAlterDropIndexes(dropIndexes);
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(createTableSql);
+            log.info("已创建数据库初始化锁表 db_init_lock");
+        } catch (SQLException e) {
+            // 可能其他实例已经创建了表，忽略异常
+            log.debug("创建锁表时发生异常（可能是并发创建导致）: {}", e.getMessage());
+        }
+    }
 
-        log.info("init tables and data success!");
-        return bean;
+    /**
+     * 清理过期锁
+     *
+     * @param connection 数据库连接
+     */
+    private void cleanupExpiredLocks(Connection connection) throws SQLException {
+        String sql = "DELETE FROM db_init_lock WHERE create_time < DATE_SUB(NOW(), INTERVAL 5 MINUTE)";
+        try (Statement stmt = connection.createStatement()) {
+            int count = stmt.executeUpdate(sql);
+            if (count > 0) {
+                log.info("清理了 {} 个过期的数据库初始化锁", count);
+            }
+        }
+    }
+
+
+    private synchronized String getInstanceId() {
+        if (INSTANCE_ID == null) {
+            INSTANCE_ID = IpHelper.getServerIp();
+        }
+        return INSTANCE_ID;
     }
 
 
