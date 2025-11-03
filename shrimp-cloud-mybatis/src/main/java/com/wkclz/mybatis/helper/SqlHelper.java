@@ -321,9 +321,11 @@ public class SqlHelper {
         Matcher dashMatcher = SINGLE_LINE_COMMENT_DASH.matcher(result);
         result = dashMatcher.replaceAll("");
 
-        // 3. 移除 # 开头的单行注释（MySQL）
-        Matcher hashMatcher = SINGLE_LINE_COMMENT_HASH.matcher(result);
-        return hashMatcher.replaceAll("");
+        // 3. 移除 # 开头的单行注释（MySQL） 【会破坏 MyBatis 的 XML 语法】
+        // Matcher hashMatcher = SINGLE_LINE_COMMENT_HASH.matcher(result);
+        // result =  hashMatcher.replaceAll("");
+
+        return result;
     }
 
 
