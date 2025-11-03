@@ -1,5 +1,10 @@
 package com.wkclz.mybatis.helper;
 
+import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
+import com.alibaba.druid.sql.parser.SQLParserUtils;
+import com.alibaba.druid.sql.parser.SQLStatementParser;
+import com.alibaba.druid.util.JdbcConstants;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.wkclz.common.entity.BaseEntity;
@@ -285,6 +290,48 @@ public class MyBatisHelper {
         rows = MapUtil.toReplaceLinkedHashMapKeyLow(rows);
         page.setRows(rows);
         return page;
+    }
+
+
+
+
+    public static boolean isPureSelect(String sql) {
+        if (sql == null || sql.trim().isEmpty()) {
+            return false;
+        }
+
+        String boundSqlStr = null;
+
+        // 解决 SQL 内存在变量的问题
+        try {
+            Map<String, Object> map = new HashMap<>();
+            String statementStr = MyBatisHelper.reloadSql(sql);
+            SqlSession sqlSession = SpringContextHolder.getBean(SqlSession.class);
+            Configuration configuration = sqlSession.getConfiguration();
+            MappedStatement mappedStatement = configuration.getMappedStatement(statementStr);
+            BoundSql boundSql = mappedStatement.getSqlSource().getBoundSql(map);
+            boundSqlStr = boundSql.getSql();
+        } catch (Exception e) {
+            throw BizException.error("错误的 SQL, 无法被解析和预编译！");
+        }
+
+        try {
+
+            // ✅ 使用 SQLParserUtils 获取对应数据库的 Parser
+            SQLStatementParser parser = SQLParserUtils.createSQLStatementParser(boundSqlStr, JdbcConstants.MYSQL);
+            // 解析成语句列表
+            List<SQLStatement> statementList = parser.parseStatementList();
+            // ❌ 不允许多条 SQL（防止 SQL 注入拼接）
+            if (statementList.size() != 1) {
+                return false;
+            }
+            SQLStatement stmt = statementList.getFirst();
+            // ✅ 判断是否为 SELECT 语句
+            return stmt instanceof SQLSelectStatement;
+        } catch (Exception e) {
+            // 解析失败，说明 SQL 不合法或不是标准 SELECT
+            return false;
+        }
     }
 
 
