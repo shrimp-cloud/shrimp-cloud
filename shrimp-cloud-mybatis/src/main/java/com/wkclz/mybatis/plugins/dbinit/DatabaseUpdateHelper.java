@@ -1,4 +1,4 @@
-package com.wkclz.mybatis.dbinit;
+package com.wkclz.mybatis.plugins.dbinit;
 
 import com.wkclz.common.exception.SysException;
 import com.wkclz.mybatis.bean.*;

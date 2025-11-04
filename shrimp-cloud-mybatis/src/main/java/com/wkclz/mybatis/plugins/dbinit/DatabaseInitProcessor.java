@@ -1,4 +1,4 @@
-package com.wkclz.mybatis.dbinit;
+package com.wkclz.mybatis.plugins.dbinit;
 
 import com.wkclz.mybatis.bean.ColumnInfo;
 import com.wkclz.mybatis.bean.IndexInfo;
@@ -10,7 +10,6 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -26,32 +25,24 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-public class DatabaseInitProcessor implements BeanPostProcessor {
-
-    private static boolean init_flag = false;
-    
+public class DatabaseInitProcessor {
     // 当前实例的唯一标识
     private static String INSTANCE_ID = null;
 
+    @Resource
+    private DataSource dataSource;
     @Resource
     private SqlSession sqlSession;
     @Resource
     private DbScriptInitConfig dbScriptInitConfig;
     @Resource
     private DatabaseUpdateHelper databaseUpdateHelper;
-    @Resource
-    private DataSource dataSource;
 
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if (init_flag) {
-            return bean;
-        }
-        init_flag = true;
-
+    public void dbinit() throws BeansException {
         // 总开关
         Integer enabled = dbScriptInitConfig.getEnabled();
         if (enabled == null || enabled != 1) {
-            return bean;
+            return;
         }
 
         // 使用数据库锁避免多实例重复执行
@@ -63,7 +54,7 @@ public class DatabaseInitProcessor implements BeanPostProcessor {
 
             if (!lockAcquired) {
                 log.info("未能获取数据库初始化锁，可能其他实例正在执行初始化");
-                return bean;
+                return;
             }
 
             log.info("成功获取数据库初始化锁，实例ID: {}，开始执行数据库初始化", getInstanceId());
@@ -72,7 +63,7 @@ public class DatabaseInitProcessor implements BeanPostProcessor {
             List<SqlScriptInfo> scripts = DatabaseUpdateHelper.scanSqlScripts();
             if (scripts.isEmpty()) {
                 log.debug("tables can not be scan!");
-                return bean;
+                return;
             }
 
             // 获取已存在的表信息
@@ -140,7 +131,7 @@ public class DatabaseInitProcessor implements BeanPostProcessor {
                 }
             }
         }
-        return bean;
+        return;
     }
 
     /**
