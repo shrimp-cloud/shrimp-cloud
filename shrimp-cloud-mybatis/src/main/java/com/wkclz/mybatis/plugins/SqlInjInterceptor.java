@@ -14,6 +14,7 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Properties;
@@ -21,6 +22,7 @@ import java.util.Properties;
 /**
  * @author shrimp
  */
+@Component
 @Intercepts({
     @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}),
     @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class})

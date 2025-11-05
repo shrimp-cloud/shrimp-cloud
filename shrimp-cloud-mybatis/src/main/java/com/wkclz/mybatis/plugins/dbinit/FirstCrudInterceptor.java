@@ -18,12 +18,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author shrimp
  */
 
+@Component
 @Intercepts({
     @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}),
     @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class}),
     @Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class})
 })
-@Component
 public class FirstCrudInterceptor implements Interceptor {
 
     private static final AtomicBoolean FIRST_CRUD_EXECUTED = new AtomicBoolean(true);

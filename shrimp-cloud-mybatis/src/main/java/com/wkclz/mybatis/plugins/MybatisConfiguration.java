@@ -19,6 +19,9 @@ public class MybatisConfiguration {
     // Mapper 操作缓存，减少反射
     private static Map<String, SqlCommandType> SQL_COMMAND_TYPE_MAPT = null;
 
+
+    /** 以下配置，若需要，直接在插件上加 @Component 注解即可 **/
+
     // @Bean 参数处理不友好，更换方法
     public ParameterInterceptor parameterInterceptor() {
         return new ParameterInterceptor();
@@ -37,15 +40,6 @@ public class MybatisConfiguration {
     // @Bean
     public QueryInterceptor queryInterceptor() {
         return new QueryInterceptor();
-    }
-
-    @Bean
-    public SqlInjInterceptor sqlInjInterceptor() {
-        return new SqlInjInterceptor();
-    }
-    @Bean
-    public UpdateInterceptor updateInterceptor() {
-        return new UpdateInterceptor();
     }
 
 

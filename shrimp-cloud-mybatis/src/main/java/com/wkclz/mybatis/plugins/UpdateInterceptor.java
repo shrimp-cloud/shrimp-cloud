@@ -14,9 +14,11 @@ import org.apache.ibatis.plugin.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+@Component
 @Intercepts({@Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class})})
 public class UpdateInterceptor implements Interceptor {
 
