@@ -19,7 +19,7 @@
 
     <properties>
         <!-- Spring 依赖(非spring-cloud-dependencies定义的依赖)  -->
-        <okhttp.version>4.12.0</okhttp.version> <!-- 5版本不可用 -->
+        <okhttp.version>5.3.0</okhttp.version> <!-- 5版本不可用 -->
         <feign-okhttp.version>13.6</feign-okhttp.version>
         <dom4j.version>2.2.0</dom4j.version>
         <druid-spring-boot-3-starter.version>1.2.27</druid-spring-boot-3-starter.version>
@@ -28,36 +28,36 @@
         <jsqlparser.version>5.3</jsqlparser.version>
 
         <!-- 三方静态依赖 -->
-        <mysql.version>9.4.0</mysql.version>
-        <commons-lang3.version>3.18.0</commons-lang3.version>
+        <mysql.version>9.5.0</mysql.version>
+        <commons-lang3.version>3.19.0</commons-lang3.version>
         <commons-beanutils.version>1.11.0</commons-beanutils.version>
         <commons-collections4.version>4.5.0</commons-collections4.version>
         <commons-compress.version>1.28.0</commons-compress.version>
-        <bcpkix-jdk18on.version>1.81</bcpkix-jdk18on.version>
-        <bcprov-jdk18on.version>1.81</bcprov-jdk18on.version>
-        <fastjson2.version>2.0.58</fastjson2.version>
-        <hutool.version>5.8.39</hutool.version>
-        <guava.version>33.4.8-jre</guava.version>
-        <jsoup.version>1.21.1</jsoup.version>
+        <bcpkix-jdk18on.version>1.82</bcpkix-jdk18on.version>
+        <bcprov-jdk18on.version>1.82</bcprov-jdk18on.version>
+        <fastjson2.version>2.0.60</fastjson2.version>
+        <hutool.version>5.8.41</hutool.version>
+        <guava.version>33.5.0-jre</guava.version>
+        <jsoup.version>1.21.2</jsoup.version>
         <zxing.version>3.5.3</zxing.version>
         <easyexcel.version>4.0.3</easyexcel.version>
         <jasypt-spring-boot.version>3.0.5</jasypt-spring-boot.version>
         <aliyun-sdk-oss.version>3.18.3</aliyun-sdk-oss.version>
-        <s3.version>2.32.23</s3.version>
+        <s3.version>2.38.0</s3.version>
         <dysmsapi20170525.version>3.1.3</dysmsapi20170525.version>
         <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
         <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
-        <alipay-sdk-java.version>4.40.393.ALL</alipay-sdk-java.version>
-        <weixin-java.version>4.7.7.B</weixin-java.version>
+        <alipay-sdk-java.version>4.40.509.ALL</alipay-sdk-java.version>
+        <weixin-java.version>4.7.8.B</weixin-java.version>
         <client-java.version>24.0.0</client-java.version>
-        <sensitive-word.version>0.27.1</sensitive-word.version>
+        <sensitive-word.version>0.29.3</sensitive-word.version>
         <rhino.version>1.8.0</rhino.version>
-        <xxl-job.version>3.1.1</xxl-job.version>
+        <xxl-job.version>3.2.0</xxl-job.version>
 
-        <jjwt.version>0.12.7</jjwt.version>
-        <jjwt-api.version>0.12.7</jjwt-api.version>
+        <jjwt.version>0.13.0</jjwt.version>
+        <jjwt-api.version>0.13.0</jjwt-api.version>
         <kaptcha.version>2.3.2</kaptcha.version>
-        <lombok.version>1.18.38</lombok.version>
+        <lombok.version>1.18.42</lombok.version>
     </properties>
 
     <dependencyManagement>
